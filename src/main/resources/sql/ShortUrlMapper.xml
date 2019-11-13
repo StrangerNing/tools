@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.znzn.tools.mapper.ShortUrlMapper">
+
+    <!-- ShortUrl结果集 -->
+    <resultMap id="ShortUrlMap" type="me.znzn.tools.entity.ShortUrl" >
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="origin_url" property="originUrl" jdbcType="VARCHAR"/>
+        <result column="short_url" property="shortUrl" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="create_account" property="createAccount" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <!-- 表名 -->
+    <sql id="table_name">t_short_url</sql>
+
+    <!-- 所有字段 -->
+    <sql id="all_columns">
+        id, origin_url, short_url, create_time, create_account
+    </sql>
+
+    <!-- 不带主键的所有字段 -->
+    <sql id="all_columns_not_with_id">
+        origin_url, short_url, create_time, create_account
+    </sql>
+
+    <!-- 查询条件带where -->
+    <sql id="all_query_condition_with_where">
+        <trim prefix="WHERE" prefixOverrides="AND|OR">
+            <if test="id != null">
+                AND id = #{id}
+            </if>
+            <if test="originUrl != null and '' != originUrl">
+                AND origin_url = #{originUrl}
+            </if>
+            <if test="shortUrl != null and '' != shortUrl">
+                AND short_url = #{shortUrl}
+            </if>
+            <if test="createTime != null">
+                AND create_time = #{createTime}
+            </if>
+            <if test="createAccount != null">
+                AND create_account = #{createAccount}
+            </if>
+        </trim>
+    </sql>
+
+    <!-- 删除条件带where -->
+    <sql id="all_delete_condition_with_where">
+        <trim prefix="WHERE" prefixOverrides="AND|OR">
+            <if test="originUrl != null and '' != originUrl">
+                AND origin_url = #{originUrl}
+            </if>
+            <if test="shortUrl != null and '' != shortUrl">
+                AND short_url = #{shortUrl}
+            </if>
+            <if test="createTime != null">
+                AND create_time = #{createTime}
+            </if>
+            <if test="createAccount != null">
+                AND create_account = #{createAccount}
+            </if>
+        </trim>
+    </sql>
+
+    <!-- 更新条件带set -->
+    <sql id="all_set_condition_with_set">
+        <set>
+            <if test="originUrl != null and '' != originUrl">
+                origin_url = #{originUrl},
+            </if>
+            <if test="shortUrl != null and '' != shortUrl">
+                short_url = #{shortUrl},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="createAccount != null">
+                create_account = #{createAccount}
+            </if>
+        </set>
+    </sql>
+
+    <!-- 批量更新条件带set -->
+    <sql id="all_batch_set_condition_with_set">
+        <set>
+            <if test="item.originUrl != null and '' != item.originUrl">
+                origin_url = #{item.originUrl},
+            </if>
+            <if test="item.shortUrl != null and '' != item.shortUrl">
+                short_url = #{item.shortUrl},
+            </if>
+            <if test="item.createTime != null">
+                create_time = #{item.createTime},
+            </if>
+            <if test="item.createAccount != null">
+                create_account = #{item.createAccount}
+            </if>
+        </set>
+    </sql>
+
+    <!--根据对象属性插入-->
+    <insert id="insertByProperty" useGeneratedKeys="true" keyProperty="id" keyColumn="id" parameterType="me.znzn.tools.entity.ShortUrl">
+        INSERT INTO <include refid="table_name"/>
+
+        (
+            <include refid="all_columns_not_with_id"/>
+        )
+        VALUES (
+            #{originUrl}, #{shortUrl}, #{createTime}, #{createAccount}
+        )
+    </insert>
+
+    <!--根据对象属性插入-->
+    <insert id="insertBatchByProperty" useGeneratedKeys="true" keyProperty="id" keyColumn="id" parameterType="java.util.List">
+        INSERT INTO <include refid="table_name"/>
+        (
+            <include refid="all_columns_not_with_id"/>
+        )
+        VALUES
+        <foreach collection="list" item="item" separator="," index = "index">
+        (
+            #{item.originUrl}, #{item.shortUrl}, #{item.createTime}, #{item.createAccount}
+        )
+        </foreach>
+    </insert>
+
+    <!--根据主键更新-->
+    <update id="updateByPrimaryKey" parameterType="me.znzn.tools.entity.ShortUrl">
+        UPDATE <include refid="table_name"/>
+            <include refid="all_set_condition_with_set"/>
+        WHERE
+            id = #{id}
+    </update>
+
+    <!--根据主键批量更新-->
+    <update id="updateBatchByPrimaryKey" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" separator=";">
+            UPDATE <include refid="table_name"/>
+                <include refid="all_batch_set_condition_with_set"/>
+            WHERE
+                id = #{item.id}
+        </foreach>
+    </update>
+
+    <!--根据主键删除-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        DELETE FROM
+            <include refid="table_name"/>
+        WHERE
+            id = #{id}
+    </delete>
+
+    <!--根据主键列表批量删除-->
+    <delete id="deleteBatchByPrimaryKey" parameterType="java.util.List">
+        DELETE FROM
+            <include refid="table_name"/>
+        WHERE
+            id
+        IN
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!--根据属性删除-->
+    <delete id="deleteByProperty" parameterType="me.znzn.tools.entity.ShortUrl">
+        DELETE FROM <include refid="table_name"/>
+        <include refid="all_delete_condition_with_where"/>
+    </delete>
+
+    <!-- 根据主键查询 -->
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ShortUrlMap">
+        SELECT
+            <include refid="all_columns"/>
+        FROM
+            <include refid="table_name"/>
+        WHERE
+            id = #{id}
+    </select>
+
+    <!-- 根据对象属性查询 -->
+    <select id="selectByProperty" parameterType="me.znzn.tools.entity.ShortUrl" resultMap="ShortUrlMap">
+        SELECT
+            <include refid="all_columns"/>
+        FROM
+            <include refid="table_name"/>
+        <include refid="all_query_condition_with_where"/>
+    </select>
+
+    <!-- 根据对象属性查询统计 -->
+    <select id="countByProperty" parameterType="me.znzn.tools.entity.ShortUrl" resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            <include refid="table_name"/>
+        <include refid="all_query_condition_with_where"/>
+    </select>
+
+</mapper>
