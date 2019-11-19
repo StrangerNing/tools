@@ -10,7 +10,6 @@ import java.io.Serializable;
  * @author zening.zhu
  * @version 1.0.0
  * @date 2019/11/11 15:47:34
- * @copyright www.ucarinc.com All Rights Reserved.
  */
 @Data
 public class ShortUrl implements Serializable{

@@ -10,7 +10,6 @@ import org.apache.ibatis.annotations.Mapper;
  * @author zening.zhu
  * @version 1.0.0
  * @date 2019/11/11 15:47:34
- * @copyright www.ucarinc.com All Rights Reserved.
  */
 @Mapper
 public interface ShortUrlMapper extends BaseDao<ShortUrl> {
