@@ -1,19 +1,20 @@
-package me.znzn.tools.module.user.entity;
+package me.znzn.tools.module.user.entity.vo;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
 
 import java.util.Date;
-import lombok.Data;
-import java.io.Serializable;
 
 /**
- * 用户表(User)表实体类
- *
- * @author zening.zhu
- * @version 1.0.0
- * @date 2019/11/19 13:09:47
+ * @author zhuzening
+ * @date 2019/11/19
+ * @since 1.0
  */
 @Data
-public class User implements Serializable{
-    private static final long serialVersionUID = 460885777953346968L;
+public class UserInfoVO {
+
+    private String token;
+
     /**
      * 主键id
      */
@@ -27,6 +28,7 @@ public class User implements Serializable{
     /**
      * 密码
      */
+    @JsonIgnore
     private String password;
 
     /**
@@ -73,6 +75,5 @@ public class User implements Serializable{
      * 备注
      */
     private String remark;
-
 
 }

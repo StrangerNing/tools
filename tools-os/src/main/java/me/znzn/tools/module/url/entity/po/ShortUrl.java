@@ -1,4 +1,4 @@
-package me.znzn.tools.module.url.entity;
+package me.znzn.tools.module.url.entity.po;
 
 import java.util.Date;
 import lombok.Data;
@@ -9,11 +9,11 @@ import java.io.Serializable;
  *
  * @author zening.zhu
  * @version 1.0.0
- * @date 2019/11/11 15:47:34
+ * @date 2019/11/19 13:29:16
  */
 @Data
 public class ShortUrl implements Serializable{
-    private static final long serialVersionUID = 362145978496390843L;
+    private static final long serialVersionUID = 440357301361849812L;
     /**
      * 主键id
      */

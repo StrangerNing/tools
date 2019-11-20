@@ -2,7 +2,7 @@ package me.znzn.tools.module.url.controller;
 
 import me.znzn.tools.common.component.Result;
 import me.znzn.tools.common.exception.BusinessException;
-import me.znzn.tools.module.url.entity.ShortUrl;
+import me.znzn.tools.module.url.entity.po.ShortUrl;
 import me.znzn.tools.module.url.service.ShortUrlService;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;

@@ -1,6 +1,6 @@
 package me.znzn.tools.module.user.mapper;
 import me.znzn.tools.common.dao.BaseDao;
-import me.znzn.tools.module.user.entity.User;
+import me.znzn.tools.module.user.entity.po.User;
 import org.apache.ibatis.annotations.Mapper;
 
 /**

@@ -1,6 +1,6 @@
 package me.znzn.tools.module.url.service;
 
-import me.znzn.tools.module.url.entity.ShortUrl;
+import me.znzn.tools.module.url.entity.po.ShortUrl;
 
 /**
  * @author zhuzening

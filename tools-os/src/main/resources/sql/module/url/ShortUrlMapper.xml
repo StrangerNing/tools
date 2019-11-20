@@ -3,7 +3,7 @@
 <mapper namespace="me.znzn.tools.module.url.mapper.ShortUrlMapper">
 
     <!-- ShortUrl结果集 -->
-    <resultMap id="ShortUrlMap" type="me.znzn.tools.module.url.entity.ShortUrl" >
+    <resultMap id="ShortUrlMap" type="me.znzn.tools.module.url.entity.po.ShortUrl" >
         <id column="id" property="id" jdbcType="BIGINT"/>
         <result column="origin_url" property="originUrl" jdbcType="VARCHAR"/>
         <result column="short_url" property="shortUrl" jdbcType="VARCHAR"/>
@@ -100,7 +100,7 @@
     </sql>
 
     <!--根据对象属性插入-->
-    <insert id="insertByProperty" useGeneratedKeys="true" keyProperty="id" keyColumn="id" parameterType="me.znzn.tools.module.url.entity.ShortUrl">
+    <insert id="insertByProperty" useGeneratedKeys="true" keyProperty="id" keyColumn="id" parameterType="me.znzn.tools.module.url.entity.po.ShortUrl">
         INSERT INTO <include refid="table_name"/>
 
         (
@@ -126,7 +126,7 @@
     </insert>
 
     <!--根据主键更新-->
-    <update id="updateByPrimaryKey" parameterType="me.znzn.tools.module.url.entity.ShortUrl">
+    <update id="updateByPrimaryKey" parameterType="me.znzn.tools.module.url.entity.po.ShortUrl">
         UPDATE <include refid="table_name"/>
             <include refid="all_set_condition_with_set"/>
         WHERE
@@ -164,7 +164,7 @@
     </delete>
 
     <!--根据属性删除-->
-    <delete id="deleteByProperty" parameterType="me.znzn.tools.module.url.entity.ShortUrl">
+    <delete id="deleteByProperty" parameterType="me.znzn.tools.module.url.entity.po.ShortUrl">
         DELETE FROM <include refid="table_name"/>
         <include refid="all_delete_condition_with_where"/>
     </delete>
@@ -180,7 +180,7 @@
     </select>
 
     <!-- 根据对象属性查询 -->
-    <select id="selectByProperty" parameterType="me.znzn.tools.module.url.entity.ShortUrl" resultMap="ShortUrlMap">
+    <select id="selectByProperty" parameterType="me.znzn.tools.module.url.entity.po.ShortUrl" resultMap="ShortUrlMap">
         SELECT
             <include refid="all_columns"/>
         FROM
@@ -189,7 +189,7 @@
     </select>
 
     <!-- 根据对象属性查询统计 -->
-    <select id="countByProperty" parameterType="me.znzn.tools.module.url.entity.ShortUrl" resultType="java.lang.Long">
+    <select id="countByProperty" parameterType="me.znzn.tools.module.url.entity.po.ShortUrl" resultType="java.lang.Long">
         SELECT
             COUNT(*)
         FROM

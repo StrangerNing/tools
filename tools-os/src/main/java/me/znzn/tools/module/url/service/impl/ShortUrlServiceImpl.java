@@ -1,7 +1,7 @@
 package me.znzn.tools.module.url.service.impl;
 
 import me.znzn.tools.common.exception.BusinessException;
-import me.znzn.tools.module.url.entity.ShortUrl;
+import me.znzn.tools.module.url.entity.po.ShortUrl;
 import me.znzn.tools.module.url.mapper.ShortUrlMapper;
 import me.znzn.tools.module.url.service.ShortUrlService;
 import me.znzn.tools.utils.LongNumUtil;

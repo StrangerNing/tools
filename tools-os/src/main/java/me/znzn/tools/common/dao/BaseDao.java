@@ -1,7 +1,5 @@
 package me.znzn.tools.common.dao;
 
-import me.znzn.tools.module.user.entity.User;
-
 import java.util.List;
 
 /**
@@ -70,17 +68,17 @@ public interface BaseDao<T> {
      * 根据主键进行查询
      *
      * @param id 主键
-     * @return me.znzn.tools.module.user.entity.User
+     * @return me.znzn.tools.module.user.entity.po.User
      */
-    User selectByPrimaryKey(Long id);
+    T selectByPrimaryKey(Long id);
 
     /**
      * 根据属性进行查询
      *
      * @param map 实例对象
-     * @return java.util.List<me.znzn.tools.module.user.entity.User>
+     * @return java.util.List<me.znzn.tools.module.user.entity.po.User>
      */
-    List<User> selectByProperty(T map);
+    List<T> selectByProperty(T map);
 
     /**
      * 根据属性进行查询统计

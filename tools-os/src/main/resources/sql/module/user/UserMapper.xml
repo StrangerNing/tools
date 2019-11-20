@@ -3,7 +3,7 @@
 <mapper namespace="me.znzn.tools.module.user.mapper.UserMapper">
 
     <!-- User结果集 -->
-    <resultMap id="UserMap" type="me.znzn.tools.module.user.entity.User" >
+    <resultMap id="UserMap" type="me.znzn.tools.module.user.entity.po.User" >
         <id column="id" property="id" jdbcType="BIGINT"/>
         <result column="username" property="username" jdbcType="VARCHAR"/>
         <result column="password" property="password" jdbcType="VARCHAR"/>
@@ -116,34 +116,34 @@
     <sql id="all_set_condition_with_set">
         <set>
             <if test="username != null and '' != username">
-                username = #{username}, 
+                username = #{username},
             </if>
             <if test="password != null and '' != password">
-                password = #{password}, 
+                password = #{password},
             </if>
             <if test="email != null and '' != email">
-                email = #{email}, 
+                email = #{email},
             </if>
             <if test="mobile != null and '' != mobile">
-                mobile = #{mobile}, 
+                mobile = #{mobile},
             </if>
             <if test="sex != null">
-                sex = #{sex}, 
+                sex = #{sex},
             </if>
             <if test="status != null">
-                status = #{status}, 
+                status = #{status},
             </if>
             <if test="createTime != null">
-                create_time = #{createTime}, 
+                create_time = #{createTime},
             </if>
             <if test="createEmp != null">
-                create_emp = #{createEmp}, 
+                create_emp = #{createEmp},
             </if>
             <if test="modifyTime != null">
-                modify_time = #{modifyTime}, 
+                modify_time = #{modifyTime},
             </if>
             <if test="modifyEmp != null">
-                modify_emp = #{modifyEmp}, 
+                modify_emp = #{modifyEmp},
             </if>
             <if test="remark != null and '' != remark">
                 remark = #{remark}
@@ -155,34 +155,34 @@
     <sql id="all_batch_set_condition_with_set">
         <set>
             <if test="item.username != null and '' != item.username">
-                username = #{item.username}, 
+                username = #{item.username},
             </if>
             <if test="item.password != null and '' != item.password">
-                password = #{item.password}, 
+                password = #{item.password},
             </if>
             <if test="item.email != null and '' != item.email">
-                email = #{item.email}, 
+                email = #{item.email},
             </if>
             <if test="item.mobile != null and '' != item.mobile">
-                mobile = #{item.mobile}, 
+                mobile = #{item.mobile},
             </if>
             <if test="item.sex != null">
-                sex = #{item.sex}, 
+                sex = #{item.sex},
             </if>
             <if test="item.status != null">
-                status = #{item.status}, 
+                status = #{item.status},
             </if>
             <if test="item.createTime != null">
-                create_time = #{item.createTime}, 
+                create_time = #{item.createTime},
             </if>
             <if test="item.createEmp != null">
-                create_emp = #{item.createEmp}, 
+                create_emp = #{item.createEmp},
             </if>
             <if test="item.modifyTime != null">
-                modify_time = #{item.modifyTime}, 
+                modify_time = #{item.modifyTime},
             </if>
             <if test="item.modifyEmp != null">
-                modify_emp = #{item.modifyEmp}, 
+                modify_emp = #{item.modifyEmp},
             </if>
             <if test="item.remark != null and '' != item.remark">
                 remark = #{item.remark}
@@ -191,7 +191,7 @@
     </sql>
 
     <!--根据对象属性插入-->
-    <insert id="insertByProperty" useGeneratedKeys="true" keyProperty="id" keyColumn="id" parameterType="me.znzn.tools.module.user.entity.User">
+    <insert id="insertByProperty" useGeneratedKeys="true" keyProperty="id" keyColumn="id" parameterType="me.znzn.tools.module.user.entity.po.User">
         INSERT INTO <include refid="table_name"/>
         (
             <include refid="all_columns_not_with_id"/>
@@ -216,7 +216,7 @@
     </insert>
 
     <!--根据主键更新-->
-    <update id="updateByPrimaryKey" parameterType="me.znzn.tools.module.user.entity.User">
+    <update id="updateByPrimaryKey" parameterType="me.znzn.tools.module.user.entity.po.User">
         UPDATE <include refid="table_name"/>
             <include refid="all_set_condition_with_set"/>
         WHERE
@@ -254,7 +254,7 @@
     </delete>
 
     <!--根据属性删除-->
-    <delete id="deleteByProperty" parameterType="me.znzn.tools.module.user.entity.User">
+    <delete id="deleteByProperty" parameterType="me.znzn.tools.module.user.entity.po.User">
         DELETE FROM <include refid="table_name"/>
         <include refid="all_delete_condition_with_where"/>
     </delete>
@@ -270,7 +270,7 @@
     </select>
 
     <!-- 根据对象属性查询 -->
-    <select id="selectByProperty" parameterType="me.znzn.tools.module.user.entity.User" resultMap="UserMap">
+    <select id="selectByProperty" parameterType="me.znzn.tools.module.user.entity.po.User" resultMap="UserMap">
         SELECT
             <include refid="all_columns"/>
         FROM
@@ -279,7 +279,7 @@
     </select>
 
     <!-- 根据对象属性查询统计 -->
-    <select id="countByProperty" parameterType="me.znzn.tools.module.user.entity.User" resultType="java.lang.Long">
+    <select id="countByProperty" parameterType="me.znzn.tools.module.user.entity.po.User" resultType="java.lang.Long">
         SELECT
             COUNT(*)
         FROM
