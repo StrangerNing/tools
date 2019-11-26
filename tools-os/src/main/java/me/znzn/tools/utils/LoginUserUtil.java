@@ -26,6 +26,10 @@ public class LoginUserUtil {
         return loginUser;
     }
 
+    public static UserInfoVO getLoginUser(String token) {
+        return LOGIN_USER.get(token);
+    }
+
     public static void delLoginUser(String token) {
         if (!StringUtils.isEmpty(token)) {
             LOGIN_USER.remove(token);

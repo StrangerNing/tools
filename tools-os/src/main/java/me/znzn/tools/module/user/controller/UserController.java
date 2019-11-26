@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
+import java.util.HashMap;
+
 import static me.znzn.tools.common.constant.LoginMap.LOGIN_USER;
 
 /**

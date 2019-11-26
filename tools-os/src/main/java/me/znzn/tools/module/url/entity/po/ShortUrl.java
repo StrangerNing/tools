@@ -2,6 +2,9 @@ package me.znzn.tools.module.url.entity.po;
 
 import java.util.Date;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import me.znzn.tools.common.component.BaseModel;
+
 import java.io.Serializable;
 
 /**
@@ -11,13 +14,10 @@ import java.io.Serializable;
  * @version 1.0.0
  * @date 2019/11/19 13:29:16
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class ShortUrl implements Serializable{
+public class ShortUrl extends BaseModel implements Serializable{
     private static final long serialVersionUID = 440357301361849812L;
-    /**
-     * 主键id
-     */
-    private Long id;
 
     /**
      * 原url
@@ -25,19 +25,9 @@ public class ShortUrl implements Serializable{
     private String originUrl;
 
     /**
-     * 短url
+     * 状态
      */
-    private String shortUrl;
-
-    /**
-     * 创建时间
-     */
-    private Date createTime;
-
-    /**
-     * 创建人
-     */
-    private Long createAccount;
+    private Integer status;
 
 
 }

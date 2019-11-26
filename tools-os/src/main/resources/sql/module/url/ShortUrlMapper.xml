@@ -6,9 +6,9 @@
     <resultMap id="ShortUrlMap" type="me.znzn.tools.module.url.entity.po.ShortUrl" >
         <id column="id" property="id" jdbcType="BIGINT"/>
         <result column="origin_url" property="originUrl" jdbcType="VARCHAR"/>
-        <result column="short_url" property="shortUrl" jdbcType="VARCHAR"/>
         <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
         <result column="create_account" property="createAccount" jdbcType="BIGINT"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
     </resultMap>
 
     <!-- 表名 -->
@@ -16,12 +16,12 @@
 
     <!-- 所有字段 -->
     <sql id="all_columns">
-        id, origin_url, short_url, create_time, create_account
+        id, origin_url, create_time, create_account, status
     </sql>
 
     <!-- 不带主键的所有字段 -->
     <sql id="all_columns_not_with_id">
-        origin_url, short_url, create_time, create_account
+        origin_url, create_time, create_account, status
     </sql>
 
     <!-- 查询条件带where -->
@@ -33,14 +33,14 @@
             <if test="originUrl != null and '' != originUrl">
                 AND origin_url = #{originUrl}
             </if>
-            <if test="shortUrl != null and '' != shortUrl">
-                AND short_url = #{shortUrl}
-            </if>
             <if test="createTime != null">
                 AND create_time = #{createTime}
             </if>
             <if test="createAccount != null">
                 AND create_account = #{createAccount}
+            </if>
+            <if test="status != null">
+                AND status = #{status}
             </if>
         </trim>
     </sql>
@@ -51,14 +51,14 @@
             <if test="originUrl != null and '' != originUrl">
                 AND origin_url = #{originUrl}
             </if>
-            <if test="shortUrl != null and '' != shortUrl">
-                AND short_url = #{shortUrl}
-            </if>
             <if test="createTime != null">
                 AND create_time = #{createTime}
             </if>
             <if test="createAccount != null">
                 AND create_account = #{createAccount}
+            </if>
+            <if test="status != null">
+                AND status = #{status}
             </if>
         </trim>
     </sql>
@@ -69,14 +69,14 @@
             <if test="originUrl != null and '' != originUrl">
                 origin_url = #{originUrl},
             </if>
-            <if test="shortUrl != null and '' != shortUrl">
-                short_url = #{shortUrl},
-            </if>
             <if test="createTime != null">
                 create_time = #{createTime},
             </if>
             <if test="createAccount != null">
-                create_account = #{createAccount}
+                create_account = #{createAccount},
+            </if>
+            <if test="status != null">
+                status = #{status}
             </if>
         </set>
     </sql>
@@ -87,14 +87,14 @@
             <if test="item.originUrl != null and '' != item.originUrl">
                 origin_url = #{item.originUrl},
             </if>
-            <if test="item.shortUrl != null and '' != item.shortUrl">
-                short_url = #{item.shortUrl},
-            </if>
             <if test="item.createTime != null">
                 create_time = #{item.createTime},
             </if>
             <if test="item.createAccount != null">
-                create_account = #{item.createAccount}
+                create_account = #{item.createAccount},
+            </if>
+            <if test="item.status != null">
+                status = #{item.status}
             </if>
         </set>
     </sql>
@@ -102,12 +102,11 @@
     <!--根据对象属性插入-->
     <insert id="insertByProperty" useGeneratedKeys="true" keyProperty="id" keyColumn="id" parameterType="me.znzn.tools.module.url.entity.po.ShortUrl">
         INSERT INTO <include refid="table_name"/>
-
         (
             <include refid="all_columns_not_with_id"/>
         )
         VALUES (
-            #{originUrl}, #{shortUrl}, #{createTime}, #{createAccount}
+            #{originUrl}, #{createTime}, #{createAccount}, #{status}
         )
     </insert>
 
@@ -120,7 +119,7 @@
         VALUES
         <foreach collection="list" item="item" separator="," index = "index">
         (
-            #{item.originUrl}, #{item.shortUrl}, #{item.createTime}, #{item.createAccount}
+            #{item.originUrl}, #{item.createTime}, #{item.createAccount}, #{item.status}
         )
         </foreach>
     </insert>
@@ -189,12 +188,30 @@
     </select>
 
     <!-- 根据对象属性查询统计 -->
-    <select id="countByProperty" parameterType="me.znzn.tools.module.url.entity.po.ShortUrl" resultType="java.lang.Long">
+    <select id="countByProperty" parameterType="me.znzn.tools.module.url.entity.po.ShortUrl" resultType="java.lang.Integer">
         SELECT
             COUNT(*)
         FROM
             <include refid="table_name"/>
         <include refid="all_query_condition_with_where"/>
+    </select>
+
+    <select id="selectShortUrlByCondition" parameterType="me.znzn.tools.module.url.entity.po.ShortUrl" resultType="me.znzn.tools.module.url.entity.vo.ShortUrlVO">
+        SELECT
+            u.id AS id,
+            u.origin_url AS originUrl,
+            u.create_time AS createTime,
+            u.create_account AS createAccount,
+            u.status AS status,
+            s.username AS createName
+        FROM t_short_url u LEFT JOIN t_b_user s ON u.create_account = s.id
+        WHERE u.create_account = #{createAccount}
+        ORDER BY u.create_time DESC
+        <if test="startIndex != null">
+            <if test="limit != null">
+                LIMIT #{startIndex} , #{limit}
+            </if>
+        </if>
     </select>
 
 </mapper>

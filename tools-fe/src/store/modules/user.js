@@ -29,6 +29,8 @@ const actions = {
         const { data } = response
         commit('SET_TOKEN', data.token)
         commit('SET_NAME', data.username)
+        // let avatar = data.avatar === undefined || data.avatar === null ? '@/assets/default_avatar.jpeg' : data.avatar
+        commit('SET_AVATAR', data.avatar)
         setToken(data.token)
         resolve()
       }).catch(error => {
@@ -47,10 +49,8 @@ const actions = {
           reject('Verification failed, please Login again.')
         }
 
-        const { name, avatar } = data
-
-        commit('SET_NAME', name)
-        commit('SET_AVATAR', avatar)
+        commit('SET_NAME', data.username)
+        commit('SET_AVATAR', data.avatar)
         resolve(data)
       }).catch(error => {
         reject(error)

@@ -86,5 +86,5 @@ public interface BaseDao<T> {
      * @param map 实例对象
      * @return java.lang.Long
      */
-    Long countByProperty(T map);
+    int countByProperty(T map);
 }

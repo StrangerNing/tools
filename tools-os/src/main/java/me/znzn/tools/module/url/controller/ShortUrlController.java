@@ -4,6 +4,8 @@ import me.znzn.tools.common.component.Result;
 import me.znzn.tools.common.exception.BusinessException;
 import me.znzn.tools.module.url.entity.po.ShortUrl;
 import me.znzn.tools.module.url.service.ShortUrlService;
+import me.znzn.tools.module.user.entity.vo.UserInfoVO;
+import me.znzn.tools.utils.LoginUserUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +24,7 @@ public class ShortUrlController {
     @Resource
     private ShortUrlService shortUrlService;
 
-    @RequestMapping("/save")
+    @RequestMapping("/url/save")
     @ResponseBody
     public Result save(@RequestBody ShortUrl shortUrl) {
         if (StringUtils.isEmpty(shortUrl.getOriginUrl())) {
@@ -31,7 +33,19 @@ public class ShortUrlController {
         if (!shortUrl.getOriginUrl().matches("(http|ftp|https):\\/\\/[\\w\\-_]+(\\.[\\w\\-_]+)+([\\w\\-\\.,@?^=%&amp;:/~\\+#]*[\\w\\-\\@?^=%&amp;/~\\+#])?")) {
             throw new BusinessException("网址url需以\"http\"或\"https\"开头！");
         }
-        return Result.success(shortUrlService.saveUrl(shortUrl.getOriginUrl()));
+        String token = LoginUserUtil.getToken();
+        UserInfoVO loginUser = LoginUserUtil.getLoginUser(token);
+        if (null != loginUser) {
+            shortUrl.setCreateAccount(loginUser.getId());
+        }
+        return Result.success(shortUrlService.saveUrl(shortUrl));
+    }
+
+    @GetMapping("/url/query")
+    @ResponseBody
+    public Result query(ShortUrl shortUrl) {
+        UserInfoVO loginUser = LoginUserUtil.getLoginUser();
+        return Result.success(shortUrlService.getUserUrlList(loginUser, shortUrl));
     }
 
     @RequestMapping("/{shortUrl}**")
