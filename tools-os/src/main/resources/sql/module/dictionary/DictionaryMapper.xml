@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.znzn.tools.module.dictionary.mapper.DictionaryMapper">
+
+    <!-- Dictionary结果集 -->
+    <resultMap id="DictionaryMap" type="me.znzn.tools.module.dictionary.entity.po.Dictionary" >
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="value" property="value" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="create_account" property="createAccount" jdbcType="BIGINT"/>
+        <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP"/>
+        <result column="modify_account" property="modifyAccount" jdbcType="BIGINT"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="version" property="version" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!-- 表名 -->
+    <sql id="table_name">t_b_dictionary</sql>
+
+    <!-- 所有字段 -->
+    <sql id="all_columns">
+        id, name, value, status, create_time, create_account, modify_time, modify_account, remark, version
+    </sql>
+
+    <!-- 不带主键的所有字段 -->
+    <sql id="all_columns_not_with_id">
+        name, value, status, create_time, create_account, modify_time, modify_account, remark, version
+    </sql>
+
+    <!-- 查询条件带where -->
+    <sql id="all_query_condition_with_where">
+        <trim prefix="WHERE" prefixOverrides="AND|OR">
+            <if test="id != null">
+                AND id = #{id}
+            </if>
+            <if test="name != null and '' != name">
+                AND name = #{name}
+            </if>
+            <if test="value != null and '' != value">
+                AND value = #{value}
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+            <if test="createTime != null">
+                AND create_time = #{createTime}
+            </if>
+            <if test="createAccount != null">
+                AND create_account = #{createAccount}
+            </if>
+            <if test="modifyTime != null">
+                AND modify_time = #{modifyTime}
+            </if>
+            <if test="modifyAccount != null">
+                AND modify_account = #{modifyAccount}
+            </if>
+            <if test="remark != null and '' != remark">
+                AND remark = #{remark}
+            </if>
+            <if test="version != null">
+                AND version = #{version}
+            </if>
+        </trim>
+    </sql>
+
+    <!-- 删除条件带where -->
+    <sql id="all_delete_condition_with_where">
+        <trim prefix="WHERE" prefixOverrides="AND|OR">
+            <if test="name != null and '' != name">
+                AND name = #{name}
+            </if>
+            <if test="value != null and '' != value">
+                AND value = #{value}
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+            <if test="createTime != null">
+                AND create_time = #{createTime}
+            </if>
+            <if test="createAccount != null">
+                AND create_account = #{createAccount}
+            </if>
+            <if test="modifyTime != null">
+                AND modify_time = #{modifyTime}
+            </if>
+            <if test="modifyAccount != null">
+                AND modify_account = #{modifyAccount}
+            </if>
+            <if test="remark != null and '' != remark">
+                AND remark = #{remark}
+            </if>
+            <if test="version != null">
+                AND version = #{version}
+            </if>
+        </trim>
+    </sql>
+
+    <!-- 更新条件带set -->
+    <sql id="all_set_condition_with_set">
+        <set>
+            <if test="name != null and '' != name">
+                name = #{name},
+            </if>
+            <if test="value != null and '' != value">
+                value = #{value},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="createAccount != null">
+                create_account = #{createAccount},
+            </if>
+            <if test="modifyTime != null">
+                modify_time = #{modifyTime},
+            </if>
+            <if test="modifyAccount != null">
+                modify_account = #{modifyAccount},
+            </if>
+            <if test="remark != null and '' != remark">
+                remark = #{remark},
+            </if>
+            <if test="version != null">
+                version = #{version}
+            </if>
+        </set>
+    </sql>
+
+    <!-- 批量更新条件带set -->
+    <sql id="all_batch_set_condition_with_set">
+        <set>
+            <if test="item.name != null and '' != item.name">
+                name = #{item.name},
+            </if>
+            <if test="item.value != null and '' != item.value">
+                value = #{item.value},
+            </if>
+            <if test="item.status != null">
+                status = #{item.status},
+            </if>
+            <if test="item.createTime != null">
+                create_time = #{item.createTime},
+            </if>
+            <if test="item.createAccount != null">
+                create_account = #{item.createAccount},
+            </if>
+            <if test="item.modifyTime != null">
+                modify_time = #{item.modifyTime},
+            </if>
+            <if test="item.modifyAccount != null">
+                modify_account = #{item.modifyAccount},
+            </if>
+            <if test="item.remark != null and '' != item.remark">
+                remark = #{item.remark},
+            </if>
+            <if test="item.version != null">
+                version = #{item.version}
+            </if>
+        </set>
+    </sql>
+
+    <!--根据对象属性插入-->
+    <insert id="insertByProperty" useGeneratedKeys="true" keyProperty="id" keyColumn="id" parameterType="me.znzn.tools.module.dictionary.entity.po.Dictionary">
+        INSERT INTO <include refid="table_name"/>
+        (
+            <include refid="all_columns_not_with_id"/>
+        )
+        VALUES (
+            #{name}, #{value}, #{status}, #{createTime}, #{createAccount}, #{modifyTime}, #{modifyAccount}, #{remark}, #{version}
+        )
+    </insert>
+
+    <!--根据对象属性插入-->
+    <insert id="insertBatchByProperty" useGeneratedKeys="true" keyProperty="id" keyColumn="id" parameterType="java.util.List">
+        INSERT INTO <include refid="table_name"/>
+        (
+            <include refid="all_columns_not_with_id"/>
+        )
+        VALUES
+        <foreach collection="list" item="item" separator="," index = "index">
+        (
+            #{item.name}, #{item.value}, #{item.status}, #{item.createTime}, #{item.createAccount}, #{item.modifyTime}, #{item.modifyAccount}, #{item.remark}, #{item.version}
+        )
+        </foreach>
+    </insert>
+
+    <!--根据主键更新-->
+    <update id="updateByPrimaryKey" parameterType="me.znzn.tools.module.dictionary.entity.po.Dictionary">
+        UPDATE <include refid="table_name"/>
+            <include refid="all_set_condition_with_set"/>
+        WHERE
+            id = #{id}
+    </update>
+
+    <!--根据主键批量更新-->
+    <update id="updateBatchByPrimaryKey" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" separator=";">
+            UPDATE <include refid="table_name"/>
+                <include refid="all_batch_set_condition_with_set"/>
+            WHERE
+                id = #{item.id}
+        </foreach>
+    </update>
+
+    <!--根据主键删除-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        DELETE FROM
+            <include refid="table_name"/>
+        WHERE
+            id = #{id}
+    </delete>
+
+    <!--根据主键列表批量删除-->
+    <delete id="deleteBatchByPrimaryKey" parameterType="java.util.List">
+        DELETE FROM
+            <include refid="table_name"/>
+        WHERE
+            id
+        IN
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!--根据属性删除-->
+    <delete id="deleteByProperty" parameterType="me.znzn.tools.module.dictionary.entity.po.Dictionary">
+        DELETE FROM <include refid="table_name"/>
+        <include refid="all_delete_condition_with_where"/>
+    </delete>
+
+    <!-- 根据主键查询 -->
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="DictionaryMap">
+        SELECT
+            <include refid="all_columns"/>
+        FROM
+            <include refid="table_name"/>
+        WHERE
+            id = #{id}
+    </select>
+
+    <!-- 根据对象属性查询 -->
+    <select id="selectByProperty" parameterType="me.znzn.tools.module.dictionary.entity.po.Dictionary" resultMap="DictionaryMap">
+        SELECT
+            <include refid="all_columns"/>
+        FROM
+            <include refid="table_name"/>
+        <include refid="all_query_condition_with_where"/>
+    </select>
+
+    <!-- 根据对象属性查询统计 -->
+    <select id="countByProperty" parameterType="me.znzn.tools.module.dictionary.entity.po.Dictionary" resultType="java.lang.Integer">
+        SELECT
+            COUNT(*)
+        FROM
+            <include refid="table_name"/>
+        <include refid="all_query_condition_with_where"/>
+    </select>
+
+
+
+    <sql id="all_query_condition_with_alias_where">
+        <trim prefix="WHERE" prefixOverrides="AND|OR">
+            <if test="id != null">
+                AND d.id = #{id}
+            </if>
+            <if test="name != null and '' != name">
+                AND d.name = #{name}
+            </if>
+            <if test="value != null and '' != value">
+                AND d.value = #{value}
+            </if>
+            <if test="status != null">
+                AND d.status = #{status}
+            </if>
+            <if test="createTime != null">
+                AND d.create_time = #{createTime}
+            </if>
+            <if test="createAccount != null">
+                AND d.create_account = #{createAccount}
+            </if>
+            <if test="modifyTime != null">
+                AND d.modify_time = #{modifyTime}
+            </if>
+            <if test="modifyAccount != null">
+                AND d.modify_account = #{modifyAccount}
+            </if>
+            <if test="remark != null and '' != remark">
+                AND d.remark = #{remark}
+            </if>
+        </trim>
+    </sql>
+
+    <select id="selectConstantListByCondition" parameterType="me.znzn.tools.module.dictionary.entity.po.Dictionary" resultType="me.znzn.tools.module.dictionary.entity.vo.DictionaryVO">
+        SELECT
+        d.id AS id,
+        d.name AS name,
+        d.value AS value,
+        d.status AS status,
+        d.create_time AS createTime,
+        (SELECT u.username FROM t_b_user u WHERE u.id = d.create_account) AS createName,
+        d.modify_time AS modifyTime,
+        (SELECT s.username FROM t_b_user s WHERE s.id = d.modify_account) AS modifyName,
+        d.version AS version
+        FROM t_b_dictionary d
+        <include refid="all_query_condition_with_alias_where"></include>
+        ORDER BY d.status DESC ,d.create_time DESC
+        <if test="startIndex != null">
+            <if test="limit != null">
+                LIMIT #{startIndex} , #{limit}
+            </if>
+        </if>
+    </select>
+
+    <update id="updateByCondition" parameterType="me.znzn.tools.module.dictionary.entity.po.Dictionary">
+        UPDATE t_b_dictionary
+        <set>
+            <if test="name != null and '' != name">
+                name = #{name},
+            </if>
+            <if test="value != null and '' != value">
+                value = #{value},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="createAccount != null">
+                create_account = #{createAccount},
+            </if>
+            <if test="modifyTime != null">
+                modify_time = #{modifyTime},
+            </if>
+            <if test="modifyAccount != null">
+                modify_account = #{modifyAccount},
+            </if>
+            <if test="remark != null and '' != remark">
+                remark = #{remark},
+            </if>
+            <if test="version != null">
+                version = version + 1
+            </if>
+        </set>
+        WHERE id = #{id} AND version = #{version}
+    </update>
+
+</mapper>

@@ -1,16 +1,16 @@
 <template>
   <div class="page-container">
-      <el-form label-width="100px">
+      <el-form label-width="90px">
         <div  class="page-text">
           <span>短链接生成</span>
         </div>
         <el-row :gutter="12" style="margin-top: 20px">
-          <el-col :xs="22" :sm="11" :lg="8">
+          <el-col :xs="18" :sm="11" :lg="8">
             <el-form-item label="输入网址：">
               <el-input v-model="url" clearable></el-input>
             </el-form-item>
           </el-col>
-          <el-col :xs="2" :sm="1" :lg="1">
+          <el-col :xs="6" :sm="1" :lg="1">
             <el-button type="primary" @click="submit">提交</el-button>
           </el-col>
         </el-row>

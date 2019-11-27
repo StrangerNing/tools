@@ -83,6 +83,25 @@ export const constantRoutes = [
       }]
   },
 
+  {
+    path: '/constant',
+    component: Layout,
+    redirect: '/query',
+    meta: {
+      title: '全局变量管理',
+      icon: 'setting'
+    },
+    children: [{
+      path: '/query',
+      name: 'constantQuery',
+      component: () => import('@/views/constant/query'),
+      meta: {
+        title: '全局变量管理',
+        icon: 'setting'
+      }
+    }]
+  },
+
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]

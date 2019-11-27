@@ -3,42 +3,61 @@
     <div class="page-text">
       <span>短链接查询</span>
     </div>
-    <el-table
-      :data="urlList" border
-      style="width: 100%">
-      <el-table-column
-        type="index"
-        :index="indexMethod"
-        width="50">
-      </el-table-column>
-      <el-table-column
-        prop="shortUrl"
-        label="短链接"
-        width="180">
-      </el-table-column>
-      <el-table-column
-        prop="originUrl"
-        label="原链接">
-      </el-table-column>
-      <el-table-column
-        prop="createTime"
-        label="创建时间">
-      </el-table-column>
-      <el-table-column
-        prop="createName"
-        label="创建人"
-        width="120">
-      </el-table-column>
-    </el-table>
-    <el-pagination
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-      :current-page="params.currentPage"
-      :page-sizes="[10, 20, 50, 100]"
-      :page-size="params.limit"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="total" style="margin-top: 20px">
-    </el-pagination>
+    <div class="page-content">
+      <el-table
+        :data="urlList" border
+        style="width: 100%">
+        <el-table-column
+          type="index"
+          :index="indexMethod"
+          width="50">
+        </el-table-column>
+        <el-table-column
+          prop="shortUrl"
+          label="短链接">
+          <template slot-scope="scope">
+            <a style="color: #1482f0" target="_blank" :href="scope.row.shortUrl">{{scope.row.shortUrl}}</a>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="originUrl"
+          label="原链接"
+          min-width="200">
+        </el-table-column>
+        <el-table-column
+          prop="createTime"
+          label="创建时间"
+          width="160">
+        </el-table-column>
+        <el-table-column
+          prop="createName"
+          label="创建人"
+          width="120">
+        </el-table-column>
+      </el-table>
+      <el-row class="hidden-xs-only">
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="params.currentPage"
+          :page-sizes="[10, 20, 50, 100]"
+          :page-size="params.limit"
+          layout="total,sizes, prev, pager, next, jumper"
+          :total="total" style="margin-top: 20px">
+        </el-pagination>
+      </el-row>
+      <el-row class="hidden-sm-and-up">
+        <el-pagination
+          small
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="params.currentPage"
+          :page-size="params.limit"
+          layout="total, prev, pager, next"
+          :total="total" style="margin-top: 20px">
+        </el-pagination>
+      </el-row>
+    </div>
   </div>
 </template>
 

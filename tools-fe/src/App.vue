@@ -19,5 +19,9 @@ export default {
       font-size: 30px;
       line-height: 46px;
     }
+    &-content {
+      overflow: auto;
+      margin-top: 20px
+    }
   }
 </style>

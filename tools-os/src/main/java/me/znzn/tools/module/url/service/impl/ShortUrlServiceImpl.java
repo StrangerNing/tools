@@ -1,6 +1,7 @@
 package me.znzn.tools.module.url.service.impl;
 
 import me.znzn.tools.common.component.ResultPage;
+import me.znzn.tools.common.constant.CommonConstant;
 import me.znzn.tools.common.exception.BusinessException;
 import me.znzn.tools.module.url.entity.po.ShortUrl;
 import me.znzn.tools.module.url.entity.vo.ShortUrlVO;
@@ -31,7 +32,7 @@ public class ShortUrlServiceImpl implements ShortUrlService {
         shortUrl.setCreateTime(new Date());
         Long num = shortUrlMapper.insertByProperty(shortUrl);
         if (num.equals(1L)) {
-            return LongNumUtil.encode(shortUrl.getId());
+            return CommonConstant.BACKGROUND_DOMAIN + LongNumUtil.encode(shortUrl.getId());
         }
         throw new BusinessException("保存失败");
     }
@@ -50,7 +51,7 @@ public class ShortUrlServiceImpl implements ShortUrlService {
         shortUrl.setCurrentPage(page.getCurrentPage());
         shortUrl.setLimit(page.getLimit());
         List<ShortUrlVO> result = shortUrlMapper.selectShortUrlByCondition(shortUrl);
-        result.forEach(item -> item.setShortUrl(LongNumUtil.encode(item.getId())));
+        result.forEach(item -> item.setShortUrl(CommonConstant.BACKGROUND_DOMAIN + LongNumUtil.encode(item.getId())));
         return new ResultPage(shortUrlMapper.countByProperty(shortUrl), page.getLimit(), page.getCurrentPage(), result);
     }
 }
