@@ -4,6 +4,7 @@ import me.znzn.tools.common.component.Result;
 import me.znzn.tools.common.exception.BusinessException;
 import me.znzn.tools.module.url.entity.po.ShortUrl;
 import me.znzn.tools.module.url.service.ShortUrlService;
+import me.znzn.tools.module.url.service.ShortUrlStatisticsService;
 import me.znzn.tools.module.user.entity.vo.UserInfoVO;
 import me.znzn.tools.utils.LoginUserUtil;
 import org.springframework.stereotype.Controller;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author zhuzening
@@ -23,6 +25,8 @@ public class ShortUrlController {
 
     @Resource
     private ShortUrlService shortUrlService;
+    @Resource
+    private ShortUrlStatisticsService shortUrlStatisticsService;
 
     @RequestMapping("/url/save")
     @ResponseBody
@@ -49,8 +53,9 @@ public class ShortUrlController {
     }
 
     @RequestMapping("/{shortUrl}**")
-    public ModelAndView getOriginUrl(@PathVariable("shortUrl") String shortUrl) {
+    public ModelAndView getOriginUrl(@PathVariable("shortUrl") String shortUrl, HttpServletRequest request) {
         ShortUrl url = shortUrlService.getOriginUrl(shortUrl);
+        shortUrlStatisticsService.saveVisitHistory(shortUrl, request);
         if (null == url) {
             return new ModelAndView("404");
         }

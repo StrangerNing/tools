@@ -2,10 +2,7 @@ package me.znzn.tools.module.url.service;
 
 import me.znzn.tools.common.component.ResultPage;
 import me.znzn.tools.module.url.entity.po.ShortUrl;
-import me.znzn.tools.module.url.entity.vo.ShortUrlVO;
 import me.znzn.tools.module.user.entity.vo.UserInfoVO;
-
-import java.util.List;
 
 /**
  * @author zhuzening

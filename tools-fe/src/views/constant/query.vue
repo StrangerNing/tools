@@ -53,11 +53,13 @@
           label="修改人"
           width="120">
         </el-table-column>
-        <el-table-column>
+        <el-table-column label="操作" width="200px">
           <template slot-scope="scope">
-            <el-button size="small" type="primary" @click="showUpdateDialog(scope.row)">修改</el-button>
-            <el-button v-if="scope.row.status === 1" size="small" type="warning" @click="enableOrDisable(scope.row, 0)">禁用</el-button>
-            <el-button v-else size="small" type="success" @click="enableOrDisable(scope.row, 1)">启用</el-button>
+            <div>
+              <el-button size="small" type="primary" @click="showUpdateDialog(scope.row)">修改</el-button>
+              <el-button v-if="scope.row.status === 1" size="small" type="warning" @click="enableOrDisable(scope.row, 0)">禁用</el-button>
+              <el-button v-else size="small" type="success" @click="enableOrDisable(scope.row, 1)">启用</el-button>
+            </div>
           </template>
         </el-table-column>
       </el-table>
@@ -84,7 +86,7 @@
         </el-pagination>
       </el-row>
     </div>
-    <el-dialog :title="title" :visible.sync="updateDialogVisible">
+    <el-dialog :title="title" :visible.sync="updateDialogVisible" :fullscreen="isFullScreen">
       <el-form label-width="100px">
         <el-form-item label="变量名">
           <el-input v-model="temp.name"></el-input>
@@ -103,9 +105,11 @@
 
 <script>
   import {getConstantList, updateConstants, updateAllConstants, addConstant} from "../../api/constant";
+  import fullScreen from "../../utils/fullscreen";
 
   export default {
     name: "query",
+    mixins: [fullScreen],
     data() {
       return {
         constantList: [],
@@ -116,7 +120,8 @@
         total: 0,
         title: '新建变量',
         updateDialogVisible: false,
-        temp: {}
+        temp: {},
+        isFullScreen: true
       }
     },
     methods: {
@@ -175,6 +180,7 @@
     },
     created() {
       this.getConstantList()
+      this.checkFullScreen()
     }
   }
 </script>

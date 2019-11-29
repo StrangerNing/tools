@@ -19,7 +19,7 @@
             <el-card>
               <el-row>
                 <span>生成成功！短网址为：</span>
-                <a style="color: #1482f0" target="_blank" :href="'http://'+shortUrl">{{shortUrl}}</a>
+                <a style="color: #1482f0" target="_blank" :href="shortUrl">{{shortUrl}}</a>
               </el-row>
               <el-row style="margin-top: 20px;text-align: center">
                 <el-button type="primary" size="small" v-clipboard:copy="shortUrl" v-clipboard:success="onCopy" v-clipboard:error="onError">复制</el-button>
@@ -52,7 +52,7 @@
         submitUrl(param).then(res => {
           if (res.success) {
             this.$message.success("提交成功")
-            this.shortUrl = 'localhost:8080/' + res.data
+            this.shortUrl = res.data
             this.showTip = true
           }
         })
@@ -64,7 +64,7 @@
         this.$message.error("短网址复制失败，请重试")
       },
       hrefUrl() {
-        window.open('http://'+this.shortUrl)
+        window.open(this.shortUrl)
       }
     }
   }
