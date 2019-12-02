@@ -2,7 +2,9 @@ package me.znzn.tools.module.url.service.impl;
 
 import me.znzn.tools.common.component.BMapModel;
 import me.znzn.tools.common.constant.CommonConstant;
+import me.znzn.tools.module.url.entity.form.VisitHisForm;
 import me.znzn.tools.module.url.entity.po.VisitHis;
+import me.znzn.tools.module.url.entity.vo.VisitHisVO;
 import me.znzn.tools.module.url.mapper.VisitHisMapper;
 import me.znzn.tools.module.url.service.ShortUrlStatisticsService;
 import me.znzn.tools.utils.LongNumUtil;
@@ -64,5 +66,10 @@ public class ShortUrlStatisticsServiceImpl implements ShortUrlStatisticsService 
         } else {
             LOGGER.error("ip:{}在有效间隔时间:{} ms内已访问过URL:{}，不再重复记录", ip, CommonConstant.VALID_VISIT_INTERVAL, shortUrlId);
         }
+    }
+
+    @Override
+    public List<VisitHisVO> getVisitHistoryListByUrlId(VisitHisForm query) {
+        return visitHisMapper.getVisitMapCount(query);
     }
 }

@@ -34,23 +34,17 @@
           label="变量值">
         </el-table-column>
         <el-table-column
-          prop="createTime"
-          label="创建时间"
-          width="160">
-        </el-table-column>
-        <el-table-column
-          prop="createName"
-          label="创建人"
-          width="120">
+          prop="remark"
+          label="备注">
         </el-table-column>
         <el-table-column
           prop="modifyTime"
-          label="修改时间"
+          label="最后修改时间"
           width="160">
         </el-table-column>
         <el-table-column
           prop="modifyName"
-          label="修改人"
+          label="最后修改人"
           width="120">
         </el-table-column>
         <el-table-column label="操作" width="200px">
@@ -93,6 +87,9 @@
         </el-form-item>
         <el-form-item label="变量值">
           <el-input v-model="temp.value"></el-input>
+        </el-form-item>
+        <el-form-item label="备注">
+          <el-input v-model="temp.remark"></el-input>
         </el-form-item>
         <div style="text-align: center">
           <el-button type="primary" icon="el-icon-close" @click="updateDialogVisible=false">取消</el-button>
@@ -165,7 +162,7 @@
       },
       showUpdateDialog(temp) {
         this.title = temp === null ? '新建全局常量' : '修改全局变量'
-        this.temp = temp === null ? {name: '', value: ''} : JSON.parse(JSON.stringify(temp))
+        this.temp = temp === null ? {name: '', value: '', remark: ''} : JSON.parse(JSON.stringify(temp))
         this.updateDialogVisible = true
       },
       handleSizeChange(val) {

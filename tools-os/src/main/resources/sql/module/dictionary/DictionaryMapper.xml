@@ -305,7 +305,8 @@
         (SELECT u.username FROM t_b_user u WHERE u.id = d.create_account) AS createName,
         d.modify_time AS modifyTime,
         (SELECT s.username FROM t_b_user s WHERE s.id = d.modify_account) AS modifyName,
-        d.version AS version
+        d.version AS version,
+        d.remark AS remark
         FROM t_b_dictionary d
         <include refid="all_query_condition_with_alias_where"></include>
         ORDER BY d.status DESC ,d.create_time DESC

@@ -80,6 +80,15 @@ export const constantRoutes = [
           title: '短链接管理',
           icon: 'search'
         }
+      },
+      {
+        path: 'statistics/:id',
+        name: 'statistics',
+        component: () => import('@/views/shortUrl/statistics'),
+        meta: {
+          title: '链接统计',
+          icon: 'search'
+        }
       }]
   },
 

@@ -236,4 +236,10 @@
         <include refid="all_query_condition_with_where"/>
     </select>
 
+    <select id="getVisitMapCount" parameterType="me.znzn.tools.module.url.entity.form.VisitHisForm" resultType="me.znzn.tools.module.url.entity.vo.VisitHisVO">
+        SELECT lng, lat, COUNT(*) AS count
+        FROM t_b_visit_his
+        WHERE t_b_visit_his.url_id = #{urlId}
+        GROUP BY lng, lat
+    </select>
 </mapper>

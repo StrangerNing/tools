@@ -2,9 +2,11 @@ package me.znzn.tools.module.url.controller;
 
 import me.znzn.tools.common.component.Result;
 import me.znzn.tools.common.exception.BusinessException;
+import me.znzn.tools.module.url.entity.form.VisitHisForm;
 import me.znzn.tools.module.url.entity.po.ShortUrl;
 import me.znzn.tools.module.url.service.ShortUrlService;
 import me.znzn.tools.module.url.service.ShortUrlStatisticsService;
+import me.znzn.tools.module.user.entity.enums.StatusEnum;
 import me.znzn.tools.module.user.entity.vo.UserInfoVO;
 import me.znzn.tools.utils.LoginUserUtil;
 import org.springframework.stereotype.Controller;
@@ -55,11 +57,23 @@ public class ShortUrlController {
     @RequestMapping("/{shortUrl}**")
     public ModelAndView getOriginUrl(@PathVariable("shortUrl") String shortUrl, HttpServletRequest request) {
         ShortUrl url = shortUrlService.getOriginUrl(shortUrl);
-        shortUrlStatisticsService.saveVisitHistory(shortUrl, request);
-        if (null == url) {
+        if (null == url || url.getStatus().equals(StatusEnum.DISABLE.getIndex())) {
             return new ModelAndView("404");
         }
+        shortUrlStatisticsService.saveVisitHistory(shortUrl, request);
         return new ModelAndView("redirect:" + url.getOriginUrl());
+    }
+
+    @PostMapping("/url/update")
+    @ResponseBody
+    public Result updateShortUrl(@RequestBody ShortUrl shortUrl) {
+        return Result.success(shortUrlService.updateShortUrlStatus(shortUrl));
+    }
+
+    @GetMapping("/url/statistics")
+    @ResponseBody
+    public Result getUrlStatistics(VisitHisForm visitHisForm) {
+        return Result.success(shortUrlStatisticsService.getVisitHistoryListByUrlId(visitHisForm));
     }
 
 }

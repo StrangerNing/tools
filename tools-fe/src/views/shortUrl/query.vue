@@ -14,9 +14,11 @@
         </el-table-column>
         <el-table-column
           prop="shortUrl"
-          label="短链接">
+          label="短链接"
+          width="250px">
           <template slot-scope="scope">
-            <a style="color: #1482f0" target="_blank" :href="scope.row.shortUrl">{{scope.row.shortUrl}}</a>
+            <a v-if="scope.row.status === 1" style="color: #1482f0" target="_blank" :href="scope.row.shortUrl">{{scope.row.shortUrl}}</a>
+            <a v-else style="color: red" target="_blank" :href="scope.row.shortUrl">{{scope.row.shortUrl}}</a>
           </template>
         </el-table-column>
         <el-table-column
@@ -33,6 +35,15 @@
           prop="createName"
           label="创建人"
           width="120">
+        </el-table-column>
+        <el-table-column
+          label="操作"
+          width="200px">
+          <template slot-scope="scope">
+            <el-button type="primary" size="small" @click="lookup(scope.row)">查看</el-button>
+            <el-button v-if="scope.row.status === 1" type="warning" size="small" @click="updateShortUrl(scope.row, 0)">禁用</el-button>
+            <el-button v-else type="success" size="small" @click="updateShortUrl(scope.row, 1)">启用</el-button>
+          </template>
         </el-table-column>
       </el-table>
       <el-row class="hidden-xs-only">
@@ -62,7 +73,7 @@
 </template>
 
 <script>
-  import {queryUrl} from "../../api/shortUrl";
+  import {queryUrl, updateUrl} from "../../api/shortUrl";
 
   export default {
     name: "query",
@@ -94,6 +105,27 @@
       },
       indexMethod(index) {
         return (this.params.currentPage - 1) * this.params.limit + (index + 1)
+      },
+      updateShortUrl(row, value) {
+        let params = JSON.parse(JSON.stringify(row))
+        params.status = value
+        updateUrl(params).then(res => {
+          if (res.data) {
+            this.$message.success('操作成功！')
+          }else {
+            this.$message.error('操作失败！')
+          }
+          this.queryUrl()
+        })
+      },
+      lookup(row) {
+        console.log(row)
+        this.$router.push({
+          name: "statistics",
+          params: {
+            id: row.id
+          }
+        })
       }
     },
     created() {

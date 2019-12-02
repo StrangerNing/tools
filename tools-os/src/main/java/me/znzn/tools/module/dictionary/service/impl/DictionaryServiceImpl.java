@@ -62,8 +62,12 @@ public class DictionaryServiceImpl implements DictionaryService {
 
     @Override
     public Boolean addConstant(Dictionary dictionary, UserInfoVO userInfoVO) {
-        dictionary.setCreateAccount(userInfoVO.getId());
-        dictionary.setCreateTime(new Date());
+        Long operateId = userInfoVO.getId();
+        Date operateTime = new Date();
+        dictionary.setCreateAccount(operateId);
+        dictionary.setCreateTime(operateTime);
+        dictionary.setModifyAccount(operateId);
+        dictionary.setModifyTime(operateTime);
         dictionary.setStatus(StatusEnum.ENABLE.getIndex());
         dictionary.setVersion(0);
         return dictionaryMapper.insertByProperty(dictionary).equals(1L);

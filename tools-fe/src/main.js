@@ -14,6 +14,9 @@ import App from './App'
 import store from './store'
 import router from './router'
 
+import echarts from 'echarts'
+import 'echarts/map/js/china'
+
 import '@/icons' // icon
 import '@/permission' // permission control
 
@@ -34,6 +37,8 @@ import VueClipboard from "vue-clipboard2";
 Vue.use(ElementUI)
 
 Vue.use(VueClipboard)
+
+Vue.prototype.$echarts = echarts
 
 Vue.config.productionTip = false
 

@@ -1,7 +1,10 @@
 package me.znzn.tools.module.url.mapper;
 import me.znzn.tools.common.dao.BaseDao;
+import me.znzn.tools.module.url.entity.form.VisitHisForm;
 import me.znzn.tools.module.url.entity.po.VisitHis;
 import java.util.List;
+
+import me.znzn.tools.module.url.entity.vo.VisitHisVO;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -14,4 +17,10 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface VisitHisMapper extends BaseDao<VisitHis> {
 
+    /**
+     * 获取统计信息
+     * @param visitHisForm 查询条件
+     * @return 结果列表
+     */
+    List<VisitHisVO> getVisitMapCount(VisitHisForm visitHisForm);
 }

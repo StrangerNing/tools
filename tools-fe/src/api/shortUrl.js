@@ -15,3 +15,19 @@ export function queryUrl(params) {
     params: params
   })
 }
+
+export function updateUrl(data) {
+  return request({
+    url: '/url/update',
+    method: 'post',
+    data: data
+  })
+}
+
+export function getUrlStatistics(params) {
+  return request({
+    url: 'url/statistics',
+    method: 'get',
+    params: params
+  })
+}

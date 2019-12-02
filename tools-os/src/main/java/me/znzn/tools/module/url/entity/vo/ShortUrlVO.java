@@ -25,4 +25,6 @@ public class ShortUrlVO {
     private Long createAccount;
 
     private String createName;
+
+    private Integer status;
 }

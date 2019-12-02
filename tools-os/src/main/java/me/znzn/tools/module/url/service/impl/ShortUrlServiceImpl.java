@@ -7,6 +7,7 @@ import me.znzn.tools.module.url.entity.po.ShortUrl;
 import me.znzn.tools.module.url.entity.vo.ShortUrlVO;
 import me.znzn.tools.module.url.mapper.ShortUrlMapper;
 import me.znzn.tools.module.url.service.ShortUrlService;
+import me.znzn.tools.module.user.entity.enums.StatusEnum;
 import me.znzn.tools.module.user.entity.vo.UserInfoVO;
 import me.znzn.tools.utils.LongNumUtil;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,7 @@ public class ShortUrlServiceImpl implements ShortUrlService {
     @Override
     public String saveUrl(ShortUrl shortUrl) {
         shortUrl.setCreateTime(new Date());
+        shortUrl.setStatus(StatusEnum.ENABLE.getIndex());
         Long num = shortUrlMapper.insertByProperty(shortUrl);
         if (num.equals(1L)) {
             return CommonConstant.BACKGROUND_DOMAIN + LongNumUtil.encode(shortUrl.getId());
@@ -53,5 +55,13 @@ public class ShortUrlServiceImpl implements ShortUrlService {
         List<ShortUrlVO> result = shortUrlMapper.selectShortUrlByCondition(shortUrl);
         result.forEach(item -> item.setShortUrl(CommonConstant.BACKGROUND_DOMAIN + LongNumUtil.encode(item.getId())));
         return new ResultPage(shortUrlMapper.countByProperty(shortUrl), page.getLimit(), page.getCurrentPage(), result);
+    }
+
+    @Override
+    public Boolean updateShortUrlStatus(ShortUrl shortUrl) {
+        ShortUrl update = new ShortUrl();
+        update.setId(shortUrl.getId());
+        update.setStatus(shortUrl.getStatus());
+        return shortUrlMapper.updateByPrimaryKey(update) == 1;
     }
 }
