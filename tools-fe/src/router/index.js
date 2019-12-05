@@ -84,6 +84,7 @@ export const constantRoutes = [
       {
         path: 'statistics/:id',
         name: 'statistics',
+        hidden: true,
         component: () => import('@/views/shortUrl/statistics'),
         meta: {
           title: '链接统计',

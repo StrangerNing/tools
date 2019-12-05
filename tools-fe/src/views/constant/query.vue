@@ -3,6 +3,9 @@
     <div class="page-text">
       全局变量管理
     </div>
+    <div>
+      <span style="color: #5a5e66">请注意，变量名应与项目内全局变量名一致！修改变量值提交后请点击应用按钮生效！</span>
+    </div>
     <div class="page-content">
       <el-row>
         <el-button type="primary" size="small" icon="el-icon-plus" @click="showUpdateDialog(null)">新建</el-button>

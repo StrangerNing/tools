@@ -38,8 +38,9 @@ public class ShortUrlStatisticsServiceImpl implements ShortUrlStatisticsService 
     @Async
     @Override
     public void saveVisitHistory(String shortUrl, HttpServletRequest request) {
-//        String ip = MapUtil.getIpAddress(request);
-        String ip = "222.76.251.164";
+        String ip = MapUtil.getIpAddress(request);
+        LOGGER.info("访问者IP:{}", ip);
+//        String ip = "222.76.251.164";
         Date now = new Date();
         Long shortUrlId = LongNumUtil.decode(shortUrl);
         //检查是否在设定的有效访问间隔时间内该ip是否已访问过该短链接
