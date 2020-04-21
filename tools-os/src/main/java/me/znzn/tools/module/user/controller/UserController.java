@@ -2,19 +2,17 @@ package me.znzn.tools.module.user.controller;
 
 import me.znzn.tools.common.component.Result;
 import me.znzn.tools.common.exception.BusinessException;
+import me.znzn.tools.module.user.entity.form.ApiKeyForm;
 import me.znzn.tools.module.user.entity.form.LoginForm;
 import me.znzn.tools.module.user.entity.form.RegisterForm;
+import me.znzn.tools.module.user.entity.vo.UserInfoVO;
 import me.znzn.tools.module.user.service.UserService;
 import me.znzn.tools.utils.LoginUserUtil;
 import me.znzn.tools.utils.ValidatorUtil;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-
-import java.util.HashMap;
-
-import static me.znzn.tools.common.constant.LoginMap.LOGIN_USER;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author zhuzening
@@ -29,8 +27,10 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/login")
-    public Result login(LoginForm loginForm) {
+    public Result login(LoginForm loginForm, HttpServletRequest request) {
         ValidatorUtil.validate(loginForm);
+        UserInfoVO loginUser = userService.login(loginForm);
+        request.getSession().setAttribute("user", loginUser);
         return Result.success(userService.login(loginForm));
     }
 
@@ -43,15 +43,45 @@ public class UserController {
         return Result.success(userService.register(registerForm));
     }
 
-    @GetMapping("info")
-    public Result getUserInfo() {
-        return Result.success(LoginUserUtil.getLoginUser());
+    @GetMapping("/info")
+    public Result getUserInfo(HttpServletRequest request) {
+        return Result.success(request.getSession().getAttribute("user"));
     }
 
-    @PostMapping("logout")
-    public Result logout() {
-        String token = LoginUserUtil.getToken();
-        LoginUserUtil.delLoginUser(token);
+    @PostMapping("/logout")
+    public Result logout(HttpServletRequest request) {
+        request.getSession().removeAttribute("user");
         return Result.success();
+    }
+
+    @GetMapping("/api/list")
+    public Result getApiList(HttpServletRequest request) {
+        UserInfoVO loginUser = LoginUserUtil.getSessionUser(request);
+        return Result.success(userService.getApiKeyList(loginUser.getId()));
+    }
+
+    @PostMapping("/api/create")
+    public Result getApiKey(@RequestBody ApiKeyForm apiKey, HttpServletRequest request) {
+        UserInfoVO loginUser = LoginUserUtil.getSessionUser(request);
+        apiKey.setCreateId(loginUser.getId());
+        return Result.success(userService.getApiKey(apiKey));
+    }
+
+    @GetMapping("/api/del/{id}")
+    public Result delApiKey(@PathVariable Long id, HttpServletRequest request) {
+        UserInfoVO loginUser = LoginUserUtil.getSessionUser(request);
+        return Result.success(userService.delApiKey(id, loginUser.getId()));
+    }
+
+    @PostMapping("/api/update")
+    public Result updateApiKey(@RequestBody ApiKeyForm apiKeyForm, HttpServletRequest request) {
+        UserInfoVO loginUser = LoginUserUtil.getSessionUser(request);
+        return Result.success(userService.updateApiKey(apiKeyForm, loginUser.getId()));
+    }
+
+    @GetMapping("/api/search")
+    public Result searchByKey(String ak, HttpServletRequest request) {
+        UserInfoVO loginUser = LoginUserUtil.getSessionUser(request);
+        return Result.success(userService.getApiKeyByKey(ak, loginUser.getId()));
     }
 }

@@ -11,6 +11,6 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class LoginMap {
 
-    public static ConcurrentHashMap<String, UserInfoVO> LOGIN_USER = new ConcurrentHashMap<>(5000);
+    public static ConcurrentHashMap<String, UserInfoVO> LOGIN_USER = new ConcurrentHashMap<>(1000);
 
 }

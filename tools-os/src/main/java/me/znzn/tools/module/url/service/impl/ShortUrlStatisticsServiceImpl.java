@@ -9,6 +9,7 @@ import me.znzn.tools.module.url.mapper.VisitHisMapper;
 import me.znzn.tools.module.url.service.ShortUrlStatisticsService;
 import me.znzn.tools.utils.LongNumUtil;
 import me.znzn.tools.utils.MapUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
@@ -48,8 +49,8 @@ public class ShortUrlStatisticsServiceImpl implements ShortUrlStatisticsService 
         query.setUrlId(shortUrlId);
         query.setIp(ip);
         List<VisitHis> visitHisHas = visitHisMapper.selectByProperty(query);
-        boolean isValid = true;
-        if (!ListUtils.isEmpty(visitHisHas)) {
+        boolean isValid = StringUtils.isNotEmpty(ip);
+        if (isValid && !ListUtils.isEmpty(visitHisHas)) {
             VisitHis latest = visitHisHas.get(0);
             long interval = now.getTime() - latest.getCreateTime().getTime();
             isValid = interval > Long.parseLong(CommonConstant.VALID_VISIT_INTERVAL);
@@ -62,7 +63,7 @@ public class ShortUrlStatisticsServiceImpl implements ShortUrlStatisticsService 
             visitHis.setAddress(bMapModel.getAddress());
             visitHis.setLng(new BigDecimal(bMapModel.getContent().getPoint().getX()));
             visitHis.setLat(new BigDecimal(bMapModel.getContent().getPoint().getY()));
-            visitHis.setCreateTime(new Date());
+            visitHis.setCreateTime(now);
             visitHisMapper.insertByProperty(visitHis);
         } else {
             LOGGER.error("ip:{}在有效间隔时间:{} ms内已访问过URL:{}，不再重复记录", ip, CommonConstant.VALID_VISIT_INTERVAL, shortUrlId);

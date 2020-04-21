@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.znzn.tools.module.user.mapper.ApiKeyMapper">
+
+    <!-- ApiKey结果集 -->
+    <resultMap id="ApiKeyMap" type="me.znzn.tools.module.user.entity.po.ApiKey" >
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="ak" property="ak" jdbcType="VARCHAR"/>
+        <result column="module" property="module" jdbcType="BIGINT"/>
+        <result column="limit_type" property="limitType" jdbcType="INTEGER"/>
+        <result column="limit_ip" property="limitIp" jdbcType="VARCHAR"/>
+        <result column="create_id" property="createId" jdbcType="BIGINT"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="modify_id" property="modifyId" jdbcType="BIGINT"/>
+        <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="version" property="version" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!-- 表名 -->
+    <sql id="table_name">t_b_api_key</sql>
+
+    <!-- 所有字段 -->
+    <sql id="all_columns">
+        id, name, ak, module, limit_type, limit_ip, create_id, create_time, modify_id, modify_time, remark, version
+    </sql>
+
+    <!-- 不带主键的所有字段 -->
+    <sql id="all_columns_not_with_id">
+        name, ak, module, limit_type, limit_ip, create_id, create_time, modify_id, modify_time, remark, version
+    </sql>
+
+    <!-- 查询条件带where -->
+    <sql id="all_query_condition_with_where">
+        <trim prefix="WHERE" prefixOverrides="AND|OR">
+            <if test="id != null">
+                AND id = #{id}
+            </if>
+            <if test="name != null and '' != name">
+                AND name = #{name}
+            </if>
+            <if test="ak != null and '' != ak">
+                AND ak = #{ak}
+            </if>
+            <if test="module != null">
+                AND module = #{module}
+            </if>
+            <if test="limitType != null">
+                AND limit_type = #{limitType}
+            </if>
+            <if test="limitIp != null and '' != limitIp">
+                AND limit_ip = #{limitIp}
+            </if>
+            <if test="createId != null">
+                AND create_id = #{createId}
+            </if>
+            <if test="createTime != null">
+                AND create_time = #{createTime}
+            </if>
+            <if test="modifyId != null">
+                AND modify_id = #{modifyId}
+            </if>
+            <if test="modifyTime != null">
+                AND modify_time = #{modifyTime}
+            </if>
+            <if test="remark != null and '' != remark">
+                AND remark = #{remark}
+            </if>
+            <if test="version != null">
+                AND version = #{version}
+            </if>
+        </trim>
+    </sql>
+
+    <!-- 删除条件带where -->
+    <sql id="all_delete_condition_with_where">
+        <trim prefix="WHERE" prefixOverrides="AND|OR">
+            <if test="name != null and '' != name">
+                AND name = #{name}
+            </if>
+            <if test="ak != null and '' != ak">
+                AND ak = #{ak}
+            </if>
+            <if test="module != null">
+                AND module = #{module}
+            </if>
+            <if test="limitType != null">
+                AND limit_type = #{limitType}
+            </if>
+            <if test="limitIp != null and '' != limitIp">
+                AND limit_ip = #{limitIp}
+            </if>
+            <if test="createId != null">
+                AND create_id = #{createId}
+            </if>
+            <if test="createTime != null">
+                AND create_time = #{createTime}
+            </if>
+            <if test="modifyId != null">
+                AND modify_id = #{modifyId}
+            </if>
+            <if test="modifyTime != null">
+                AND modify_time = #{modifyTime}
+            </if>
+            <if test="remark != null and '' != remark">
+                AND remark = #{remark}
+            </if>
+            <if test="version != null">
+                AND version = #{version}
+            </if>
+        </trim>
+    </sql>
+
+    <!-- 更新条件带set -->
+    <sql id="all_set_condition_with_set">
+        <set>
+            <if test="name != null and '' != name">
+                name = #{name},
+            </if>
+            <if test="ak != null and '' != ak">
+                ak = #{ak},
+            </if>
+            <if test="module != null">
+                module = #{module},
+            </if>
+            <if test="limitType != null">
+                limit_type = #{limitType},
+            </if>
+            <if test="limitIp != null and '' != limitIp">
+                limit_ip = #{limitIp},
+            </if>
+            <if test="createId != null">
+                create_id = #{createId},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="modifyId != null">
+                modify_id = #{modifyId},
+            </if>
+            <if test="modifyTime != null">
+                modify_time = #{modifyTime},
+            </if>
+            <if test="remark != null and '' != remark">
+                remark = #{remark},
+            </if>
+            <if test="version != null">
+                version = version + 1
+            </if>
+        </set>
+    </sql>
+
+    <!-- 批量更新条件带set -->
+    <sql id="all_batch_set_condition_with_set">
+        <set>
+            <if test="item.name != null and '' != item.name">
+                name = #{item.name},
+            </if>
+            <if test="item.ak != null and '' != item.ak">
+                ak = #{item.ak},
+            </if>
+            <if test="item.module != null">
+                module = #{item.module},
+            </if>
+            <if test="item.limitType != null">
+                limit_type = #{item.limitType},
+            </if>
+            <if test="item.limitIp != null and '' != item.limitIp">
+                limit_ip = #{item.limitIp},
+            </if>
+            <if test="item.createId != null">
+                create_id = #{item.createId},
+            </if>
+            <if test="item.createTime != null">
+                create_time = #{item.createTime},
+            </if>
+            <if test="item.modifyId != null">
+                modify_id = #{item.modifyId},
+            </if>
+            <if test="item.modifyTime != null">
+                modify_time = #{item.modifyTime},
+            </if>
+            <if test="item.remark != null and '' != item.remark">
+                remark = #{item.remark},
+            </if>
+            <if test="item.version != null">
+                version = version + 1
+            </if>
+        </set>
+    </sql>
+
+    <!--根据对象属性插入-->
+    <insert id="insertByProperty" useGeneratedKeys="true" keyProperty="id" keyColumn="id" parameterType="me.znzn.tools.module.user.entity.po.ApiKey">
+        INSERT INTO <include refid="table_name"/>
+        (
+            <include refid="all_columns_not_with_id"/>
+        )
+        VALUES (
+            #{name}, #{ak}, #{module}, #{limitType}, #{limitIp}, #{createId}, #{createTime}, #{modifyId}, #{modifyTime}, #{remark}, #{version}
+        )
+    </insert>
+
+    <!--根据对象属性插入-->
+    <insert id="insertBatchByProperty" useGeneratedKeys="true" keyProperty="id" keyColumn="id" parameterType="java.util.List">
+        INSERT INTO <include refid="table_name"/>
+        (
+            <include refid="all_columns_not_with_id"/>
+        )
+        VALUES
+        <foreach collection="list" item="item" separator="," index = "index">
+        (
+            #{item.name}, #{item.ak}, #{item.module}, #{item.limitType}, #{item.limitIp}, #{item.createId}, #{item.createTime}, #{item.modifyId}, #{item.modifyTime}, #{item.remark}, #{item.version}
+        )
+        </foreach>
+    </insert>
+
+    <!--根据主键更新-->
+    <update id="updateByPrimaryKey" parameterType="me.znzn.tools.module.user.entity.po.ApiKey">
+        UPDATE <include refid="table_name"/>
+            <include refid="all_set_condition_with_set"/>
+        WHERE
+            id = #{id} AND version = #{version}
+    </update>
+
+    <!--根据主键批量更新-->
+    <update id="updateBatchByPrimaryKey" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" separator=";">
+            UPDATE <include refid="table_name"/>
+                <include refid="all_batch_set_condition_with_set"/>
+            WHERE
+                id = #{item.id} AND version = #{item.version}
+        </foreach>
+    </update>
+
+    <!--根据主键删除-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        DELETE FROM
+            <include refid="table_name"/>
+        WHERE
+            id = #{id}
+    </delete>
+
+    <!--根据主键列表批量删除-->
+    <delete id="deleteBatchByPrimaryKey" parameterType="java.util.List">
+        DELETE FROM
+            <include refid="table_name"/>
+        WHERE
+            id
+        IN
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!--根据属性删除-->
+    <delete id="deleteByProperty" parameterType="me.znzn.tools.module.user.entity.po.ApiKey">
+        DELETE FROM <include refid="table_name"/>
+        <include refid="all_delete_condition_with_where"/>
+    </delete>
+
+    <!-- 根据主键查询 -->
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ApiKeyMap">
+        SELECT
+            <include refid="all_columns"/>
+        FROM
+            <include refid="table_name"/>
+        WHERE
+            id = #{id}
+    </select>
+
+    <!-- 根据对象属性查询 -->
+    <select id="selectByProperty" parameterType="me.znzn.tools.module.user.entity.po.ApiKey" resultMap="ApiKeyMap">
+        SELECT
+            <include refid="all_columns"/>
+        FROM
+            <include refid="table_name"/>
+        <include refid="all_query_condition_with_where"/>
+    </select>
+
+    <!-- 根据对象属性查询统计 -->
+    <select id="countByProperty" parameterType="me.znzn.tools.module.user.entity.po.ApiKey" resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            <include refid="table_name"/>
+        <include refid="all_query_condition_with_where"/>
+    </select>
+
+</mapper>

@@ -44,4 +44,12 @@ public class LoginUserUtil {
         }
         return token;
     }
+
+    public static UserInfoVO getSessionUser(HttpServletRequest request) {
+        UserInfoVO loginUser = (UserInfoVO)request.getSession().getAttribute("user");
+        if (null == loginUser) {
+            throw new BusinessException("401", "用户未登陆，请先登陆");
+        }
+        return loginUser;
+    }
 }

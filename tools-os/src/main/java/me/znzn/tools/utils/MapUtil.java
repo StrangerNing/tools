@@ -1,6 +1,8 @@
 package me.znzn.tools.utils;
 
+import com.alibaba.druid.support.http.util.IPAddress;
 import com.alibaba.druid.support.json.JSONUtils;
+import lombok.extern.slf4j.Slf4j;
 import me.znzn.tools.common.component.BMapModel;
 import me.znzn.tools.common.constant.CommonConstant;
 import org.apache.commons.lang3.StringUtils;
@@ -15,6 +17,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sun.net.util.IPAddressUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -27,42 +30,25 @@ import java.util.List;
  * @date 2019/11/28
  * @since 1.0
  */
+@Slf4j
 public class MapUtil {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MapUtil.class);
 
     public static String getIpAddress(HttpServletRequest request) {
-        String Xip = request.getHeader("X-Real-IP");
-        String XFor = request.getHeader("X-Forwarded-For");
-        if(StringUtils.isNotEmpty(XFor) && !"unKnown".equalsIgnoreCase(XFor)){
-            //多次反向代理后会有多个ip值，第一个ip才是真实ip
-            int index = XFor.indexOf(",");
-            if(index != -1){
-                return XFor.substring(0,index);
-            }else{
-                return XFor;
-            }
+        log.info("请求头：{}",request.toString());
+        String ip = request.getHeader("x-forwarded-for");
+        if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("Proxy-Client-IP");
         }
-        XFor = Xip;
-        if(StringUtils.isNotEmpty(XFor) && !"unKnown".equalsIgnoreCase(XFor)){
-            return XFor;
+        if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("WL-Proxy-Client-IP");
         }
-        if (StringUtils.isBlank(XFor) || "unknown".equalsIgnoreCase(XFor)) {
-            XFor = request.getHeader("Proxy-Client-IP");
+        if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getRemoteAddr();
         }
-        if (StringUtils.isBlank(XFor) || "unknown".equalsIgnoreCase(XFor)) {
-            XFor = request.getHeader("WL-Proxy-Client-IP");
-        }
-        if (StringUtils.isBlank(XFor) || "unknown".equalsIgnoreCase(XFor)) {
-            XFor = request.getHeader("HTTP_CLIENT_IP");
-        }
-        if (StringUtils.isBlank(XFor) || "unknown".equalsIgnoreCase(XFor)) {
-            XFor = request.getHeader("HTTP_X_FORWARDED_FOR");
-        }
-        if (StringUtils.isBlank(XFor) || "unknown".equalsIgnoreCase(XFor)) {
-            XFor = request.getRemoteAddr();
-        }
-        return XFor;
+        log.info("访问者ip为：{}", ip);
+        return ip;
     }
 
     public static BMapModel decodeIP(String ip) {
