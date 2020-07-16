@@ -2,6 +2,7 @@ package me.znzn.tools.module.url.service.impl;
 
 import me.znzn.tools.common.component.BMapModel;
 import me.znzn.tools.common.constant.CommonConstant;
+import me.znzn.tools.common.exception.BusinessException;
 import me.znzn.tools.module.url.entity.form.VisitHisForm;
 import me.znzn.tools.module.url.entity.po.VisitHis;
 import me.znzn.tools.module.url.entity.vo.VisitHisVO;
@@ -9,6 +10,7 @@ import me.znzn.tools.module.url.mapper.VisitHisMapper;
 import me.znzn.tools.module.url.service.ShortUrlStatisticsService;
 import me.znzn.tools.utils.LongNumUtil;
 import me.znzn.tools.utils.MapUtil;
+import me.znzn.tools.utils.StringUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +43,9 @@ public class ShortUrlStatisticsServiceImpl implements ShortUrlStatisticsService 
     public void saveVisitHistory(String shortUrl, HttpServletRequest request) {
         String ip = MapUtil.getIpAddress(request);
         LOGGER.info("访问者IP:{}", ip);
+        if (StringUtils.isEmpty(ip)) {
+            throw new BusinessException("获取ip错误");
+        }
 //        String ip = "222.76.251.164";
         Date now = new Date();
         Long shortUrlId = LongNumUtil.decode(shortUrl);

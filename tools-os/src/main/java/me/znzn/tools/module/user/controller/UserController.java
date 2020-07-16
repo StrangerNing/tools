@@ -55,33 +55,33 @@ public class UserController {
     }
 
     @GetMapping("/api/list")
-    public Result getApiList(HttpServletRequest request) {
-        UserInfoVO loginUser = LoginUserUtil.getSessionUser(request);
+    public Result getApiList() {
+        UserInfoVO loginUser = LoginUserUtil.getSessionUser();
         return Result.success(userService.getApiKeyList(loginUser.getId()));
     }
 
     @PostMapping("/api/create")
-    public Result getApiKey(@RequestBody ApiKeyForm apiKey, HttpServletRequest request) {
-        UserInfoVO loginUser = LoginUserUtil.getSessionUser(request);
+    public Result getApiKey(@RequestBody ApiKeyForm apiKey) {
+        UserInfoVO loginUser = LoginUserUtil.getSessionUser();
         apiKey.setCreateId(loginUser.getId());
         return Result.success(userService.getApiKey(apiKey));
     }
 
     @GetMapping("/api/del/{id}")
-    public Result delApiKey(@PathVariable Long id, HttpServletRequest request) {
-        UserInfoVO loginUser = LoginUserUtil.getSessionUser(request);
+    public Result delApiKey(@PathVariable Long id) {
+        UserInfoVO loginUser = LoginUserUtil.getSessionUser();
         return Result.success(userService.delApiKey(id, loginUser.getId()));
     }
 
     @PostMapping("/api/update")
-    public Result updateApiKey(@RequestBody ApiKeyForm apiKeyForm, HttpServletRequest request) {
-        UserInfoVO loginUser = LoginUserUtil.getSessionUser(request);
+    public Result updateApiKey(@RequestBody ApiKeyForm apiKeyForm) {
+        UserInfoVO loginUser = LoginUserUtil.getSessionUser();
         return Result.success(userService.updateApiKey(apiKeyForm, loginUser.getId()));
     }
 
     @GetMapping("/api/search")
-    public Result searchByKey(String ak, HttpServletRequest request) {
-        UserInfoVO loginUser = LoginUserUtil.getSessionUser(request);
+    public Result searchByKey(String ak) {
+        UserInfoVO loginUser = LoginUserUtil.getSessionUser();
         return Result.success(userService.getApiKeyByKey(ak, loginUser.getId()));
     }
 }

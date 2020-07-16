@@ -1,7 +1,6 @@
 package me.znzn.tools.module.url.controller;
 
 import me.znzn.tools.common.component.Result;
-import me.znzn.tools.common.exception.BusinessException;
 import me.znzn.tools.module.url.entity.form.VisitHisForm;
 import me.znzn.tools.module.url.entity.po.ShortUrl;
 import me.znzn.tools.module.url.service.ShortUrlService;
@@ -10,7 +9,6 @@ import me.znzn.tools.module.user.entity.enums.StatusEnum;
 import me.znzn.tools.module.user.entity.vo.UserInfoVO;
 import me.znzn.tools.utils.LoginUserUtil;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -32,8 +30,8 @@ public class ShortUrlController {
 
     @RequestMapping("/url/save")
     @ResponseBody
-    public Result save(@RequestBody ShortUrl shortUrl, HttpServletRequest request) {
-        UserInfoVO loginUser = LoginUserUtil.getSessionUser(request);
+    public Result save(@RequestBody ShortUrl shortUrl) {
+        UserInfoVO loginUser = LoginUserUtil.getSessionUser();
         if (null != loginUser) {
             shortUrl.setCreateAccount(loginUser.getId());
         }
@@ -42,8 +40,8 @@ public class ShortUrlController {
 
     @GetMapping("/url/query")
     @ResponseBody
-    public Result query(ShortUrl shortUrl, HttpServletRequest request) {
-        UserInfoVO loginUser = LoginUserUtil.getSessionUser(request);
+    public Result query(ShortUrl shortUrl) {
+        UserInfoVO loginUser = LoginUserUtil.getSessionUser();
         return Result.success(shortUrlService.getUserUrlList(loginUser, shortUrl));
     }
 

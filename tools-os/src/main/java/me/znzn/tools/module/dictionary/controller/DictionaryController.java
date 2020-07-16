@@ -8,6 +8,7 @@ import me.znzn.tools.utils.LoginUserUtil;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author zhuzening
@@ -34,13 +35,13 @@ public class DictionaryController {
 
     @PostMapping("/modify")
     public Result updateConstant(@RequestBody Dictionary dictionary) {
-        UserInfoVO loginUser = LoginUserUtil.getLoginUser();
+        UserInfoVO loginUser = LoginUserUtil.getSessionUser();
         return Result.success(dictionaryService.updateConstant(dictionary, loginUser));
     }
 
     @PostMapping("/add")
     public Result addConstant(@RequestBody Dictionary dictionary) {
-        UserInfoVO loginUser = LoginUserUtil.getLoginUser();
+        UserInfoVO loginUser = LoginUserUtil.getSessionUser();
         return Result.success(dictionaryService.addConstant(dictionary, loginUser));
     }
 }

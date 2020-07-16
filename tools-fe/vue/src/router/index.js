@@ -102,13 +102,27 @@ export const constantRoutes = [
       icon: 'setting'
     },
     children: [{
-      path: '/query',
+      path: 'query',
       name: 'constantQuery',
       component: () => import('@/views/constant/query'),
       meta: {
         title: '全局变量管理',
         icon: 'setting'
       }
+    }]
+  },
+  {
+    path: '/api',
+    component: Layout,
+    redirect: '/query',
+    children: [{
+      path: 'query',
+      name: 'akQuery',
+      component: () => import('@/views/apikey/index'),
+      meta: {
+        title: 'API管理',
+        icon: 'function'
+      },
     }]
   },
 

@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.2.1.RELEASE</version>
+        <version>2.2.3.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>me.znzn</groupId>
@@ -17,18 +17,51 @@
 
     <properties>
         <java.version>1.8</java.version>
+        <java.source>1.8</java.source>
         <tools-os.version>0.0.1-SNAPSHOT</tools-os.version>
     </properties>
 
     <modules>
         <module>tools-os</module>
+        <module>tools-fe</module>
     </modules>
 
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <env>dev</env>
+            </properties>
+        </profile>
+        <profile>
+            <id>test</id>
+            <properties>
+                <env>test</env>
+            </properties>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <env>prod</env>
+            </properties>
+        </profile>
+    </profiles>
+
     <dependencies>
-<!--        <dependency>-->
-<!--            <groupId>me.znzn</groupId>-->
-<!--            <artifactId>tools-os</artifactId>-->
-<!--            <version>${tools-os.version}</version>-->
-<!--        </dependency>-->
     </dependencies>
+
+    <build>
+        <filters>
+            <filter>src/main/filters/${env}.properties</filter>
+        </filters>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 </project>

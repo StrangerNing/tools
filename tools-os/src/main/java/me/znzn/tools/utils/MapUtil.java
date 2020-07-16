@@ -17,7 +17,6 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.net.util.IPAddressUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -52,8 +51,7 @@ public class MapUtil {
     }
 
     public static BMapModel decodeIP(String ip) {
-        //拼接请求url
-//        String url = StringUtil.parseBrace(CommonConstant.MAP_REQUEST_PREFIX, ip, CommonConstant.MAP_AK);
+        //拼接请求
         HttpClient client = HttpClients.createDefault();
         HttpPost post = new HttpPost(CommonConstant.MAP_REQUEST_PREFIX);
         List<NameValuePair> params = new ArrayList<>();

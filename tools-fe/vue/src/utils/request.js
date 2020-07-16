@@ -3,7 +3,7 @@ import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
 
-const baseURL = process.env.NODE_ENV === 'development' ? 'http://10.130.72.84:8080/tools' : 'http://www.znzn.me:8080/'
+const baseURL = process.env.NODE_ENV === 'development' ? 'http://localhost:8080' : 'http://www.znzn.me/'
 
 // create an axios instance
 const service = axios.create({
@@ -21,7 +21,7 @@ service.interceptors.request.use(
       // let each request carry token
       // ['X-Token'] is a custom headers key
       // please modify it according to the actual situation
-      config.headers['token'] = getToken()
+      config.headers.token = getToken()
     }
     return config
   },
@@ -56,7 +56,7 @@ service.interceptors.response.use(
       })
 
       // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
-      if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
+      if (res.code === '401' || res.code === 50012 || res.code === 50014) {
         // to re-login
         MessageBox.confirm('You have been logged out, you can cancel to stay on this page, or log in again', 'Confirm logout', {
           confirmButtonText: 'Re-Login',
