@@ -14,6 +14,8 @@ import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import javax.annotation.Resource;
+
 /**
  * @author zhuzening
  * @version 1.0
@@ -23,6 +25,9 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 @Component
 public class MusicWebSocketServer extends TextWebSocketHandler {
 
+    @Resource
+    private MusicControlService musicControlService;
+
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         String token = WsSessionManager.getToken(session);
@@ -30,6 +35,8 @@ public class MusicWebSocketServer extends TextWebSocketHandler {
         MessageVO message = new MessageVO("Join chat room successfully");
         TextMessage textMessage = new TextMessage(JsonUtils.toJson(message));
         session.sendMessage(textMessage);
+        musicControlService.sendNowMusic(session);
+        musicControlService.sendMusicList(session);
     }
 
     @Override

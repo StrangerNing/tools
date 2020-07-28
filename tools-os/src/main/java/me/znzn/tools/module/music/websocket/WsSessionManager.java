@@ -1,8 +1,12 @@
 package me.znzn.tools.module.music.websocket;
 
 import lombok.extern.slf4j.Slf4j;
+import me.znzn.tools.module.music.entity.ChatVO;
+import me.znzn.tools.module.music.entity.MessageVO;
+import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
+import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -76,5 +80,15 @@ public class WsSessionManager {
             return USER_NICKNAME.get(token);
         }
         return null;
+    }
+
+    public static void broadcast(MessageVO message) {
+        WsSessionManager.SESSION_POOL.values().forEach(item -> {
+            try {
+                item.sendMessage(new TextMessage(message.toString()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 }

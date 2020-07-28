@@ -15,7 +15,7 @@ public class MusicInfoVO implements Serializable {
 
     private static final long serialVersionUID = -7260543176174384147L;
 
-    private Long id;
+    private String id;
 
     private String name;
 
@@ -25,9 +25,9 @@ public class MusicInfoVO implements Serializable {
 
     private String pic_id;
 
-    private Long url_id;
+    private String url_id;
 
-    private Long lyric_id;
+    private String lyric_id;
 
     private String source;
 }

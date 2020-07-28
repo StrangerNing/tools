@@ -1,6 +1,7 @@
 package me.znzn.tools.module.music.entity;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import me.znzn.tools.utils.JsonUtils;
 
 import java.io.Serializable;
@@ -11,14 +12,13 @@ import java.util.List;
  * @version 1.0
  * @since 2020/7/23
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class MusicPushVO implements Serializable {
+public class MusicPushVO extends MessageVO implements Serializable {
 
     private static final long serialVersionUID = -3461645000025233690L;
 
-    private String type;
-
-    private Long id;
+    private String id;
 
     private String name;
 
@@ -36,7 +36,7 @@ public class MusicPushVO implements Serializable {
 
     private String current;
 
-    private Long length;
+    private Integer length;
 
     @Override
     public String toString() {
