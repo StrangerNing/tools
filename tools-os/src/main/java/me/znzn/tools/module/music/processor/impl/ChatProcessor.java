@@ -17,6 +17,7 @@ import org.springframework.web.socket.WebSocketSession;
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.List;
+import java.util.Random;
 
 /**
  * @author zhuzening
@@ -37,8 +38,9 @@ public class ChatProcessor implements MessageProcessor {
     public void excute(WebSocketSession session, WebSocketMessage message) throws IOException {
         MessageVO text = JsonUtils.toObject(((TextMessage) message).asBytes(), MessageVO.class);
         if (WsSessionManager.getUserNickName(session) == null && !text.getData().startsWith("设置昵称")) {
-            musicControlService.sendMessage(session, new MessageVO("Please set nickname first"));
-            return;
+            String nickname = "用户" + new Random().nextInt(10000);
+            WsSessionManager.setUserNickname(session, nickname);
+            musicControlService.sendMessage(session, new MessageVO("setname", nickname));
         }
         if (text.getData().startsWith("设置昵称 ")) {
             String nickName = text.getData().substring(5);
@@ -66,23 +68,13 @@ public class ChatProcessor implements MessageProcessor {
             musicControlService.sendMessage(session, new MessageVO("没有找到相关歌曲"));
         } else {
             MusicInfoVO music = musicList.get(0);
-            MusicUrlVO musicUrl = MusicUtil.getMusicUrl(music.getId(), source);
-            if (musicUrl.getSize() == 0L) {
+            MusicPushVO musicPushVO = MusicUtil.getMusic(music);
+            if (musicPushVO.getFile() == null) {
                 musicControlService.sendMessage(session, new MessageVO("歌曲无效"));
                 return;
             }
-            MusicPushVO musicPushVO = new MusicPushVO();
-            musicPushVO.setType("music");
-            musicPushVO.setId(music.getId());
-            musicPushVO.setName(music.getName());
-            musicPushVO.setAlbum(music.getAlbum());
-            musicPushVO.setArtists(music.getArtist());
-            musicPushVO.setFile(musicUrl.getUrl());
-            musicPushVO.setImage(MusicUtil.getMusicImage(music.getPic_id(), source));
-            musicPushVO.setCurrent("0");
-            musicPushVO.setLrcs(MusicUtil.getMusicLrcs(music.getId(), source));
             musicPushVO.setUser(WsSessionManager.getUserNickName(session));
-            musicPushVO.setLength(MusicUtil.getMusicLength(musicUrl.getUrl()));
+            musicControlService.saveSongId(music);
             redisTemplate.opsForList().rightPush("music_list", musicPushVO);
             String msg = "用户 " + WsSessionManager.getUserNickName(session) + " 点歌 " + music.getName() + "-" + music.getArtist().toString();
             WsSessionManager.broadcast(new MessageVO(msg));

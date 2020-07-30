@@ -2,9 +2,12 @@ package me.znzn.tools.module.music.websocket;
 
 import lombok.extern.slf4j.Slf4j;
 import me.znzn.tools.module.music.entity.MessageVO;
+import me.znzn.tools.module.music.entity.MusicInfoVO;
 import me.znzn.tools.module.music.entity.MusicPushVO;
+import me.znzn.tools.utils.MusicUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.socket.TextMessage;
@@ -30,38 +33,54 @@ public class MusicControlService {
 
     private static String SYNC_KEY = "music_sync_key";
 
+    private static String RANDOM_KEY = "music_random";
+
     private static MusicPushVO music;
 
+    @Async
     public void init() {
-        while (true) {
-            if (WsSessionManager.SESSION_POOL.size() == 0) {
-                continue;
-            }
+        while (WsSessionManager.SESSION_POOL.size() != 0) {
             Long musicListSize = redisTemplate.opsForList().size(MUSIC_LIST_KEY);
             if (musicListSize != null && musicListSize > 0) {
-                if (music == null) {
+                if (music == null || "系统随机".equals(music.getUser())) {
                     broadcastNextMusic();
                 } else {
-                    Long time = (Long)redisTemplate.opsForValue().get(SYNC_KEY);
+                    Long time = (Long) redisTemplate.opsForValue().get(SYNC_KEY);
                     if (time != null && music.getLength() != null) {
-                        if (System.currentTimeMillis() - time > music.getLength() + 2000) {
+                        if (System.currentTimeMillis() - time > (music.getLength() * 1000 + 2000)) {
                             broadcastNextMusic();
+                        }
+                    }
+                }
+            } else {
+                Long time = (Long) redisTemplate.opsForValue().get(SYNC_KEY);
+                if (music == null) {
+                    sendRandomSong();
+                } else {
+                    if (time != null && music.getLength() != null) {
+                        if (System.currentTimeMillis() - time > (music.getLength() * 1000 + 2000)) {
+                            sendRandomSong();
                         }
                     }
                 }
             }
             try {
-                Thread.sleep(1000);
+                Thread.sleep(3000);
             } catch (InterruptedException i) {
                 log.error("线程切换失败", i);
             }
         }
+        log.error("无人在线，线程停止");
     }
 
     private void broadcastNewMusic() {
         music = (MusicPushVO)redisTemplate.opsForList().leftPop(MUSIC_LIST_KEY);
-        redisTemplate.opsForValue().set(SYNC_KEY, System.currentTimeMillis());
-        WsSessionManager.broadcast(music);
+        if (music == null) {
+            sendRandomSong();
+        } else {
+            redisTemplate.opsForValue().set(SYNC_KEY, System.currentTimeMillis());
+            WsSessionManager.broadcast(music);
+        }
     }
 
     public void broadcastNextMusic() {
@@ -140,5 +159,32 @@ public class MusicControlService {
 
     public void broadcastMessage(MessageVO messageVO) {
         WsSessionManager.broadcast(messageVO);
+    }
+
+    public void saveSongId(MusicInfoVO musicInfoVO) {
+        redisTemplate.opsForSet().add(RANDOM_KEY, musicInfoVO);
+    }
+
+    public void sendRandomSong() {
+        MusicInfoVO song = (MusicInfoVO)redisTemplate.opsForSet().randomMember(RANDOM_KEY);
+        if (song == null) {
+            return;
+        }
+        redisTemplate.opsForValue().set(SYNC_KEY, System.currentTimeMillis());
+        MusicPushVO musicPushVO = MusicUtil.getMusic(song);
+        musicPushVO.setUser("系统随机");
+        music = musicPushVO;
+        WsSessionManager.broadcast(musicPushVO);
+        WsSessionManager.broadcast(new MessageVO("系统随机播放：" + music.getName()));
+    }
+
+    public String isRandomMusic() {
+        return music != null && "系统随机".equals(music.getUser()) ? music.getName() : null;
+    }
+
+    public void setMusicDuration(double duration) {
+        if (music != null && (music.getLength() == null || music.getLength() == 0)) {
+            music.setLength(duration);
+        }
     }
 }

@@ -36,7 +36,7 @@ public class MusicPushVO extends MessageVO implements Serializable {
 
     private String current;
 
-    private Integer length;
+    private Double length;
 
     @Override
     public String toString() {

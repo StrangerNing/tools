@@ -31,12 +31,22 @@ public class MusicWebSocketServer extends TextWebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         String token = WsSessionManager.getToken(session);
-        WsSessionManager.add(token, session);
+        if (WsSessionManager.SESSION_POOL.size() == 0) {
+            log.error("有人登陆了，启动监听线程");
+            WsSessionManager.add(token, session);
+            musicControlService.init();
+        } else {
+            WsSessionManager.add(token, session);
+        }
         MessageVO message = new MessageVO("Join chat room successfully");
         TextMessage textMessage = new TextMessage(JsonUtils.toJson(message));
         session.sendMessage(textMessage);
         musicControlService.sendNowMusic(session);
         musicControlService.sendMusicList(session);
+        String name = musicControlService.isRandomMusic();
+        if (name != null) {
+            musicControlService.sendMessage(session, new MessageVO("系统随机播放：" + name));
+        }
     }
 
     @Override

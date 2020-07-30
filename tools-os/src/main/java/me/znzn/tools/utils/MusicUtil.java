@@ -7,8 +7,11 @@ import javazoom.jl.decoder.Bitstream;
 import javazoom.jl.decoder.BitstreamException;
 import javazoom.jl.decoder.Header;
 import lombok.extern.slf4j.Slf4j;
+import me.znzn.tools.module.music.entity.MessageVO;
 import me.znzn.tools.module.music.entity.MusicInfoVO;
+import me.znzn.tools.module.music.entity.MusicPushVO;
 import me.znzn.tools.module.music.entity.MusicUrlVO;
+import me.znzn.tools.module.music.websocket.WsSessionManager;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -155,8 +158,8 @@ public class MusicUtil {
         return image;
     }
 
-    public static int getMusicLength(String songUrl) {
-        int time = 0;
+    public static Double getMusicLength(String songUrl) {
+        Double time = null;
         try {
             URL url = new URL(songUrl);
             URLConnection con = url.openConnection();
@@ -164,14 +167,30 @@ public class MusicUtil {
             BufferedInputStream bis = new BufferedInputStream(con.getInputStream());
             Bitstream bt = new Bitstream(bis);
             Header h = bt.readFrame();
-            time = (int) h.total_ms(b);
+            time = (double)h.total_ms(b);
         } catch (MalformedURLException m) {
             log.error("URL形式错误", m);
         } catch (IOException i) {
-            log.error("链接URL出错", i);
+            log.error("链接URL出错，将依赖客户端上传获取音乐长度");
         } catch (BitstreamException b) {
             log.error("远程文件帧读取失败", b);
         }
         return time;
+    }
+
+    public static MusicPushVO getMusic(MusicInfoVO music) {
+        MusicUrlVO musicUrl = MusicUtil.getMusicUrl(music.getId(), music.getSource());
+        MusicPushVO musicPushVO = new MusicPushVO();
+        musicPushVO.setType("music");
+        musicPushVO.setId(music.getId());
+        musicPushVO.setName(music.getName());
+        musicPushVO.setAlbum(music.getAlbum());
+        musicPushVO.setArtists(music.getArtist());
+        musicPushVO.setFile(musicUrl.getUrl());
+        musicPushVO.setImage(MusicUtil.getMusicImage(music.getPic_id(), music.getSource()));
+        musicPushVO.setCurrent("0");
+        musicPushVO.setLrcs(MusicUtil.getMusicLrcs(music.getId(), music.getSource()));
+        musicPushVO.setLength(MusicUtil.getMusicLength(musicUrl.getUrl()));
+        return musicPushVO;
     }
 }
