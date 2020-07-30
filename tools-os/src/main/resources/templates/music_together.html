@@ -114,6 +114,7 @@
 							<button onclick="sendmsg()" id="sendmsgbtn" class="btn btn-primary full-width">发送</button>
 						</span>
             </div>
+            <div><audio src="https://tools-znzn-me.oss-cn-shenzhen.aliyuncs.com/%E4%BF%A1%E6%81%AF.mp3" id="message-received" style="width: 0px;height: 0px;opacity: 0;"></audio></div>
             <p class="actionInput">
 <!--                <a onclick="openedEmoji=true;$(faces).fadeIn();" id="openfaces">[ 发送表情 ]</a>&nbsp;&nbsp;-->
                 <a onclick="msginput.value='投票切歌';sendmsg();">[ 投票切歌 ]</a>&nbsp;&nbsp;
@@ -209,6 +210,10 @@
 
   // 聊天内容
   function chat(data) {
+    if (data.user !== localStorage.getItem("username")) {
+      var messageReceived = document.getElementById('message-received');
+      messageReceived.play();
+    }
     var regexp = new RegExp(/#([0-9]{1,2}).(jpg|png|gif)#/g);
     data.data = data.data.replace(regexp, "<img src='/face/$1.$2' />");
     var randid = Math.floor(Math.random() * 10000000);
