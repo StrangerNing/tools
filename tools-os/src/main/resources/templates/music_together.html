@@ -78,7 +78,7 @@
                 <div style="overflow: auto;max-height:512px;">
                     <table class="table responsive-table" id="musicList"></table>
                 </div>
-                <audio src="" id="musicControl" style="width: 0px;height: 0px;opacity: 0;" autoplay>
+                <audio src="https://tools-znzn-me.oss-cn-shenzhen.aliyuncs.com/white.mp3" id="musicControl" style="width: 0px;height: 0px;opacity: 0;" autoplay>
             </div>
         </div>
         <div class="col s12 m4 livechat">
@@ -274,6 +274,10 @@
 
   // 连接服务器
   function connect() {
+    var musicControl = document.getElementById("musicControl");
+    musicControl.play()
+    var messageReceived = document.getElementById("message-received");
+    messageReceived.play()
     websocket = new WebSocket(ws_hostname);
     websocket.onopen = function (event) {
       $("#chatdata").html("");
