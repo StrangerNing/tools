@@ -160,21 +160,21 @@ public class MusicUtil {
 
     public static Double getMusicLength(String songUrl) {
         Double time = null;
-        try {
-            URL url = new URL(songUrl);
-            URLConnection con = url.openConnection();
-            int b = con.getContentLength();
-            BufferedInputStream bis = new BufferedInputStream(con.getInputStream());
-            Bitstream bt = new Bitstream(bis);
-            Header h = bt.readFrame();
-            time = (double)h.total_ms(b);
-        } catch (MalformedURLException m) {
-            log.error("URL形式错误", m);
-        } catch (IOException i) {
-            log.error("链接URL出错，将依赖客户端上传获取音乐长度");
-        } catch (BitstreamException b) {
-            log.error("远程文件帧读取失败", b);
-        }
+//        try {
+//            URL url = new URL(songUrl);
+//            URLConnection con = url.openConnection();
+//            int b = con.getContentLength();
+//            BufferedInputStream bis = new BufferedInputStream(con.getInputStream());
+//            Bitstream bt = new Bitstream(bis);
+//            Header h = bt.readFrame();
+//            time = (double)h.total_ms(b);
+//        } catch (MalformedURLException m) {
+//            log.error("URL形式错误", m);
+//        } catch (IOException i) {
+//            log.error("链接URL出错，将依赖客户端上传获取音乐长度");
+//        } catch (BitstreamException b) {
+//            log.error("远程文件帧读取失败", b);
+//        }
         return time;
     }
 
