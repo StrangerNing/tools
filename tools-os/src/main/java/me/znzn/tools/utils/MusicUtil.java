@@ -2,16 +2,10 @@ package me.znzn.tools.utils;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import javazoom.jl.decoder.Bitstream;
-import javazoom.jl.decoder.BitstreamException;
-import javazoom.jl.decoder.Header;
 import lombok.extern.slf4j.Slf4j;
-import me.znzn.tools.module.music.entity.MessageVO;
 import me.znzn.tools.module.music.entity.MusicInfoVO;
 import me.znzn.tools.module.music.entity.MusicPushVO;
 import me.znzn.tools.module.music.entity.MusicUrlVO;
-import me.znzn.tools.module.music.websocket.WsSessionManager;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -21,14 +15,9 @@ import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import org.omg.IOP.ENCODING_CDR_ENCAPS;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 

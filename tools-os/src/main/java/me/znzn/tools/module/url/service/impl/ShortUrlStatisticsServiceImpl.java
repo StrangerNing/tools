@@ -62,6 +62,10 @@ public class ShortUrlStatisticsServiceImpl implements ShortUrlStatisticsService 
         }
         if (isValid) {
             BMapModel bMapModel = MapUtil.decodeIP(ip);
+            if (bMapModel.getContent() == null) {
+                LOGGER.error("查询ip无返回内容");
+                return;
+            }
             VisitHis visitHis = new VisitHis();
             visitHis.setUrlId(shortUrlId);
             visitHis.setIp(ip);

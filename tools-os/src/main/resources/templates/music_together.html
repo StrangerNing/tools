@@ -217,9 +217,9 @@
     setTimeout(function() {
       if(data.current != undefined) {
         musicControl.currentTime = data.current + 2;
+        websocket.send('{"type":"duration","data": "' + musicControl.duration + '"}');
       }
       musicControl.play();
-      websocket.send('{"type":"duration","data": "' + musicControl.duration + '"}')
     }, 1000);
   }
 

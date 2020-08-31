@@ -9,6 +9,7 @@ import me.znzn.tools.module.user.entity.enums.StatusEnum;
 import me.znzn.tools.module.user.entity.vo.UserInfoVO;
 import me.znzn.tools.utils.LoginUserUtil;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -52,7 +53,19 @@ public class ShortUrlController {
             return new ModelAndView("404");
         }
         shortUrlStatisticsService.saveVisitHistory(shortUrl, request);
-        return new ModelAndView("redirect:" + url.getOriginUrl());
+        String queryString = request.getQueryString();
+        if (null == queryString) {
+            queryString = "";
+        }
+        String originUrl = "";
+        if (url.getOriginUrl() != null) {
+            if (url.getOriginUrl().contains("?")) {
+                originUrl = url.getOriginUrl().concat("&").concat(queryString);
+            } else {
+                originUrl = url.getOriginUrl().concat("?").concat(queryString);
+            }
+        }
+        return new ModelAndView("redirect:" + originUrl);
     }
 
     @PostMapping("/url/update")
