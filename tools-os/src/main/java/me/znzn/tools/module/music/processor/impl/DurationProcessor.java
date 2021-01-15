@@ -24,7 +24,7 @@ public class DurationProcessor implements MessageProcessor {
     private MusicControlService musicControlService;
 
     @Override
-    public void excute(WebSocketSession session, WebSocketMessage message) throws IOException {
+    public void execute(WebSocketSession session, WebSocketMessage message) throws IOException {
         MessageVO text = JsonUtils.toObject(((TextMessage) message).asBytes(), MessageVO.class);
         double duration = Double.parseDouble(text.getData());
         musicControlService.setMusicDuration(duration);

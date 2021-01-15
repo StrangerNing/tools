@@ -35,28 +35,27 @@ public class ChatProcessor implements MessageProcessor {
     private MusicControlService musicControlService;
 
     @Override
-    public void excute(WebSocketSession session, WebSocketMessage message) throws IOException {
+    public void execute(WebSocketSession session, WebSocketMessage message) throws IOException {
         MessageVO text = JsonUtils.toObject(((TextMessage) message).asBytes(), MessageVO.class);
         if (WsSessionManager.getUserNickName(session) == null && !text.getData().startsWith("设置昵称")) {
             String nickname = "用户" + new Random().nextInt(10000);
             WsSessionManager.setUserNickname(session, nickname);
-            musicControlService.sendMessage(session, new MessageVO("setname", nickname));
+            WsSessionManager.sendMessage(session, new MessageVO("setname", nickname));
         }
         if (text.getData().startsWith("设置昵称 ")) {
             String nickName = text.getData().substring(5);
             WsSessionManager.setUserNickname(session, nickName);
-            musicControlService.sendMessage(session, new MessageVO("setname", nickName));
-            musicControlService.sendMessage(session, new MessageVO("Set nickname successfully"));
+            WsSessionManager.sendMessage(session, new MessageVO("setname", nickName));
+            WsSessionManager.sendMessage(session, new MessageVO("Set nickname successfully"));
         } else if (text.getData().startsWith("点歌 ")) {
             String name = text.getData().substring(3);
+            log.info("{}网易云点歌：{}", WsSessionManager.getUserNickName(session), name);
             getMusic(session, name, "netease");
         } else if (text.getData().startsWith("酷狗点歌 ")) {
             String name = text.getData().substring(5);
             getMusic(session, name, "kugou");
         } else if (text.getData().startsWith("投票切歌")) {
-            musicControlService.broadcastNextMusic();
-            musicControlService.sendMessage(session, new MessageVO("对不起，这个功能还没开发hhh，但我先帮你把这首歌切掉了"));
-            musicControlService.broadcastMessage(new MessageVO("用户 " + WsSessionManager.getUserNickName(session) + " 切掉了这首歌"));
+            musicControlService.cutSong(session);
         } else {
             WsSessionManager.broadcast(new ChatVO(text.getData(), WsSessionManager.getUserNickName(session)));
         }
@@ -65,12 +64,12 @@ public class ChatProcessor implements MessageProcessor {
     private void getMusic(WebSocketSession session, String name, String source) {
         List<MusicInfoVO> musicList = MusicUtil.searchBySourceToVO(name, source);
         if (CollectionUtils.isEmpty(musicList)) {
-            musicControlService.sendMessage(session, new MessageVO("没有找到相关歌曲"));
+            WsSessionManager.sendMessage(session, new MessageVO("没有找到相关歌曲"));
         } else {
             MusicInfoVO music = musicList.get(0);
             MusicPushVO musicPushVO = MusicUtil.getMusic(music);
             if (musicPushVO.getFile() == null) {
-                musicControlService.sendMessage(session, new MessageVO("歌曲无效"));
+                WsSessionManager.sendMessage(session, new MessageVO("歌曲无效"));
                 return;
             }
             musicPushVO.setUser(WsSessionManager.getUserNickName(session));

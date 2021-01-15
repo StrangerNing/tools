@@ -20,7 +20,7 @@ public class MsgProcessor implements MessageProcessor {
     private MusicControlService musicControlService;
 
     @Override
-    public void excute(WebSocketSession session, WebSocketMessage message) {
+    public void execute(WebSocketSession session, WebSocketMessage message) {
 
     }
 }

@@ -17,5 +17,5 @@ public interface MessageProcessor {
      * @param session websocket session
      * @param message received message
      */
-    void excute(WebSocketSession session, WebSocketMessage message) throws IOException;
+    void execute(WebSocketSession session, WebSocketMessage message) throws IOException;
 }

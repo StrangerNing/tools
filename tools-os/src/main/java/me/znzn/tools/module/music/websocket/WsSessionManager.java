@@ -91,4 +91,12 @@ public class WsSessionManager {
             }
         });
     }
+
+    public static void sendMessage(WebSocketSession session, MessageVO messageVO) {
+        try {
+            session.sendMessage(new TextMessage(messageVO.toString()));
+        } catch (IOException i) {
+            log.error("IO异常", i);
+        }
+    }
 }

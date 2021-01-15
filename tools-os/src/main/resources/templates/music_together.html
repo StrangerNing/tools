@@ -11,7 +11,7 @@
  作者：Akkariin Meiko | QQ：204034 | Telegram：Akkariins
 
 -->
-<html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta name="theme-color" content="#009688" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -83,7 +83,7 @@
         </div>
         <div class="col s12 m4 livechat">
             <h5>实时聊天</h5>
-            <p>当前一共在线 <online id="online-user">0</online> 人</p>
+            <p>当前一共在线 <online id="online-user">0</online> 人<cut id="cut-song">&nbsp;</cut></p>
             <div id="chatdata"><button onclick="connect()" class="btn btn-primary">连接服务器</button></div>
             <div class="input-group">
                 <input type="text" id="msginput" class="form-control input white-text" placeholder="消息内容"></input>
@@ -322,6 +322,16 @@
             break;
           case "setname":
             window.localStorage.setItem("username", json.data);
+            break;
+          case "cut":
+            if (json.data === "0") {
+              $("#cut-song").html(null);
+            } else {
+              $("#cut-song").html("，当前歌曲已有" + json.data + "人投票切歌");
+            }
+            break;
+          case "duration":
+            websocket.send('{"type":"duration","data": "' + musicControl.duration + '"}');
             break;
           default:
             print("Unknown message type: " + json.type);

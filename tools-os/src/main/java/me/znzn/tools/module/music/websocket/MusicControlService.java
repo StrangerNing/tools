@@ -1,5 +1,6 @@
 package me.znzn.tools.module.music.websocket;
 
+import io.netty.util.internal.MathUtil;
 import lombok.extern.slf4j.Slf4j;
 import me.znzn.tools.module.music.entity.MessageVO;
 import me.znzn.tools.module.music.entity.MusicInfoVO;
@@ -15,6 +16,7 @@ import org.springframework.web.socket.WebSocketSession;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -29,11 +31,13 @@ public class MusicControlService {
     @Resource
     private RedisTemplate redisTemplate;
 
-    private static String MUSIC_LIST_KEY = "music_list";
+    private static final String MUSIC_LIST_KEY = "music_list";
 
-    private static String SYNC_KEY = "music_sync_key";
+    private static final String SYNC_KEY = "music_sync_key";
 
-    private static String RANDOM_KEY = "music_random";
+    private static final String RANDOM_KEY = "music_random";
+
+    private static final String CUT_SONG_KEY = "music_cut";
 
     private static MusicPushVO music;
 
@@ -41,8 +45,11 @@ public class MusicControlService {
     public void init() {
         while (WsSessionManager.SESSION_POOL.size() != 0) {
             Long musicListSize = redisTemplate.opsForList().size(MUSIC_LIST_KEY);
+            if (music != null && (music.getLength() == null || music.getLength() == 0 || music.getLength().isNaN())) {
+                WsSessionManager.broadcast(new MessageVO("duration" , "true"));
+            }
             if (musicListSize != null && musicListSize > 0) {
-                if (music == null || "系统随机".equals(music.getUser())) {
+                if (music == null || music.getIsRandom()) {
                     broadcastNextMusic();
                 } else {
                     Long time = (Long) redisTemplate.opsForValue().get(SYNC_KEY);
@@ -57,7 +64,7 @@ public class MusicControlService {
                 if (music == null) {
                     sendRandomSong();
                 } else {
-                    if (time != null && music.getLength() != null) {
+                    if (time != null && music.getLength() != null && !music.getLength().isNaN()) {
                         if (System.currentTimeMillis() - time > (music.getLength() * 1000 + 2000)) {
                             sendRandomSong();
                         }
@@ -80,6 +87,7 @@ public class MusicControlService {
         } else {
             redisTemplate.opsForValue().set(SYNC_KEY, System.currentTimeMillis());
             WsSessionManager.broadcast(music);
+            cleanCutSongVoted();
         }
     }
 
@@ -90,6 +98,7 @@ public class MusicControlService {
 
     public void sendNowMusic(WebSocketSession session) {
         if (music != null) {
+            sendVoteNum(session);
             Long current = (Long)redisTemplate.opsForValue().get(SYNC_KEY);
             if (current != null) {
                 long length = (System.currentTimeMillis() - current);
@@ -149,22 +158,13 @@ public class MusicControlService {
         return null;
     }
 
-    public void sendMessage(WebSocketSession session, MessageVO messageVO) {
-        try {
-            session.sendMessage(new TextMessage(messageVO.toString()));
-        } catch (IOException i) {
-            log.error("IO异常", i);
-        }
-    }
-
-    public void broadcastMessage(MessageVO messageVO) {
-        WsSessionManager.broadcast(messageVO);
-    }
-
     public void saveSongId(MusicInfoVO musicInfoVO) {
         redisTemplate.opsForSet().add(RANDOM_KEY, musicInfoVO);
     }
 
+    /**
+     * 推送播放新的随机歌曲
+     */
     public void sendRandomSong() {
         MusicInfoVO song = (MusicInfoVO)redisTemplate.opsForSet().randomMember(RANDOM_KEY);
         if (song == null) {
@@ -172,19 +172,69 @@ public class MusicControlService {
         }
         redisTemplate.opsForValue().set(SYNC_KEY, System.currentTimeMillis());
         MusicPushVO musicPushVO = MusicUtil.getMusic(song);
-        musicPushVO.setUser("系统随机");
+        musicPushVO.setIsRandom(true);
         music = musicPushVO;
         WsSessionManager.broadcast(musicPushVO);
         WsSessionManager.broadcast(new MessageVO("系统随机播放：" + music.getName()));
+        cleanCutSongVoted();
     }
 
     public String isRandomMusic() {
-        return music != null && "系统随机".equals(music.getUser()) ? music.getName() : null;
+        return music != null && music.getIsRandom() ? music.getName() : null;
     }
 
     public void setMusicDuration(double duration) {
-        if (music != null && (music.getLength() == null || music.getLength() == 0)) {
+        if (music != null && (music.getLength() == null || music.getLength() == 0 || music.getLength().isNaN())) {
             music.setLength(duration);
         }
+    }
+
+    public void cutSong(WebSocketSession session) {
+        BigDecimal cutPercent = new BigDecimal(0.3);
+        String token = WsSessionManager.getToken(session);
+        Boolean isVoted = redisTemplate.opsForSet().isMember(CUT_SONG_KEY, token);
+        if (isVoted == null) {
+            return;
+        }
+        if (isVoted) {
+            WsSessionManager.sendMessage(session, new MessageVO("你已经投过票了"));
+        }
+        redisTemplate.opsForSet().add(CUT_SONG_KEY, token);
+        BigDecimal votedSize = getVotedSize();
+        BigDecimal onlineSize = new BigDecimal(WsSessionManager.SESSION_POOL.size());
+
+        if (votedSize != null && onlineSize != null) {
+            boolean canCut = votedSize.compareTo(onlineSize.multiply(cutPercent)) > -1;
+            if (canCut) {
+                broadcastNewMusic();
+                WsSessionManager.broadcast(new MessageVO("切歌成功"));
+            }
+        }
+        sendVoteNum();
+    }
+
+    public void cleanCutSongVoted() {
+        redisTemplate.delete(CUT_SONG_KEY);
+        WsSessionManager.broadcast(new MessageVO("cut", "0"));
+    }
+
+    public BigDecimal getVotedSize() {
+        return new BigDecimal(redisTemplate.opsForSet().size(CUT_SONG_KEY));
+    }
+
+    public void sendVoteNum(WebSocketSession session) {
+        BigDecimal size = getVotedSize();
+        if (size == null) {
+            size = new BigDecimal(0);
+        }
+        WsSessionManager.sendMessage(session, new MessageVO("cut", String.valueOf(size)));
+    }
+
+    public void sendVoteNum() {
+        BigDecimal size = getVotedSize();
+        if (size == null) {
+            size = new BigDecimal(0);
+        }
+        WsSessionManager.broadcast(new MessageVO("cut", String.valueOf(size)));
     }
 }

@@ -38,6 +38,8 @@ public class MusicPushVO extends MessageVO implements Serializable {
 
     private Double length;
 
+    private Boolean isRandom = false;
+
     @Override
     public String toString() {
         return JsonUtils.toJson(this);

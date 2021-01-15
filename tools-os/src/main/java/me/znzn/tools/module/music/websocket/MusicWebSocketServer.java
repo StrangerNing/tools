@@ -45,7 +45,7 @@ public class MusicWebSocketServer extends TextWebSocketHandler {
         musicControlService.sendMusicList(session);
         String name = musicControlService.isRandomMusic();
         if (name != null) {
-            musicControlService.sendMessage(session, new MessageVO("系统随机播放：" + name));
+            WsSessionManager.sendMessage(session, new MessageVO("系统随机播放：" + name));
         }
     }
 
@@ -55,7 +55,7 @@ public class MusicWebSocketServer extends TextWebSocketHandler {
             String type = (String)JSON.parseObject((String) message.getPayload()).get("type");
             try {
                 MessageProcessor messageProcessor = (MessageProcessor)SpringUtil.getBean(type + "Processor");
-                messageProcessor.excute(session, message);
+                messageProcessor.execute(session, message);
             } catch (BeansException e) {
                 log.error("查找处理bean失败", e);
             }
