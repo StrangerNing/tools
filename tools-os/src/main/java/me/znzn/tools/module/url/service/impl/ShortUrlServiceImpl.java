@@ -3,6 +3,7 @@ package me.znzn.tools.module.url.service.impl;
 import me.znzn.tools.common.component.ResultPage;
 import me.znzn.tools.common.constant.CommonConstant;
 import me.znzn.tools.common.exception.BusinessException;
+import me.znzn.tools.module.url.entity.constant.UrlRedisConstant;
 import me.znzn.tools.module.url.entity.po.ShortUrl;
 import me.znzn.tools.module.url.entity.vo.ShortUrlVO;
 import me.znzn.tools.module.url.mapper.ShortUrlMapper;
@@ -10,12 +11,14 @@ import me.znzn.tools.module.url.service.ShortUrlService;
 import me.znzn.tools.module.user.entity.enums.StatusEnum;
 import me.znzn.tools.module.user.entity.vo.UserInfoVO;
 import me.znzn.tools.utils.LongNumUtil;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author zhuzening
@@ -28,6 +31,8 @@ public class ShortUrlServiceImpl implements ShortUrlService {
 
     @Resource
     private ShortUrlMapper shortUrlMapper;
+    @Resource
+    private RedisTemplate redisTemplate;
 
     @Override
     public String saveUrl(ShortUrl shortUrl) {
@@ -49,7 +54,17 @@ public class ShortUrlServiceImpl implements ShortUrlService {
     @Override
     public ShortUrl getOriginUrl(String shortUrl) {
         Long id = LongNumUtil.decode(shortUrl);
-        return shortUrlMapper.selectByPrimaryKey(id);
+        ShortUrl url = (ShortUrl)redisTemplate.opsForValue().get(UrlRedisConstant.SHORT_URL_KEY + id);
+        if (url == null) {
+            ShortUrl dbUrl = shortUrlMapper.selectByPrimaryKey(id);
+            if (dbUrl != null) {
+                redisTemplate.opsForValue().set(UrlRedisConstant.SHORT_URL_KEY + id, dbUrl, Long.parseLong(CommonConstant.SHORT_URL_CACHE_TIME), TimeUnit.DAYS);
+            }
+            return dbUrl;
+        } else {
+            redisTemplate.expire(UrlRedisConstant.SHORT_URL_KEY + id, Long.parseLong(CommonConstant.SHORT_URL_CACHE_TIME), TimeUnit.DAYS);
+        }
+        return url;
     }
 
     @Override

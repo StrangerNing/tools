@@ -148,8 +148,8 @@ export default {
     }
     return {
       loginForm: {
-        username: 'admin',
-        password: 'zhuzening8'
+        username: null,
+        password: null
       },
       registerForm: {
         username: null,

@@ -20,5 +20,7 @@ public class CommonConstant {
 
     public static String CAPTCHA_END_URL = "https://recaptcha.net/recaptcha/api/siteverify";
 
-    public static String CAPTCHA_SECRET = "6LcPWzEaAAAAAJP_HVXIFvwyHGF6hEn9eR1UHjqt";
+    public static String CAPTCHA_SECRET = "";
+
+    public static String SHORT_URL_CACHE_TIME = "10";
 }

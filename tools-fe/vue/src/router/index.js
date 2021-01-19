@@ -131,6 +131,21 @@ export const constantRoutes = [
       },
     }]
   },
+  {
+    path: '/user/info',
+    component: Layout,
+    redirect: '/user/info/edit',
+    hidden: true,
+    children: [{
+      path: 'edit',
+      name: 'userInfoEdit',
+      component: () => import('@/views/user/info'),
+      meta: {
+        title: '个人信息',
+        icon: 'user'
+      }
+    }]
+  },
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
