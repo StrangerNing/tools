@@ -8,6 +8,7 @@ import me.znzn.tools.module.user.entity.form.RegisterForm;
 import me.znzn.tools.module.user.entity.vo.UserInfoVO;
 import me.znzn.tools.module.user.service.UserService;
 import me.znzn.tools.utils.LoginUserUtil;
+import me.znzn.tools.utils.RecaptchaValidUtil;
 import me.znzn.tools.utils.ValidatorUtil;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,6 +40,11 @@ public class UserController {
         ValidatorUtil.validate(registerForm);
         if (!registerForm.getPassword().equals(registerForm.getConfirmPassword())) {
             throw new BusinessException("两次密码不一致");
+        }
+        String captcha = registerForm.getCaptchaCode();
+        Boolean captchaValid = RecaptchaValidUtil.valid(captcha);
+        if (!captchaValid) {
+            throw new BusinessException("人机校验未通过");
         }
         return Result.success(userService.register(registerForm));
     }

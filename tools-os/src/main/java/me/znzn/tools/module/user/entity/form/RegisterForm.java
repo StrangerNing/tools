@@ -21,4 +21,6 @@ public class RegisterForm {
     @NotBlank(message = "请输入确认密码")
     private String confirmPassword;
 
+    private String captchaCode;
+
 }

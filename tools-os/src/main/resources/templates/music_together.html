@@ -216,7 +216,7 @@
     lrcObj = parseLyric(data.lrcs);
     setTimeout(function() {
       if(data.current != undefined) {
-        musicControl.currentTime = data.current + 2;
+        musicControl.currentTime = data.current;
         websocket.send('{"type":"duration","data": "' + musicControl.duration + '"}');
       }
       musicControl.play();
