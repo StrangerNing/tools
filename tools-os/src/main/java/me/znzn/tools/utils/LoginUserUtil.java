@@ -53,4 +53,10 @@ public class LoginUserUtil {
         }
         return loginUser;
     }
+
+    public static void setSessionUser(UserInfoVO loginUser) {
+        HttpServletRequest request = ((ServletRequestAttributes) (RequestContextHolder.currentRequestAttributes())).getRequest();
+        request.getSession().removeAttribute("user");
+        request.getSession().setAttribute("user", loginUser);
+    }
 }

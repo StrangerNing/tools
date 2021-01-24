@@ -1,8 +1,9 @@
 package me.znzn.tools.module.api.controller;
 
-import me.znzn.tools.common.component.Result;
+import me.znzn.tools.common.component.ResultPageUtil;
 import me.znzn.tools.module.api.entity.GenerateShortUrlVO;
 import me.znzn.tools.module.api.service.ApiService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,7 +23,7 @@ public class ApiController {
     private ApiService apiService;
 
     @GetMapping("/url/get")
-    public Result getShortUrl(GenerateShortUrlVO shortUrlVO) {
-        return Result.success(apiService.getShortUrl(shortUrlVO));
+    public ResponseEntity getShortUrl(GenerateShortUrlVO shortUrlVO) {
+        return ResultPageUtil.success(apiService.getShortUrl(shortUrlVO));
     }
 }

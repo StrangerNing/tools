@@ -5,7 +5,8 @@ import { resetRouter } from '@/router'
 const state = {
   token: getToken(),
   name: '',
-  avatar: ''
+  avatar: '',
+  nickname: ''
 }
 
 const mutations = {
@@ -17,6 +18,9 @@ const mutations = {
   },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
+  },
+  SET_NICKNAME: (state, nickname) => {
+    state.nickname = nickname
   }
 }
 
@@ -30,7 +34,8 @@ const actions = {
         commit('SET_TOKEN', data.token)
         commit('SET_NAME', data.username)
         // let avatar = data.avatar === undefined || data.avatar === null ? '@/assets/default_avatar.jpeg' : data.avatar
-        commit('SET_AVATAR', data.avatar)
+        commit('SET_AVATAR', data.avatarUrl)
+        commit('SET_NICKNAME', data.nickname)
         setToken(data.token)
         resolve()
       }).catch(error => {
@@ -46,11 +51,12 @@ const actions = {
         const { data } = response
 
         if (!data) {
-          reject('Verification failed, please Login again.')
+          reject('用户验证失败，请重新登录')
         }
 
         commit('SET_NAME', data.username)
-        commit('SET_AVATAR', data.avatar)
+        commit('SET_AVATAR', data.avatarUrl)
+        commit('SET_NICKNAME', data.nickname)
         resolve(data)
       }).catch(error => {
         reject(error)

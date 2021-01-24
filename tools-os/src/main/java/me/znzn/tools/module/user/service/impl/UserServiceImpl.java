@@ -76,6 +76,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Boolean update(UserInfoVO userInfoVO, UserInfoVO loginUser) {
+        User user = new User();
+        BeanUtils.copyProperties(userInfoVO, user);
+        user.setModifyTime(new Date());
+        user.setModifyEmp(loginUser.getId());
+        Integer count = userMapper.updateByPrimaryKey(user);
+        return count == 1;
+    }
+
+    @Override
     public List<ApiKey> getApiKeyList(Long userId) {
         ApiKey query = new ApiKey();
         query.setCreateId(userId);

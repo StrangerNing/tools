@@ -76,4 +76,12 @@ public class UserInfoVO {
      */
     private String remark;
 
+    private String roles;
+
+    private String avatar;
+
+    private String avatarUrl;
+
+    private String nickname;
+
 }

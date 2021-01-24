@@ -23,4 +23,12 @@ public class CommonConstant {
     public static String CAPTCHA_SECRET = "";
 
     public static String SHORT_URL_CACHE_TIME = "10";
+
+    public static String OSS_ENDPOINT = "";
+
+    public static String OSS_ACCESS_KEY_ID = "";
+
+    public static String OSS_ACCESS_KEY_SECRET = "";
+
+    public static String OSS_BUCKET_NAME = "";
 }

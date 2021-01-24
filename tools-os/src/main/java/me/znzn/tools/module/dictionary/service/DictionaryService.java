@@ -2,6 +2,7 @@ package me.znzn.tools.module.dictionary.service;
 
 import me.znzn.tools.common.component.ResultPage;
 import me.znzn.tools.module.dictionary.entity.po.Dictionary;
+import me.znzn.tools.module.dictionary.entity.vo.DictionaryVO;
 import me.znzn.tools.module.user.entity.vo.UserInfoVO;
 
 import java.util.List;
@@ -23,7 +24,14 @@ public interface DictionaryService {
      * @param dictionary 查询条件
      * @return me.znzn.tools.common.component.ResultPage 全局变量列表
      */
-    ResultPage getConstantList(Dictionary dictionary);
+    List<DictionaryVO> getConstantList(Dictionary dictionary);
+
+    /**
+     * 根据条件查询数量
+     * @param dictionary
+     * @return
+     */
+    int countByProperty(Dictionary dictionary);
 
     /**
      * 更新值记录

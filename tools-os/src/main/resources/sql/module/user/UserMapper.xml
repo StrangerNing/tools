@@ -16,6 +16,9 @@
         <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP"/>
         <result column="modify_emp" property="modifyEmp" jdbcType="BIGINT"/>
         <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="roles" property="roles" jdbcType="VARCHAR"/>
+        <result column="nickname" property="nickname" jdbcType="VARCHAR"/>
+        <result column="avatar" property="avatar" jdbcType="VARCHAR"/>
     </resultMap>
 
     <!-- 表名 -->
@@ -23,12 +26,12 @@
 
     <!-- 所有字段 -->
     <sql id="all_columns">
-        id, username, password, email, mobile, sex, status, create_time, create_emp, modify_time, modify_emp, remark
+        id, username, password, email, mobile, sex, status, create_time, create_emp, modify_time, modify_emp, remark, roles, nickname, avatar
     </sql>
 
     <!-- 不带主键的所有字段 -->
     <sql id="all_columns_not_with_id">
-        username, password, email, mobile, sex, status, create_time, create_emp, modify_time, modify_emp, remark
+        username, password, email, mobile, sex, status, create_time, create_emp, modify_time, modify_emp, remark, roles, nickname, avatar
     </sql>
 
     <!-- 查询条件带where -->
@@ -70,6 +73,12 @@
             <if test="remark != null and '' != remark">
                 AND remark = #{remark}
             </if>
+            <if test="nickname != null and '' != nickname">
+                AND nickname = #{nickname}
+            </if>
+            <if test="avatar != null and '' != avatar">
+                AND avatar = #{avatar}
+            </if>
         </trim>
     </sql>
 
@@ -109,6 +118,12 @@
             <if test="remark != null and '' != remark">
                 AND remark = #{remark}
             </if>
+            <if test="nickname != null and '' != nickname">
+                AND nickname = #{nickname}
+            </if>
+            <if test="avatar != null and '' != avatar">
+                AND avatar = #{avatar}
+            </if>
         </trim>
     </sql>
 
@@ -146,7 +161,16 @@
                 modify_emp = #{modifyEmp},
             </if>
             <if test="remark != null and '' != remark">
-                remark = #{remark}
+                remark = #{remark},
+            </if>
+            <if test="roles != null and '' != roles">
+                roles = #{roles},
+            </if>
+            <if test="nickname != null and '' != nickname">
+                nickname = #{nickname},
+            </if>
+            <if test="avatar != null and '' != avatar">
+                avatar = #{avatar}
             </if>
         </set>
     </sql>
@@ -185,7 +209,16 @@
                 modify_emp = #{item.modifyEmp},
             </if>
             <if test="item.remark != null and '' != item.remark">
-                remark = #{item.remark}
+                remark = #{item.remark},
+            </if>
+            <if test="item.roles != null and '' != item.roles">
+                roles = #{roles},
+            </if>
+            <if test="item.nickname != null and '' != item.nickname">
+                nickname = #{nickname},
+            </if>
+            <if test="avatar != null and '' != item.avatar">
+                avatar = #{avatar}
             </if>
         </set>
     </sql>
@@ -197,7 +230,7 @@
             <include refid="all_columns_not_with_id"/>
         )
         VALUES (
-            #{username}, #{password}, #{email}, #{mobile}, #{sex}, #{status}, #{createTime}, #{createEmp}, #{modifyTime}, #{modifyEmp}, #{remark}
+            #{username}, #{password}, #{email}, #{mobile}, #{sex}, #{status}, #{createTime}, #{createEmp}, #{modifyTime}, #{modifyEmp}, #{remark}, #{roles}, #{nickname}, #{avatar}
         )
     </insert>
 
@@ -210,7 +243,7 @@
         VALUES
         <foreach collection="list" item="item" separator="," index = "index">
         (
-            #{item.username}, #{item.password}, #{item.email}, #{item.mobile}, #{item.sex}, #{item.status}, #{item.createTime}, #{item.createEmp}, #{item.modifyTime}, #{item.modifyEmp}, #{item.remark}
+            #{item.username}, #{item.password}, #{item.email}, #{item.mobile}, #{item.sex}, #{item.status}, #{item.createTime}, #{item.createEmp}, #{item.modifyTime}, #{item.modifyEmp}, #{item.remark}, #{item.roles}, #{item.nickname}, #{avatar}
         )
         </foreach>
     </insert>

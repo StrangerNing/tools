@@ -3,6 +3,7 @@ package me.znzn.tools.module.dictionary.service.impl;
 import me.znzn.tools.common.component.ResultPage;
 import me.znzn.tools.common.constant.CommonConstant;
 import me.znzn.tools.module.dictionary.entity.po.Dictionary;
+import me.znzn.tools.module.dictionary.entity.vo.DictionaryVO;
 import me.znzn.tools.module.dictionary.mapper.DictionaryMapper;
 import me.znzn.tools.module.dictionary.service.DictionaryService;
 import me.znzn.tools.module.user.entity.enums.StatusEnum;
@@ -48,9 +49,13 @@ public class DictionaryServiceImpl implements DictionaryService {
     }
 
     @Override
-    public ResultPage getConstantList(Dictionary dictionary) {
-        List<Dictionary> result = dictionaryMapper.selectConstantListByCondition(dictionary);
-        return new ResultPage(dictionaryMapper.countByProperty(dictionary), dictionary.getLimit(), dictionary.getCurrentPage(), result);
+    public List<DictionaryVO> getConstantList(Dictionary dictionary) {
+        return dictionaryMapper.selectConstantListByCondition(dictionary);
+    }
+
+    @Override
+    public int countByProperty(Dictionary dictionary) {
+        return dictionaryMapper.countByProperty(dictionary);
     }
 
     @Override

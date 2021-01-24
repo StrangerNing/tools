@@ -1,10 +1,11 @@
 package me.znzn.tools.common.handler;
 
-import me.znzn.tools.common.component.Result;
-import me.znzn.tools.common.enums.ResultEnum;
+import me.znzn.tools.common.component.ResultPageUtil;
 import me.znzn.tools.common.exception.BusinessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -22,13 +23,13 @@ public class ExceptionHandle {
 
     @ExceptionHandler
     @ResponseBody
-    public Result handle(Exception e){
+    public ResponseEntity handle(Exception e){
         if (e instanceof BusinessException){
             BusinessException businessException = (BusinessException)e;
-            return Result.error(((BusinessException) e).getTextMessage(),((BusinessException) e).getCode());
+            return ResultPageUtil.error(HttpStatus.INTERNAL_SERVER_ERROR, businessException.getTextMessage(), Integer.valueOf(businessException.getCode()));
         }else {
             logger.error("系统异常，{}",e);
-            return Result.error("系统异常", ResultEnum.SystemException);
+            return ResultPageUtil.error(HttpStatus.INTERNAL_SERVER_ERROR, "系统异常");
         }
     }
 }

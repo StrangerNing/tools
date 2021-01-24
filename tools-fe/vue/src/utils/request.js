@@ -3,7 +3,7 @@ import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
 
-const baseURL = process.env.NODE_ENV === 'development' ? 'http://localhost:8080' : 'http://www.znzn.me/'
+export const baseURL = process.env.NODE_ENV === 'development' ? 'http://localhost:8080' : 'http://www.znzn.me'
 
 // create an axios instance
 const service = axios.create({
@@ -48,35 +48,33 @@ service.interceptors.response.use(
     const res = response.data
 
     // if the custom code is not 20000, it is judged as an error.
-    if (res.code !== '1') {
+    if (res.status !== 1) {
       Message({
-        message: res.message || 'Error',
+        message: res.msg || 'Error',
         type: 'error',
         duration: 5 * 1000
       })
-
-      // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
-      if (res.code === '401' || res.code === 50012 || res.code === 50014) {
-        // to re-login
-        MessageBox.confirm('You have been logged out, you can cancel to stay on this page, or log in again', 'Confirm logout', {
-          confirmButtonText: 'Re-Login',
-          cancelButtonText: 'Cancel',
-          type: 'warning'
-        }).then(() => {
-          store.dispatch('user/resetToken').then(() => {
-            location.reload()
-          })
-        })
-      }
-      return Promise.reject(new Error(res.message || 'Error'))
+      return Promise.reject(new Error(res.msg || 'Error'))
     } else {
       return res
     }
   },
   error => {
-    console.log('err' + error) // for debug
+    console.log('err' + error.response) // for debug
+    let response = error.response.data
+    if (response.status === 401) {
+      MessageBox.confirm('无法找到登录信息，请重新登录', '确认登出', {
+        confirmButtonText: '重新登录',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        store.dispatch('user/resetToken').then(() => {
+          location.reload()
+        })
+      })
+    }
     Message({
-      message: error.message,
+      message: error.response.data.msg,
       type: 'error',
       duration: 5 * 1000
     })

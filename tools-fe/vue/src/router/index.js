@@ -105,7 +105,8 @@ export const constantRoutes = [
     redirect: '/query',
     meta: {
       title: '全局变量管理',
-      icon: 'setting'
+      icon: 'setting',
+      roles: ['admin']
     },
     children: [{
       path: 'query',
@@ -113,7 +114,8 @@ export const constantRoutes = [
       component: () => import('@/views/constant/query'),
       meta: {
         title: '全局变量管理',
-        icon: 'setting'
+        icon: 'setting',
+        roles: ['admin']
       }
     }]
   },

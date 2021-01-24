@@ -31,6 +31,13 @@ public interface UserService {
     Boolean register(RegisterForm registerForm);
 
     /**
+     * 更新用户信息
+     * @param userInfoVO
+     * @return
+     */
+    Boolean update(UserInfoVO userInfoVO, UserInfoVO loginUser);
+
+    /**
      * 获取用户AK列表
      * @param userId 登陆用户id
      * @return AK列表
