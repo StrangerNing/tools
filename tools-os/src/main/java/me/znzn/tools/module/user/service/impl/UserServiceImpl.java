@@ -67,6 +67,7 @@ public class UserServiceImpl implements UserService {
             throw new BusinessException("用户名已被占用");
         }
         User newUser = new User();
+        newUser.setRoles("[\"user\"]");
         newUser.setUsername(username);
         newUser.setPassword(MD5Util.generate(registerForm.getPassword()));
         newUser.setSex(SexEnum.UNKNOWN.getIndex());

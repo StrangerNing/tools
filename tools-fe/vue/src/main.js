@@ -21,6 +21,7 @@ import '@/icons' // icon
 import '@/permission' // permission control
 
 import VueClipboard from "vue-clipboard2";
+import permission from './directive/permission/index'//引入权限控制组件
 
 /**
  * If you don't want to use mock-server
@@ -37,6 +38,8 @@ import VueClipboard from "vue-clipboard2";
 Vue.use(ElementUI)
 
 Vue.use(VueClipboard)
+
+Vue.use(permission)
 
 Vue.prototype.$echarts = echarts
 

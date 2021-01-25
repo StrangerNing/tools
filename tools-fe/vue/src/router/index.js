@@ -44,12 +44,6 @@ export const constantRoutes = [
   },
 
   {
-    path: '/404',
-    component: () => import('@/views/404'),
-    hidden: true
-  },
-
-  {
     path: '/',
     component: Layout,
     redirect: '/dashboard',
@@ -61,13 +55,18 @@ export const constantRoutes = [
     }]
   },
 
+
+]
+
+export const asyncRoutes = [
   {
     path: '/shortUrl',
     component: Layout,
     redirect: '/add',
     meta: {
       title: '短链接服务',
-      icon: 'global'
+      icon: 'global',
+      roles: ['user','admin']
     },
     children: [{
       path: 'add',
@@ -75,7 +74,8 @@ export const constantRoutes = [
       component: () => import('@/views/shortUrl/index'),
       meta: {
         title: '短链接生成',
-        icon: 'url'
+        icon: 'url',
+        roles: ['user','admin']
       }
     },
       {
@@ -84,7 +84,8 @@ export const constantRoutes = [
         component: () => import('@/views/shortUrl/query'),
         meta: {
           title: '短链接管理',
-          icon: 'search'
+          icon: 'search',
+          roles: ['user','admin']
         }
       },
       {
@@ -94,7 +95,8 @@ export const constantRoutes = [
         component: () => import('@/views/shortUrl/statistics'),
         meta: {
           title: '链接统计',
-          icon: 'search'
+          icon: 'search',
+          roles: ['user','admin']
         }
       }]
   },
@@ -129,7 +131,8 @@ export const constantRoutes = [
       component: () => import('@/views/apikey/index'),
       meta: {
         title: 'API管理',
-        icon: 'function'
+        icon: 'function',
+        roles: ['user','admin']
       },
     }]
   },
@@ -144,11 +147,16 @@ export const constantRoutes = [
       component: () => import('@/views/user/info'),
       meta: {
         title: '个人信息',
-        icon: 'user'
+        icon: 'user',
+        roles: ['user','admin']
       }
     }]
   },
-
+  {
+    path: '/404',
+    component: () => import('@/views/404'),
+    hidden: true
+  },
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]

@@ -133,7 +133,7 @@
       },
       updateAllConstants() {
         updateAllConstants().then(res => {
-          if (res.success) {
+          if (res.status === 1) {
             this.$message.success("应用成功！")
           }
         })

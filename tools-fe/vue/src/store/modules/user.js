@@ -1,12 +1,15 @@
 import { login, logout, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
+import store from "../index";
+import router from "../../router";
 
 const state = {
   token: getToken(),
   name: '',
   avatar: '',
-  nickname: ''
+  nickname: '',
+  roles: ''
 }
 
 const mutations = {
@@ -21,7 +24,10 @@ const mutations = {
   },
   SET_NICKNAME: (state, nickname) => {
     state.nickname = nickname
-  }
+  },
+  SET_ROLES: (state, roles) => {
+    state.roles = roles
+  },
 }
 
 const actions = {
@@ -36,6 +42,7 @@ const actions = {
         // let avatar = data.avatar === undefined || data.avatar === null ? '@/assets/default_avatar.jpeg' : data.avatar
         commit('SET_AVATAR', data.avatarUrl)
         commit('SET_NICKNAME', data.nickname)
+        store.dispatch('permission/generateRoutes', JSON.parse(data.roles)).then(e => router.addRoutes(e))
         setToken(data.token)
         resolve()
       }).catch(error => {
@@ -57,6 +64,7 @@ const actions = {
         commit('SET_NAME', data.username)
         commit('SET_AVATAR', data.avatarUrl)
         commit('SET_NICKNAME', data.nickname)
+        commit('SET_ROLES', data.roles)
         resolve(data)
       }).catch(error => {
         reject(error)

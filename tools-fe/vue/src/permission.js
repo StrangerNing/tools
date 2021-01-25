@@ -5,6 +5,7 @@ import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
 import { getToken } from '@/utils/auth' // get token from cookie
 import getPageTitle from '@/utils/get-page-title'
+import ro from "element-ui/src/locale/lang/ro";
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
@@ -26,17 +27,41 @@ router.beforeEach(async (to, from, next) => {
       next({ path: '/' })
       NProgress.done()
     } else {
-      const hasGetUserInfo = store.getters.name
-      if (hasGetUserInfo) {
+      // determine whether the user has obtained his permission roles through getInfo
+      console.log('hasRoles? ', store.getters.roles)
+      const hasRoles = store.getters.roles && store.getters.roles.length > 0
+      if (hasRoles) {
         next()
       } else {
         try {
-          // get user info
-          await store.dispatch('user/getInfo')
 
-          next()
+          // get user info
+          // note: roles must be a object array! such as: ['admin'] or ,['developer','editor']
+          const {
+            roles
+          } = await store.dispatch('user/getInfo')
+
+          console.log('当前路由表,', router)
+
+          console.log('after ====', store.getters.roles, store.getters.nickname)
+
+          //
+          // generate accessible routes map based on roles
+          const accessRoutes = await store.dispatch('permission/generateRoutes', JSON.parse(roles))
+
+          console.log('accessRoutes!!!! =========', accessRoutes)
+
+          // dynamically add accessible routes
+          router.addRoutes(accessRoutes)
+          //
+          //           // hack method to ensure that addRoutes is complete
+          //           // set the replace: true, so the navigation will not leave a history record
+          next({
+            ...to,
+            replace: true
+          })
         } catch (error) {
-          // remove token and go to login page to re-login
+          // remove token and go to login page to component-login
           await store.dispatch('user/resetToken')
           Message.error(error || 'Has Error')
           next(`/login?redirect=${to.path}`)
