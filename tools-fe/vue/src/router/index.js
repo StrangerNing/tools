@@ -62,7 +62,7 @@ export const asyncRoutes = [
   {
     path: '/shortUrl',
     component: Layout,
-    redirect: '/add',
+    redirect: '/shortUrl/query',
     meta: {
       title: '短链接服务',
       icon: 'global',
@@ -104,12 +104,7 @@ export const asyncRoutes = [
   {
     path: '/constant',
     component: Layout,
-    redirect: '/query',
-    meta: {
-      title: '全局变量管理',
-      icon: 'setting',
-      roles: ['admin']
-    },
+    redirect: '/constant/query',
     children: [{
       path: 'query',
       name: 'constantQuery',
@@ -124,7 +119,7 @@ export const asyncRoutes = [
   {
     path: '/api',
     component: Layout,
-    redirect: '/query',
+    redirect: '/api/query',
     children: [{
       path: 'query',
       name: 'akQuery',

@@ -64,7 +64,6 @@ public class UploadFileUtil {
         try {
             log.info("上传文件中...");
 
-
             String format;
             if (bucketNameEnum == null) {
                 bucketNameEnum = OssBucketNameEnum.OTHERS;
