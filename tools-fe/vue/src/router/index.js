@@ -100,6 +100,26 @@ export const asyncRoutes = [
         }
       }]
   },
+  {
+    path: '/file',
+    component: Layout,
+    redirect: '/file/imagelist',
+    meta: {
+      title: '文件管理',
+      icon: 'global',
+      roles: ['user','admin']
+    },
+    children: [{
+      path: 'imagelist',
+      name: 'imageList',
+      component: () => import('@/views/file/imageList'),
+      meta: {
+        title: '图床',
+        icon: 'url',
+        roles: ['user','admin']
+      }
+    }]
+  },
 
   {
     path: '/constant',

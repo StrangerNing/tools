@@ -1,11 +1,12 @@
 package me.znzn.tools.utils;
 
 import com.aliyun.oss.OSS;
+import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.OSSClientBuilder;
 import com.aliyun.oss.model.ObjectMetadata;
 import com.aliyun.oss.model.PutObjectResult;
 import lombok.extern.slf4j.Slf4j;
-import me.znzn.tools.common.enums.OssBucketNameEnum;
+import me.znzn.tools.common.enums.OssFileTypeEnum;
 import me.znzn.tools.common.exception.BusinessException;
 import me.znzn.tools.module.user.entity.vo.UserInfoVO;
 import org.apache.commons.lang3.StringUtils;
@@ -57,7 +58,7 @@ public class UploadFileUtil {
         return request.getScheme() + "://" + request.getServerName() + ":" +request.getServerPort() + filePath;
     }
 
-    public static String uploadOSS(MultipartFile file, UserInfoVO user, OssBucketNameEnum bucketNameEnum) {
+    public static String uploadOSS(MultipartFile file, UserInfoVO user, OssFileTypeEnum bucketNameEnum) {
         String fileName = UUID.randomUUID().toString();
         String suffix = MultipartFileUtil.getExtFilename(file);
         OSS client = new OSSClientBuilder().build(OSS_ENDPOINT, OSS_ACCESS_KEY_ID, OSS_ACCESS_KEY_SECRET);
@@ -66,9 +67,9 @@ public class UploadFileUtil {
 
             String format;
             if (bucketNameEnum == null) {
-                bucketNameEnum = OssBucketNameEnum.OTHERS;
+                bucketNameEnum = OssFileTypeEnum.OTHERS;
             }
-            if (bucketNameEnum.equals(OssBucketNameEnum.AVATAR)) {
+            if (bucketNameEnum.equals(OssFileTypeEnum.AVATAR)) {
                 format = bucketNameEnum.getName() + user.getId() + "/";
             } else {
                 SimpleDateFormat sd = new SimpleDateFormat("/yyyy/MM/dd/");
@@ -93,6 +94,11 @@ public class UploadFileUtil {
             client.shutdown();
         }
         return null;
+    }
+
+    public static void delFile(String filename) {
+        OSS client = new OSSClientBuilder().build(OSS_ENDPOINT, OSS_ACCESS_KEY_ID, OSS_ACCESS_KEY_SECRET);
+        client.deleteObject(OSS_BUCKET_NAME, filename);
     }
 
     public static String getFileUrl(String fileName, Long expiration) {

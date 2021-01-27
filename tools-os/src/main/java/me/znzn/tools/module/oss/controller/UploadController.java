@@ -3,18 +3,19 @@ package me.znzn.tools.module.oss.controller;
 import cn.hutool.core.io.FileTypeUtil;
 import lombok.extern.slf4j.Slf4j;
 import me.znzn.tools.common.component.ResultPageUtil;
-import me.znzn.tools.common.enums.OssBucketNameEnum;
+import me.znzn.tools.common.constant.CommonConstant;
+import me.znzn.tools.common.enums.OssFileTypeEnum;
 import me.znzn.tools.common.exception.BusinessException;
 import me.znzn.tools.module.oss.entity.vo.FileReturnVo;
+import me.znzn.tools.module.oss.service.FileService;
 import me.znzn.tools.module.user.entity.vo.UserInfoVO;
 import me.znzn.tools.utils.LoginUserUtil;
 import me.znzn.tools.utils.UploadFileUtil;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 
 /**
@@ -25,6 +26,8 @@ import java.io.IOException;
 @Slf4j
 @RestController()
 public class UploadController {
+    @Resource
+    private FileService fileService;
 
     @PostMapping("/upload/avatar")
     public ResponseEntity avatar(@RequestParam("file") MultipartFile file) {
@@ -34,11 +37,12 @@ public class UploadController {
                 throw new BusinessException("只能上传\"jpg\"、\"png\"格式的图片");
             }
             UserInfoVO user = LoginUserUtil.getSessionUser();
-            String fileName = UploadFileUtil.uploadOSS(file, user, OssBucketNameEnum.AVATAR);
-            String url = UploadFileUtil.getFileUrl(fileName, 3600 * 1000L);
+            String fileName = UploadFileUtil.uploadOSS(file, user, OssFileTypeEnum.AVATAR);
+            String url = UploadFileUtil.getFileUrl(fileName, Long.valueOf(CommonConstant.OSS_URL_EXPIRATION));
             FileReturnVo fileReturnVo = new FileReturnVo();
-            fileReturnVo.setFilename(fileName);
+            fileReturnVo.setName(fileName);
             fileReturnVo.setUrl(url);
+            fileService.insertFile(fileName, OssFileTypeEnum.AVATAR, user);
             return ResultPageUtil.success(fileReturnVo);
         } catch (IOException io) {
             log.error("获取文件错误，IO异常");
@@ -54,11 +58,12 @@ public class UploadController {
                 throw new BusinessException("只能上传图片");
             }
             UserInfoVO user = LoginUserUtil.getSessionUser();
-            String fileName = UploadFileUtil.uploadOSS(file, user, OssBucketNameEnum.IMAGE);
-            String url = UploadFileUtil.getFileUrl(fileName, 3600 * 1000L);
+            String fileName = UploadFileUtil.uploadOSS(file, user, OssFileTypeEnum.IMAGE);
+            String url = UploadFileUtil.getFileUrl(fileName, Long.valueOf(CommonConstant.OSS_URL_EXPIRATION));
             FileReturnVo fileReturnVo = new FileReturnVo();
-            fileReturnVo.setFilename(fileName);
+            fileReturnVo.setName(fileName);
             fileReturnVo.setUrl(url);
+            fileService.insertFile(fileName, OssFileTypeEnum.IMAGE, user);
             return ResultPageUtil.success(fileReturnVo);
         } catch (IOException io) {
             log.error("获取文件错误，IO异常");

@@ -31,4 +31,6 @@ public class CommonConstant {
     public static String OSS_ACCESS_KEY_SECRET = "";
 
     public static String OSS_BUCKET_NAME = "";
+
+    public static String OSS_URL_EXPIRATION = "3600000";
 }

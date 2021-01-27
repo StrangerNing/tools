@@ -89,8 +89,8 @@
     },
     methods: {
       handleAvatarSuccess(res, file) {
-        console.log(res.data.filename)
-        this.userInfo.avatar = res.data.filename;
+        console.log(res.data.name)
+        this.userInfo.avatar = res.data.name;
         this.userInfo.avatarUrl = res.data.url
       },
       beforeAvatarUpload(file) {

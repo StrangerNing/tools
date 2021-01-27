@@ -2,6 +2,7 @@ package me.znzn.tools.module.user.entity.vo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import me.znzn.tools.common.component.BaseModel;
 
 import java.util.Date;
 
@@ -83,5 +84,17 @@ public class UserInfoVO {
     private String avatarUrl;
 
     private String nickname;
+
+    public void setCreateUser(BaseModel model) {
+        model.setCreateAccount(id);
+        model.setCreateTime(new Date());
+        model.setModifyAccount(id);
+        model.setModifyTime(new Date());
+    }
+
+    public void setModifyUser(BaseModel modify) {
+        modify.setModifyAccount(id);
+        modify.setModifyTime(new Date());
+    }
 
 }
