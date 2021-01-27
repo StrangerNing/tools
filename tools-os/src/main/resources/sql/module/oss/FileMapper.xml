@@ -246,6 +246,7 @@
         FROM
         <include refid="table_name"/>
         <include refid="all_query_condition_with_where"/>
+        ORDER BY create_time DESC
         <if test="startIndex != null">
             <if test="limit != null">
                 LIMIT #{startIndex} , #{limit}

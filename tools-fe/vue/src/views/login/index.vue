@@ -148,8 +148,8 @@ export default {
     }
     return {
       loginForm: {
-        username: null,
-        password: null
+        username: 'admin',
+        password: 'zhuzening8'
       },
       registerForm: {
         username: null,
@@ -204,7 +204,6 @@ export default {
     login() {
       this.loading = true
       this.$store.dispatch('user/login', this.loginForm).then(() => {
-        console.log('1111')
         this.$router.push({ path: this.redirect || '/' })
         this.loading = false
       }).catch(() => {

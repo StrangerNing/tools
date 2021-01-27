@@ -3,6 +3,7 @@ package me.znzn.tools.utils;
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.OSSClientBuilder;
+import com.aliyun.oss.model.GeneratePresignedUrlRequest;
 import com.aliyun.oss.model.ObjectMetadata;
 import com.aliyun.oss.model.PutObjectResult;
 import lombok.extern.slf4j.Slf4j;
@@ -104,7 +105,19 @@ public class UploadFileUtil {
     public static String getFileUrl(String fileName, Long expiration) {
         OSS client = new OSSClientBuilder().build(OSS_ENDPOINT, OSS_ACCESS_KEY_ID, OSS_ACCESS_KEY_SECRET);
         Date expirationDate = new Date(System.currentTimeMillis() + expiration);
-        URL url = client.generatePresignedUrl(OSS_BUCKET_NAME, fileName, expirationDate);
+        GeneratePresignedUrlRequest request = new GeneratePresignedUrlRequest(OSS_BUCKET_NAME, fileName);
+        request.setExpiration(expirationDate);
+        URL url = client.generatePresignedUrl(request);
+        return url.toString();
+    }
+
+    public static String getFileUrl(String filename, Long expiration, String style) {
+        OSS client = new OSSClientBuilder().build(OSS_ENDPOINT, OSS_ACCESS_KEY_ID, OSS_ACCESS_KEY_SECRET);
+        Date expirationDate = new Date(System.currentTimeMillis() + expiration);
+        GeneratePresignedUrlRequest request = new GeneratePresignedUrlRequest(OSS_BUCKET_NAME, filename);
+        request.setExpiration(expirationDate);
+        request.setProcess(style);
+        URL url = client.generatePresignedUrl(request);
         return url.toString();
     }
 

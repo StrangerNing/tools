@@ -1,8 +1,10 @@
 package me.znzn.tools.module.oss.controller;
 
 
+import me.znzn.tools.common.component.ResultPage;
 import me.znzn.tools.common.component.ResultPageUtil;
 import me.znzn.tools.common.enums.OssFileTypeEnum;
+import me.znzn.tools.module.oss.entity.form.FileForm;
 import me.znzn.tools.module.oss.entity.po.File;
 import me.znzn.tools.module.oss.service.FileService;
 import me.znzn.tools.module.user.entity.vo.UserInfoVO;
@@ -28,12 +30,18 @@ public class FileController {
     @Autowired
     private FileService fileService;
 
+    @GetMapping("/get/{id}")
+    public ResponseEntity getFile(@PathVariable Long id) {
+        return ResultPageUtil.success(fileService.getFile(id));
+    }
+
     @GetMapping("/image/list")
-    public ResponseEntity imageList(File file) {
+    public ResponseEntity imageList(FileForm file) {
         UserInfoVO user = LoginUserUtil.getSessionUser();
         file.setCreateAccount(user.getId());
         file.setType(OssFileTypeEnum.IMAGE.getIndex());
-        return ResultPageUtil.successWithPage(fileService.getFileList(file), fileService.countFileList(file), file.getCurrentPage());
+        ResultPage page = fileService.getFileList(file);
+        return ResultPageUtil.successWithPage(page.getList(), page.getTotalCount(), page.getCurrentPage());
     }
 
     @GetMapping("/del/{id}")

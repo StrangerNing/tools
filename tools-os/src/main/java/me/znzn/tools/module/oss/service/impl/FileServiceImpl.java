@@ -1,13 +1,16 @@
 package me.znzn.tools.module.oss.service.impl;
 
+import me.znzn.tools.common.component.ResultPage;
 import me.znzn.tools.common.constant.CommonConstant;
 import me.znzn.tools.common.enums.OssFileTypeEnum;
+import me.znzn.tools.module.oss.entity.form.FileForm;
 import me.znzn.tools.module.oss.entity.po.File;
 import me.znzn.tools.module.oss.entity.vo.FileReturnVo;
 import me.znzn.tools.module.oss.mapper.FileMapper;
 import me.znzn.tools.module.oss.service.FileService;
 import me.znzn.tools.module.user.entity.vo.UserInfoVO;
 import me.znzn.tools.utils.UploadFileUtil;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -36,12 +39,14 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public List<FileReturnVo> getFileList(File file) {
-        List<FileReturnVo> list = fileMapper.selectByPropertyReturnVO(file);
+    public ResultPage getFileList(FileForm file) {
+        File f = new File();
+        BeanUtils.copyProperties(file, f);
+        List<FileReturnVo> list = fileMapper.selectByPropertyReturnVO(f);
         list.forEach(item -> {
-            item.setUrl(UploadFileUtil.getFileUrl(item.getName(), Long.valueOf(CommonConstant.OSS_URL_EXPIRATION)));
+            item.setUrl(UploadFileUtil.getFileUrl(item.getName(), Long.valueOf(CommonConstant.OSS_URL_EXPIRATION), file.getStyle()));
         });
-        return list;
+        return new ResultPage(fileMapper.countByProperty(f), file.getLimit(), file.getCurrentPage(), list);
     }
 
     @Override
@@ -57,5 +62,14 @@ public class FileServiceImpl implements FileService {
             fileMapper.deleteByPrimaryKey(id);
             UploadFileUtil.delFile(file.getName());
         }
+    }
+
+    @Override
+    public FileReturnVo getFile(Long id) {
+        File file = fileMapper.selectByPrimaryKey(id);
+        FileReturnVo fileReturnVo = new FileReturnVo();
+        BeanUtils.copyProperties(file, fileReturnVo);
+        fileReturnVo.setUrl(UploadFileUtil.getFileUrl(file.getName(), Long.valueOf(CommonConstant.OSS_URL_EXPIRATION)));
+        return fileReturnVo;
     }
 }

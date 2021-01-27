@@ -1,6 +1,8 @@
 package me.znzn.tools.module.oss.service;
 
+import me.znzn.tools.common.component.ResultPage;
 import me.znzn.tools.common.enums.OssFileTypeEnum;
+import me.znzn.tools.module.oss.entity.form.FileForm;
 import me.znzn.tools.module.oss.entity.po.File;
 import me.znzn.tools.module.oss.entity.vo.FileReturnVo;
 import me.znzn.tools.module.user.entity.vo.UserInfoVO;
@@ -29,7 +31,7 @@ public interface FileService {
      * @param file 文件
      * @return List
      */
-    List<FileReturnVo> getFileList(File file);
+    ResultPage getFileList(FileForm file);
 
     /**
      * 获取文件个数
@@ -43,4 +45,11 @@ public interface FileService {
      * @param id 文件id
      */
     void delFile(Long id);
+
+    /**
+     * 获取文件地址
+     * @param id 文件id
+     * @return me.znzn.tools.module.oss.entity.vo.FileReturnVo
+     */
+    FileReturnVo getFile(Long id);
 }

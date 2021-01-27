@@ -14,3 +14,10 @@ export function delFile(params) {
     method: 'get'
   })
 }
+
+export function getFile(params) {
+  return request({
+    url: '/file/get/' + params,
+    method: 'get'
+  })
+}
