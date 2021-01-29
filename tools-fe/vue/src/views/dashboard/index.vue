@@ -23,8 +23,6 @@ export default {
   },
   methods: {
     getUserInfo() {
-      console.log(this.$store.getters.avatar)
-      console.log(this.$store.getters.nickname)
       getInfo().then(res => {
         this.$alert(res.data, '用户信息', {
           confirmButtonText: '确定'

@@ -22,4 +22,11 @@ public interface FileMapper extends BaseDao<File> {
      * @return List
      */
     List<FileReturnVo> selectByPropertyReturnVO(File file);
+
+    /**
+     * 根据条件获取一个
+     * @param file
+     * @return
+     */
+    FileReturnVo selectOneByProperty(File file);
 }

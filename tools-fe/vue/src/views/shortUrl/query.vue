@@ -119,7 +119,6 @@
         })
       },
       lookup(row) {
-        console.log(row)
         this.$router.push({
           name: "statistics",
           params: {

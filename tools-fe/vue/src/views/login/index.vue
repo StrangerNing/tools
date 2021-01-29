@@ -196,7 +196,6 @@ export default {
         if (valid) {
           this.login()
         } else {
-          console.log('error submit!!')
           return false
         }
       })
@@ -222,7 +221,6 @@ export default {
     },
     handleRegister() {
       if (this.registerValid.codeFlag) {
-        console.log('发送注册请求')
         this.registerForm.captchaCode = this.registerValid.captchaCode
         register(this.registerForm).then(res => {
           if (res.data) {
@@ -250,11 +248,9 @@ export default {
       }
     },
     validRecaptcha(val) {
-      console.log(" =======", val, this.registerForm)
       if (val != null) {
         this.registerValid.captchaCode = val;
         this.registerValid.codeFlag = true;
-        console.log('父组件方法，验证成功')
       }
       this.handleRegister()
     },

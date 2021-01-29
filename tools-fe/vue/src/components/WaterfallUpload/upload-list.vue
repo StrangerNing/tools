@@ -6,6 +6,8 @@
       'el-upload-list--' + listType,
       { 'is-disabled': disabled }
     ]"
+    v-infinite-scroll="loadImage"
+    style="overflow:auto"
     name="el-list"
   >
     <li
@@ -19,11 +21,11 @@
       @click="focusing = false"
     >
       <slot :file="file">
-        <img
-          class="el-upload-list__item-thumbnail"
+        <el-image
+          class="el-upload-list__item-thumbnail infinite-list-item"
           v-if="file.status !== 'uploading' && ['picture-card', 'picture'].indexOf(listType) > -1"
-          :src="file.url" alt=""
-        >
+          :src="file.url" alt="" lazy
+        ></el-image>
         <a class="el-upload-list__item-name" @click="handleClick(file)">
           <i class="el-icon-document"></i>{{file.name}}
         </a>

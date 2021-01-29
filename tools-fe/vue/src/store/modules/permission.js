@@ -6,7 +6,6 @@ import { asyncRoutes, constantRoutes } from '@/router'
  * @param route
  */
 function hasPermission(roles, route) {
-  console.log('now recognize if has Roles ==========', route.meta, roles)
   if (!roles || roles === '') {
     return false
   }
@@ -29,13 +28,11 @@ export function filterAsyncRoutes(routes, roles) {
     const tmp = { ...route }
     if (hasPermission(roles, tmp)) {
       if (tmp.children) {
-        console.log('children =======')
         tmp.children = filterAsyncRoutes(tmp.children, roles)
       }
       res.push(tmp)
     }
   })
-  console.log('getAsncRoutes ========', res)
 
   return res
 }
@@ -59,10 +56,8 @@ const actions = {
       if (roles.includes('superAdmin')) {
         accessedRoutes = asyncRoutes
       } else {
-        console.log('not superAdmin')
         accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
       }
-      console.log('结束！！！ =======', accessedRoutes)
       commit('SET_ROUTES', accessedRoutes)
       resolve(accessedRoutes)
     })

@@ -242,7 +242,7 @@
 
     <select id="selectByPropertyReturnVO" parameterType="me.znzn.tools.module.oss.entity.po.File" resultType="me.znzn.tools.module.oss.entity.vo.FileReturnVo">
         SELECT
-        <include refid="all_columns"/>
+        id, name, type, create_account as createAccount, create_time as createTime, modify_account as modifyAccount, modify_time as modifyAccount, remark
         FROM
         <include refid="table_name"/>
         <include refid="all_query_condition_with_where"/>
@@ -252,6 +252,16 @@
                 LIMIT #{startIndex} , #{limit}
             </if>
         </if>
+    </select>
+
+    <select id="selectOneByProperty" parameterType="me.znzn.tools.module.oss.entity.po.File" resultType="me.znzn.tools.module.oss.entity.vo.FileReturnVo">
+        SELECT
+        id, name, type, create_account as createAccount, create_time as createTime, modify_account as modifyAccount, modify_time as modifyAccount, remark
+        FROM
+        <include refid="table_name"/>
+        <include refid="all_query_condition_with_where"/>
+        ORDER BY create_time DESC
+        LIMIT 1
     </select>
 
 

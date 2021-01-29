@@ -8,4 +8,6 @@ package me.znzn.tools.module.url.entity.constant;
 public class UrlRedisConstant {
 
     public static final String SHORT_URL_KEY = "short_url_" ;
+
+    public static final String FILE_KEY = "file_";
 }

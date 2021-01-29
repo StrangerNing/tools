@@ -3,6 +3,9 @@ package me.znzn.tools.module.oss.entity.vo;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import me.znzn.tools.common.component.BaseModel;
+import me.znzn.tools.common.constant.CommonConstant;
+
+import java.io.Serializable;
 
 /**
  * @author zhuzening
@@ -11,7 +14,9 @@ import me.znzn.tools.common.component.BaseModel;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class FileReturnVo extends BaseModel {
+public class FileReturnVo extends BaseModel implements Serializable {
+
+    private static final long serialVersionUID = 8066280598625648896L;
 
     private Long id;
 
@@ -23,4 +28,6 @@ public class FileReturnVo extends BaseModel {
      * url
      */
     private String url;
+
+    private String prefix = CommonConstant.FILE_REQUEST_PREFIX;
 }

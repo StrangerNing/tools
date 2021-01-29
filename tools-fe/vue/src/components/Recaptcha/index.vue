@@ -32,7 +32,6 @@
     methods: {
       handleLoadGoogleCaptcha() {
         let env = this;
-        console.log(env.captchaId)
         if (env.captchaId === undefined || env.captchaId === null) {
           env.captchaId = grecaptcha.render("captcha", {
             //在Google reCaptcha网站获取的Site Key
@@ -51,24 +50,20 @@
         }
       },
       handleCaptchaCallback(val) {
-        console.log(val, this.register)
         if (val != null) {
           this.register.captchaCode = val;
           this.register.codeFlag = true;
-          console.log('验证成功', this.register)
           this.$emit('input', this.register)
         }
       },
       handleCaptchaExpired() {
         this.register.captchaCode = "";
         this.register.codeFlag = false;
-        console.log('验证过期')
         this.$emit('input', this.register)
       },
       handleCaptchaError() {
         this.register.captchaCode = "";
         //重置验证码
-        console.log('重置验证码')
         grecaptcha.reset(this.captchaId);
         this.register.codeFlag = false;
         this.$emit('input', this.register)

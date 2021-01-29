@@ -13,6 +13,8 @@ spring:
   mvc:
     static-path-pattern: /static/**
     #static为存放css,js的文件夹
+  resources:
+    static-locations: classpath:/static/
 
   datasource:
     url: @maven.database.url@

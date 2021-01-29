@@ -43,13 +43,22 @@ public interface FileService {
     /**
      * 删除文件
      * @param id 文件id
+     * @param user 登录用户
      */
-    void delFile(Long id);
+    void delFile(Long id, UserInfoVO user);
 
     /**
      * 获取文件地址
      * @param id 文件id
+     * @param user 登录用户
      * @return me.znzn.tools.module.oss.entity.vo.FileReturnVo
      */
-    FileReturnVo getFile(Long id);
+    FileReturnVo getFile(Long id, UserInfoVO user);
+
+    /**
+     * 获取文件
+     * @param name
+     * @return
+     */
+    FileReturnVo getFile(String name);
 }

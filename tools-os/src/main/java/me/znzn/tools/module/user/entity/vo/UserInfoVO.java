@@ -1,9 +1,14 @@
 package me.znzn.tools.module.user.entity.vo;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import me.znzn.tools.common.component.BaseModel;
+import me.znzn.tools.common.exception.BusinessException;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -11,8 +16,11 @@ import java.util.Date;
  * @date 2019/11/19
  * @since 1.0
  */
+@Slf4j
 @Data
-public class UserInfoVO {
+public class UserInfoVO implements Serializable {
+
+    private static final long serialVersionUID = 5443017913386436929L;
 
     private String token;
 
@@ -95,6 +103,32 @@ public class UserInfoVO {
     public void setModifyUser(BaseModel modify) {
         modify.setModifyAccount(id);
         modify.setModifyTime(new Date());
+    }
+
+    public Boolean isAdmin() {
+        if (roles == null) {
+            return false;
+        }
+        try {
+            JSONArray rolesArray = JSON.parseArray(roles);
+            return rolesArray.contains("admin");
+        } catch (Exception e) {
+            log.error("JSON反序列化失败", e);
+            return false;
+        }
+    }
+
+    public Boolean hasOperateAuth(BaseModel baseModel) {
+        if (isAdmin()) {
+            return true;
+        }
+        return id.equals(baseModel.getCreateAccount());
+    }
+
+    public void hasOperateAuthThrowException(BaseModel baseModel) {
+        if (!hasOperateAuth(baseModel)) {
+            throw new BusinessException("没有操作权限");
+        }
     }
 
 }

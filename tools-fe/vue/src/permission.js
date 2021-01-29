@@ -28,7 +28,6 @@ router.beforeEach(async (to, from, next) => {
       NProgress.done()
     } else {
       // determine whether the user has obtained his permission roles through getInfo
-      console.log('hasRoles? ', store.getters.roles)
       const hasRoles = store.getters.roles && store.getters.roles.length > 0
       if (hasRoles) {
         next()
@@ -41,15 +40,9 @@ router.beforeEach(async (to, from, next) => {
             roles
           } = await store.dispatch('user/getInfo')
 
-          console.log('当前路由表,', router)
-
-          console.log('after ====', store.getters.roles, store.getters.nickname)
-
           //
           // generate accessible routes map based on roles
           const accessRoutes = await store.dispatch('permission/generateRoutes', JSON.parse(roles))
-
-          console.log('accessRoutes!!!! =========', accessRoutes)
 
           // dynamically add accessible routes
           router.addRoutes(accessRoutes)

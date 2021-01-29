@@ -24,6 +24,8 @@ public class CommonConstant {
 
     public static String SHORT_URL_CACHE_TIME = "10";
 
+    public static String FILE_CACHE_TIME = "1";
+
     public static String OSS_ENDPOINT = "";
 
     public static String OSS_ACCESS_KEY_ID = "";
@@ -33,4 +35,6 @@ public class CommonConstant {
     public static String OSS_BUCKET_NAME = "";
 
     public static String OSS_URL_EXPIRATION = "3600000";
+
+    public static String FILE_REQUEST_PREFIX = "";
 }

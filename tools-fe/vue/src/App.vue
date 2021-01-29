@@ -19,7 +19,6 @@ export default {
   },
   methods: {
     reload () {
-      console.log('刷新页面')
       this.isRouterAlive = false
       this.$nextTick(function () {
         this.isRouterAlive = true
@@ -30,8 +29,16 @@ export default {
 </script>
 
 <style lang="scss">
+  html,body {
+    height: 100%;
+  }
+
+  #app {
+    height: 100%;
+  }
   .page {
     &-container {
+      height: 100%;
       margin: 30px;
     }
     &-text {
@@ -39,6 +46,7 @@ export default {
       line-height: 46px;
     }
     &-content {
+      height: 100%;
       overflow: auto;
       margin-top: 20px
     }
