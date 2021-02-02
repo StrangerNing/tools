@@ -3,7 +3,7 @@ import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
 
-export const baseURL = process.env.NODE_ENV === 'development' ? 'http://10.130.161.205:8080' : 'http://www.znzn.me'
+export const baseURL = process.env.NODE_ENV === 'development' ? 'http://localhost:8080' : 'http://www.znzn.me'
 
 // create an axios instance
 const service = axios.create({
