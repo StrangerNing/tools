@@ -47,31 +47,39 @@
               <div
                 class="cover"
                 :style="initCardStyle(props)"
-                @click="handlePictureCardPreview(props.data.id)"
               >
-                <img
-                  :src="props.data.url"
-                  alt
-                  @load="$refs.waterfall.refresh"
-                >
-              </div>
-
-              <div class="name">
-                <p>上传时间：{{props.data.createTime}}</p>
-              </div>
-              <div class="menus">
-                <p
-                  data-title="复制链接"
-                  @click="handleCopy(props.data)"
-                />
-                <p
-                  data-title="编辑"
-                  @click="handleEdit(props.data)"
-                />
-                <p
-                  data-title="删除"
-                  @click="handleDelete(props.data)"
-                />
+                <slot :file="props">
+                  <img
+                    :src="props.data.url"
+                    alt="加载失败"
+                    @load="$refs.waterfall.refresh"
+                  />
+                  <div class="name">
+                    <p>上传时间：{{props.data.createTime}}</p>
+                  </div>
+                  <span class="el-upload-list__item-actions">
+                    <el-tooltip effect="dark" content="复制链接" placement="top-end">
+                      <span>
+                        <i class="el-icon-document-copy" @click="handleCopy(props.data)"></i>
+                      </span>
+                    </el-tooltip>
+                    <el-tooltip effect="dark" content="查看图片" placement="top">
+                      <span class="el-upload-list__item-preview">
+                        <i class="el-icon-zoom-in" @click="handlePictureCardPreview(props.data.id)"></i>
+                      </span>
+                    </el-tooltip>
+<!--                    <el-tooltip effect="dark" content="编辑" placement="top">-->
+<!--                      <span>-->
+<!--                        <i class="el-icon-edit" @click="handleEdit(props.data)"></i>-->
+<!--                      </span>-->
+<!--                    </el-tooltip>-->
+                    <el-tooltip effect="dark" content="删除" placement="top-start">
+                      <span class="el-upload-list__item-delete">
+                        <i class="el-icon-delete" @click="handleDelete(props.data)"></i>
+                      </span>
+                    </el-tooltip>
+                  </span>
+                </slot>
               </div>
             </el-card>
           </template>
@@ -82,10 +90,14 @@
         <p v-if="noMore" class="foot-tip">没有更多了</p>
       </el-divider>
     </div>
-    <el-dialog :visible.sync="dialogVisible">
-      <el-image :src="dialogImageUrl"></el-image>
+    <el-dialog :visible.sync="dialogVisible" fullscreen title="编辑信息">
+
     </el-dialog>
     <el-backtop target=".main-container"></el-backtop>
+    <el-image-viewer v-if="showViewer"
+                     :on-close="closeViewer"
+                     :url-list="[dialogImageUrl]">
+    </el-image-viewer>
   </div>
 </template>
 
@@ -93,33 +105,24 @@
   import {delFile, getFile, getImageList} from "../../api/file";
   import {baseURL} from "../../utils/request";
   import Waterfall from "vue-waterfall-plugin";
+  import ElImageViewer from 'element-ui/packages/image/src/image-viewer';
 
   export default {
     name: "imageList",
-    components: {Waterfall},
+    components: {Waterfall, ElImageViewer},
     data() {
       return {
         query: {
           currentPage: 1,
           limit: 10,
-          style: 'image/resize,l_200,m_mfit'
+          style: 'image/resize,l_150,m_mfit'
         },
         uploadUrl: baseURL + '/upload/image',
         imageList: [],
         dialogImageUrl: null,
         dialogVisible: false,
-        displaySetting: {
-          1200: { //当屏幕宽度小于等于1200
-            rowPerView: 4,
-          },
-          800: { //当屏幕宽度小于等于800
-            rowPerView: 3,
-          },
-          500: { //当屏幕宽度小于等于500
-            rowPerView: 2,
-          }
-        },
-
+        previewList: [],
+        showViewer: false,
 
         colors: ['#409EFF', '#67C23A', '#E6A23C', '#F56C6C', '#909399'],
         list: [],
@@ -197,8 +200,13 @@
       handlePictureCardPreview(id) {
         getFile(id).then(res => {
           this.dialogImageUrl = res.data.url
-          this.dialogVisible = true
+          document.body.style.overflow = 'hidden'
+          this.showViewer = true
         })
+      },
+      closeViewer() {
+        document.body.style.overflow = null
+        this.showViewer = false
       },
 
       load() {
@@ -231,17 +239,19 @@
        * 编辑
        */
       handleEdit() {
+        this.dialogVisible = true
         this.$message.success('编辑');
       },
       /**
        * 删除
        */
       handleDelete(item) {
-        this.$alert('该操作不可恢复，是否确定？', '标题名称', {
+        this.$confirm('该操作不可恢复，是否确定？', '删除文件', {
           confirmButtonText: '确定',
-          callback: action => {
-            this.handleRemove(item)
-          }
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.handleRemove(item)
         });
       },
       handleCopy(item) {
@@ -274,6 +284,49 @@
         display: block;
         width: 100%;
       }
+      .el-upload-list__item-actions {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        /*margin: 10px 10px 0 10px;*/
+        left: 0;
+        top: 0;
+        cursor: default;
+        text-align: center;
+        color: #fff;
+        opacity: 0;
+        font-size: 20px;
+        background-color: rgba(0, 0, 0, .5);
+        transition: opacity .3s;
+        &::after {
+          display: inline-block;
+          content: "";
+          height: 100%;
+          vertical-align: middle
+        }
+
+        span {
+          display: none;
+          cursor: pointer;
+        }
+
+        span + span {
+          margin-left: 15px;
+        }
+
+        .el-upload-list__item-delete {
+          position: static;
+          font-size: inherit;
+          color: inherit;
+        }
+
+        &:hover {
+          opacity: 1;
+          span {
+            display: inline-block;
+          }
+        }
+      }
     }
     .name {
       background: #fff;
@@ -281,6 +334,7 @@
       font-weight: 600;
       padding: 10px 20px;
       font-size: 14px;
+      text-align: left;
     }
     .menus {
       padding: 10px;
