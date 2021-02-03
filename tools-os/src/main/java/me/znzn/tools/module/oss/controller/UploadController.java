@@ -34,7 +34,7 @@ public class UploadController {
         try {
             String type = FileTypeUtil.getType(file.getInputStream());
             if (!"jpg".equals(type) && !"png".equals(type)) {
-                throw new BusinessException("只能上传\"jpg\"、\"png\"格式的图片");
+                return ResultPageUtil.error("只能上传\"jpg\"、\"png\"格式的图片");
             }
             UserInfoVO user = LoginUserUtil.getSessionUser();
             String fileName = UploadFileUtil.uploadOSS(file, user, OssFileTypeEnum.AVATAR);
@@ -55,7 +55,7 @@ public class UploadController {
         try {
             String type = FileTypeUtil.getType(file.getInputStream());
             if (!"jpg".equals(type) && !"png".equals(type) && !"gif".equals(type) && !"bmp".equals(type)) {
-                throw new BusinessException("只能上传图片");
+                return ResultPageUtil.error("只能上传图片");
             }
             UserInfoVO user = LoginUserUtil.getSessionUser();
             String fileName = UploadFileUtil.uploadOSS(file, user, OssFileTypeEnum.IMAGE);

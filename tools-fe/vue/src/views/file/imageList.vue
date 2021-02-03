@@ -189,6 +189,7 @@
       handleSuccess(response, file, fileList) {
         this.$message.success('上传成功')
         console.log('success ', response)
+        this.query.currentPage = 1
         this.search()
       },
       handleRemove(file) {

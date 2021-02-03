@@ -50,7 +50,7 @@
           originUrl: this.url
         }
         submitUrl(param).then(res => {
-          if (res.success) {
+          if (res.status === 1) {
             this.$message.success("提交成功")
             this.shortUrl = res.data
             this.showTip = true
