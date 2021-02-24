@@ -1,0 +1,519 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.znzn.tools.module.blog.mapper.ArticleMapper">
+
+    <!-- Article结果集 -->
+    <resultMap id="ArticleMap" type="me.znzn.tools.module.blog.entity.po.Article" >
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="title" property="title" jdbcType="VARCHAR"/>
+        <result column="content" property="content" jdbcType="VARCHAR"/>
+        <result column="alias" property="alias" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="INTEGER"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="permission" property="permission" jdbcType="INTEGER"/>
+        <result column="priority" property="priority" jdbcType="INTEGER"/>
+        <result column="author" property="author" jdbcType="VARCHAR"/>
+        <result column="comment" property="comment" jdbcType="INTEGER"/>
+        <result column="views" property="views" jdbcType="INTEGER"/>
+        <result column="minutes" property="minutes" jdbcType="INTEGER"/>
+        <result column="order_publish_time" property="orderPublishTime" jdbcType="TIMESTAMP"/>
+        <result column="edit_type" property="editType" jdbcType="INTEGER"/>
+        <result column="create_account" property="createAccount" jdbcType="BIGINT"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="modify_account" property="modifyAccount" jdbcType="BIGINT"/>
+        <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="version" property="version" jdbcType="INTEGER"/>
+        <result column="thumb" property="thumb" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="ArticleVoMap" type="me.znzn.tools.module.blog.entity.vo.ArticleVo" extends="ArticleMap">
+        <result column="markdown" property="markdown" jdbcType="VARCHAR"/>
+        <collection property="tags" resultMap="me.znzn.tools.module.blog.mapper.TagMapper.TagMap" columnPrefix="tag_"/>
+    </resultMap>
+
+    <!-- 表名 -->
+    <sql id="table_name">t_blog_article</sql>
+
+    <!-- 所有字段 -->
+    <sql id="all_columns">
+        id, title, content, alias, type, status, permission, priority, author, comment, views, minutes, order_publish_time, edit_type, create_account, create_time, modify_account, modify_time, remark, version, thumb
+    </sql>
+
+    <!-- 不带主键的所有字段 -->
+    <sql id="all_columns_not_with_id">
+        title, content, alias, type, status, permission, priority, author, comment, views, minutes, order_publish_time, edit_type, create_account, create_time, modify_account, modify_time, remark, version, thumb
+    </sql>
+
+    <sql id="all_columns_with_prefix">
+        article.id, article.title, article.content, article.alias, article.type, article.status, article.permission, article.priority, article.author, article.comment, article.views, article.minutes, article.order_publish_time, article.edit_type, article.create_account, article.create_time, article.modify_account, article.modify_time, article.remark, article.version, article.thumb
+    </sql>
+
+    <!-- 查询条件带where -->
+    <sql id="all_query_condition_with_where">
+        <trim prefix="WHERE" prefixOverrides="AND|OR">
+            <if test="id != null">
+                AND id = #{id}
+            </if>
+            <if test="title != null and '' != title">
+                AND title = #{title}
+            </if>
+            <if test="content != null and '' != content">
+                AND content = #{content}
+            </if>
+            <if test="alias != null and '' != alias">
+                AND alias = #{alias}
+            </if>
+            <if test="type != null">
+                AND type = #{type}
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+            <if test="permission != null">
+                AND permission = #{permission}
+            </if>
+            <if test="priority != null">
+                AND priority = #{priority}
+            </if>
+            <if test="author != null and '' != author">
+                AND author = #{author}
+            </if>
+            <if test="comment != null">
+                AND comment = #{comment}
+            </if>
+            <if test="views != null">
+                AND views = #{views}
+            </if>
+            <if test="minutes != null">
+                AND minutes = #{minutes}
+            </if>
+            <if test="orderPublishTime != null">
+                AND order_publish_time = #{orderPublishTime}
+            </if>
+            <if test="editType != null">
+                AND edit_type = #{editType}
+            </if>
+            <if test="createAccount != null">
+                AND create_account = #{createAccount}
+            </if>
+            <if test="createTime != null">
+                AND create_time = #{createTime}
+            </if>
+            <if test="modifyAccount != null">
+                AND modify_account = #{modifyAccount}
+            </if>
+            <if test="modifyTime != null">
+                AND modify_time = #{modifyTime}
+            </if>
+            <if test="remark != null and '' != remark">
+                AND remark = #{remark}
+            </if>
+            <if test="version != null and '' != version">
+                AND version = #{version}
+            </if>
+            <if test="thumb != null and '' != thumb">
+                AND thumb = #{thumb}
+            </if>
+        </trim>
+    </sql>
+
+    <!-- 查询条件不带where带前缀 -->
+    <sql id="all_query_condition_with_prefix">
+            <if test="id != null">
+                AND article.id = #{id}
+            </if>
+            <if test="title != null and '' != title">
+                AND article.title LIKE CONCAT(CONCAT('%',#{title},'%'))
+            </if>
+            <if test="content != null and '' != content">
+                AND article.content = #{content}
+            </if>
+            <if test="alias != null and '' != alias">
+                AND article.alias = #{alias}
+            </if>
+            <if test="type != null">
+                AND article.type = #{type}
+            </if>
+            <if test="status != null">
+                AND article.status = #{status}
+            </if>
+            <if test="permission != null">
+                AND article.permission = #{permission}
+            </if>
+            <if test="priority != null">
+                AND article.priority = #{priority}
+            </if>
+            <if test="author != null and '' != author">
+                AND article.author = #{author}
+            </if>
+            <if test="comment != null">
+                AND article.comment = #{comment}
+            </if>
+            <if test="views != null">
+                AND article.views = #{views}
+            </if>
+            <if test="minutes != null">
+                AND article.minutes = #{minutes}
+            </if>
+            <if test="orderPublishTime != null">
+                AND article.order_publish_time = #{orderPublishTime}
+            </if>
+            <if test="editType != null">
+                AND article.edit_type = #{editType}
+            </if>
+            <if test="createAccount != null">
+                AND article.create_account = #{createAccount}
+            </if>
+            <if test="createTime != null">
+                AND article.create_time = #{createTime}
+            </if>
+            <if test="modifyAccount != null">
+                AND article.modify_account = #{modifyAccount}
+            </if>
+            <if test="modifyTime != null">
+                AND article.modify_time = #{modifyTime}
+            </if>
+            <if test="remark != null and '' != remark">
+                AND article.remark = #{remark}
+            </if>
+            <if test="version != null and '' != version">
+                AND article.version = #{version}
+            </if>
+            <if test="thumb != null and '' != thumb">
+                AND article.thumb = #{thumb}
+            </if>
+    </sql>
+
+    <!-- 删除条件带where -->
+    <sql id="all_delete_condition_with_where">
+        <trim prefix="WHERE" prefixOverrides="AND|OR">
+            <if test="title != null and '' != title">
+                AND title = #{title}
+            </if>
+            <if test="content != null and '' != content">
+                AND content = #{content}
+            </if>
+            <if test="alias != null and '' != alias">
+                AND alias = #{alias}
+            </if>
+            <if test="type != null">
+                AND type = #{type}
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+            <if test="permission != null">
+                AND permission = #{permission}
+            </if>
+            <if test="priority != null">
+                AND priority = #{priority}
+            </if>
+            <if test="author != null and '' != author">
+                AND author = #{author}
+            </if>
+            <if test="comment != null">
+                AND comment = #{comment}
+            </if>
+            <if test="views != null">
+                AND views = #{views}
+            </if>
+            <if test="minutes != null">
+                AND minutes = #{minutes}
+            </if>
+            <if test="orderPublishTime != null">
+                AND order_publish_time = #{orderPublishTime}
+            </if>
+            <if test="editType != null">
+                AND edit_type = #{editType}
+            </if>
+            <if test="createAccount != null">
+                AND create_account = #{createAccount}
+            </if>
+            <if test="createTime != null">
+                AND create_time = #{createTime}
+            </if>
+            <if test="modifyAccount != null">
+                AND modify_account = #{modifyAccount}
+            </if>
+            <if test="modifyTime != null">
+                AND modify_time = #{modifyTime}
+            </if>
+            <if test="remark != null and '' != remark">
+                AND remark = #{remark}
+            </if>
+            <if test="version != null and '' != version">
+                AND version = #{version}
+            </if>
+            <if test="thumb != null and '' != thumb">
+                AND thumb = #{thumb}
+            </if>
+        </trim>
+    </sql>
+
+    <!-- 更新条件带set -->
+    <sql id="all_set_condition_with_set">
+        <set>
+            <if test="title != null and '' != title">
+                title = #{title},
+            </if>
+            <if test="content != null and '' != content">
+                content = #{content},
+            </if>
+            <if test="alias != null and '' != alias">
+                alias = #{alias},
+            </if>
+            <if test="type != null">
+                type = #{type},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="permission != null">
+                permission = #{permission},
+            </if>
+            <if test="priority != null">
+                priority = #{priority},
+            </if>
+            <if test="author != null and '' != author">
+                author = #{author},
+            </if>
+            <if test="comment != null">
+                comment = #{comment},
+            </if>
+            <if test="views != null">
+                views = #{views},
+            </if>
+            <if test="minutes != null">
+                minutes = #{minutes},
+            </if>
+            <if test="orderPublishTime != null">
+                order_publish_time = #{orderPublishTime},
+            </if>
+            <if test="editType != null">
+                edit_type = #{editType},
+            </if>
+            <if test="createAccount != null">
+                create_account = #{createAccount},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="modifyAccount != null">
+                modify_account = #{modifyAccount},
+            </if>
+            <if test="modifyTime != null">
+                modify_time = #{modifyTime},
+            </if>
+            <if test="remark != null and '' != remark">
+                remark = #{remark},
+            </if>
+            <if test="version != null and '' != version">
+                version = version + 1,
+            </if>
+            <if test="thumb != null and '' != thumb">
+                thumb = #{thumb}
+            </if>
+        </set>
+    </sql>
+
+    <!-- 批量更新条件带set -->
+    <sql id="all_batch_set_condition_with_set">
+        <set>
+            <if test="item.title != null and '' != item.title">
+                title = #{item.title},
+            </if>
+            <if test="item.content != null and '' != item.content">
+                content = #{item.content},
+            </if>
+            <if test="item.alias != null and '' != item.alias">
+                alias = #{item.alias},
+            </if>
+            <if test="item.type != null">
+                type = #{item.type},
+            </if>
+            <if test="item.status != null">
+                status = #{item.status},
+            </if>
+            <if test="item.permission != null">
+                permission = #{item.permission},
+            </if>
+            <if test="item.priority != null">
+                priority = #{item.priority},
+            </if>
+            <if test="item.author != null and '' != item.author">
+                author = #{item.author},
+            </if>
+            <if test="item.comment != null">
+                comment = #{item.comment},
+            </if>
+            <if test="item.views != null">
+                views = #{item.views},
+            </if>
+            <if test="item.minutes != null">
+                minutes = #{item.minutes},
+            </if>
+            <if test="item.orderPublishTime != null">
+                order_publish_time = #{item.orderPublishTime},
+            </if>
+            <if test="item.editType != null">
+                edit_type = #{item.editType},
+            </if>
+            <if test="item.createAccount != null">
+                create_account = #{item.createAccount},
+            </if>
+            <if test="item.createTime != null">
+                create_time = #{item.createTime},
+            </if>
+            <if test="item.modifyAccount != null">
+                modify_account = #{item.modifyAccount},
+            </if>
+            <if test="item.modifyTime != null">
+                modify_time = #{item.modifyTime},
+            </if>
+            <if test="item.remark != null and '' != item.remark">
+                remark = #{item.remark}
+            </if>
+            <if test="item.version != null and '' != item.version">
+                version = #{item.version}
+            </if>
+            <if test="item.thumb != null and '' != item.thumb">
+                thumb = #{item.thumb}
+            </if>
+        </set>
+    </sql>
+
+    <!--根据对象属性插入-->
+    <insert id="insertByProperty" useGeneratedKeys="true" keyProperty="id" keyColumn="id" parameterType="me.znzn.tools.module.blog.entity.po.Article">
+        INSERT INTO <include refid="table_name"/>
+        (
+            <include refid="all_columns_not_with_id"/>
+        )
+        VALUES (
+            #{title}, #{content}, #{alias}, #{type}, #{status}, #{permission}, #{priority}, #{author}, #{comment}, #{views}, #{minutes}, #{orderPublishTime}, #{editType}, #{createAccount}, #{createTime}, #{modifyAccount}, #{modifyTime}, #{remark}, #{version}, #{thumb}
+        )
+    </insert>
+
+    <!--根据对象属性插入-->
+    <insert id="insertBatchByProperty" useGeneratedKeys="true" keyProperty="id" keyColumn="id" parameterType="java.util.List">
+        INSERT INTO <include refid="table_name"/>
+        (
+            <include refid="all_columns_not_with_id"/>
+        )
+        VALUES
+        <foreach collection="list" item="item" separator="," index = "index">
+        (
+            #{item.title}, #{item.content}, #{item.alias}, #{item.type}, #{item.status}, #{item.permission}, #{item.priority}, #{item.author}, #{item.comment}, #{item.views}, #{item.minutes}, #{item.orderPublishTime}, #{item.editType}, #{item.createAccount}, #{item.createTime}, #{item.modifyAccount}, #{item.modifyTime}, #{item.remark}, #{item.version}, #{item.thumb}
+        )
+        </foreach>
+    </insert>
+
+    <!--根据主键更新-->
+    <update id="updateByPrimaryKey" parameterType="me.znzn.tools.module.blog.entity.po.Article">
+        UPDATE <include refid="table_name"/>
+            <include refid="all_set_condition_with_set"/>
+        WHERE
+            id = #{id} AND version = #{version}
+    </update>
+
+    <!--根据主键批量更新-->
+    <update id="updateBatchByPrimaryKey" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" separator=";">
+            UPDATE <include refid="table_name"/>
+                <include refid="all_batch_set_condition_with_set"/>
+            WHERE
+                id = #{item.id}
+        </foreach>
+    </update>
+
+    <!--根据主键删除-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        DELETE FROM
+            <include refid="table_name"/>
+        WHERE
+            id = #{id}
+    </delete>
+
+    <!--根据主键列表批量删除-->
+    <delete id="deleteBatchByPrimaryKey" parameterType="java.util.List">
+        DELETE FROM
+            <include refid="table_name"/>
+        WHERE
+            id
+        IN
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!--根据属性删除-->
+    <delete id="deleteByProperty" parameterType="me.znzn.tools.module.blog.entity.po.Article">
+        DELETE FROM <include refid="table_name"/>
+        <include refid="all_delete_condition_with_where"/>
+    </delete>
+
+    <!-- 根据主键查询 -->
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ArticleMap">
+        SELECT
+            <include refid="all_columns"/>
+        FROM
+            <include refid="table_name"/>
+        WHERE
+            id = #{id}
+    </select>
+
+    <!-- 根据对象属性查询 -->
+    <select id="selectByProperty" parameterType="me.znzn.tools.module.blog.entity.po.Article" resultMap="ArticleMap">
+        SELECT
+            <include refid="all_columns"/>
+        FROM
+            <include refid="table_name"/>
+        <include refid="all_query_condition_with_where"/>
+    </select>
+
+    <!-- 根据对象属性查询统计 -->
+    <select id="countByProperty" parameterType="me.znzn.tools.module.blog.entity.po.Article" resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            <include refid="table_name"/>
+        <include refid="all_query_condition_with_where"/>
+    </select>
+
+    <select id="selectArticleList" resultMap="ArticleVoMap">
+        SELECT <include refid="all_columns_with_prefix"/>,
+        tag.id tag_id, tag.tag tag_tag
+        FROM <include refid="table_name"/> article
+        LEFT JOIN <include refid="me.znzn.tools.module.blog.mapper.ArticleTagMapper.table_name"></include> at ON at.article_id = article.id
+        LEFT JOIN <include refid="me.znzn.tools.module.blog.mapper.TagMapper.table_name"></include> tag ON tag.id = at.tag_id
+        WHERE 1=1 <include refid="all_query_condition_with_prefix"/>
+        <if test="tag != null and '' != tag">
+            AND tag.tag = #{tag}
+        </if>
+        <if test="startIndex != null">
+            <if test="limit != null">
+                LIMIT #{startIndex} , #{limit}
+            </if>
+        </if>
+    </select>
+    <select id="countArticle" resultType="java.lang.Integer">
+        SELECT count(DISTINCT article.id)
+        FROM <include refid="table_name"/> article
+        LEFT JOIN <include refid="me.znzn.tools.module.blog.mapper.ArticleTagMapper.table_name"></include> at ON at.article_id = article.id
+        LEFT JOIN <include refid="me.znzn.tools.module.blog.mapper.TagMapper.table_name"></include> tag ON tag.id = at.tag_id
+        WHERE 1=1 <include refid="all_query_condition_with_prefix"/>
+        <if test="tag != null and '' != tag">
+            AND tag.tag = #{tag}
+        </if>
+    </select>
+
+    <select id="selectArticleById" resultMap="ArticleVoMap">
+        SELECT <include refid="all_columns_with_prefix"/>,
+        tag.id tag_id, tag.tag tag_tag
+        FROM <include refid="table_name"/> article
+        LEFT JOIN <include refid="me.znzn.tools.module.blog.mapper.ArticleTagMapper.table_name"></include> at ON at.article_id = article.id
+        LEFT JOIN <include refid="me.znzn.tools.module.blog.mapper.TagMapper.table_name"></include> tag ON tag.id = at.tag_id
+        WHERE article.id = #{id}
+    </select>
+
+</mapper>

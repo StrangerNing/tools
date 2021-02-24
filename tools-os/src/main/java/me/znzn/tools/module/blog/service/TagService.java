@@ -1,0 +1,21 @@
+package me.znzn.tools.module.blog.service;
+
+import me.znzn.tools.module.blog.entity.po.Tag;
+import java.util.List;
+
+/**
+ * 服务接口
+ *
+ * @author zening.zhu
+ * @version 1.0.0
+ * @date 2021/02/22 15:22:20
+ */
+public interface TagService {
+
+    /**
+     * 搜索tag
+     * @param tag
+     * @return
+     */
+    List<Tag> searchTag(String tag);
+}

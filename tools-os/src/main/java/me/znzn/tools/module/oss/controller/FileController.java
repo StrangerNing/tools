@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.AntPathMatcher;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -45,6 +46,13 @@ public class FileController {
 
             FileReturnVo file = fileService.getFile(name);
             String url = file.getUrl();
+
+            String referer = request.getHeader("Referer");
+            if (StringUtils.isEmpty(referer)) {
+                ModelAndView modelAndView = new ModelAndView("preview_file");
+                modelAndView.addObject("url", url);
+                return modelAndView;
+            }
             return new ModelAndView("redirect:" + url);
         } catch (Exception e) {
             return new ModelAndView("404");
@@ -73,6 +81,14 @@ public class FileController {
     public ResponseEntity delImage(@PathVariable Long id) {
         UserInfoVO user = LoginUserUtil.getSessionUser();
         fileService.delFile(id, user);
+        return ResultPageUtil.success();
+    }
+
+    @GetMapping("/del")
+    @ResponseBody
+    public ResponseEntity delImage(String name) {
+        UserInfoVO user = LoginUserUtil.getSessionUser();
+        fileService.delFile(name, user);
         return ResultPageUtil.success();
     }
 

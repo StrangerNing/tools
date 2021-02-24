@@ -11,6 +11,7 @@ import me.znzn.tools.module.user.entity.vo.UserInfoVO;
 import me.znzn.tools.utils.LoginUserUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -48,11 +49,11 @@ public class ShortUrlController {
         return ResultPageUtil.successWithPage(page.getList(), page.getTotalCount(), page.getCurrentPage());
     }
 
-    @RequestMapping("/{shortUrl}**")
+    @RequestMapping("/getUrl/{shortUrl}")
     public ModelAndView getOriginUrl(@PathVariable("shortUrl") String shortUrl, HttpServletRequest request) {
         ShortUrl url = shortUrlService.getOriginUrl(shortUrl);
         if (null == url || url.getStatus().equals(StatusEnum.DISABLE.getIndex())) {
-            return new ModelAndView("404");
+            return new ModelAndView("/error/404");
         }
         shortUrlStatisticsService.saveVisitHistory(shortUrl, request);
         String queryString = request.getQueryString();

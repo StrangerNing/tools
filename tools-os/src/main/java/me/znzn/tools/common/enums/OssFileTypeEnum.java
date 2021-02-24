@@ -23,9 +23,14 @@ public enum OssFileTypeEnum {
     FILE("file/", 3),
 
     /**
+     * 博客
+     */
+    BLOG("blog/", 4),
+
+    /**
      * 其他
      */
-    OTHERS("others/", 4);
+    OTHERS("others/", 5);
 
     private String name;
 

@@ -1,5 +1,6 @@
 package me.znzn.tools.module.oss.controller;
 
+import cn.hutool.core.codec.Base64;
 import cn.hutool.core.io.FileTypeUtil;
 import lombok.extern.slf4j.Slf4j;
 import me.znzn.tools.common.component.ResultPageUtil;
@@ -10,13 +11,18 @@ import me.znzn.tools.module.oss.entity.vo.FileReturnVo;
 import me.znzn.tools.module.oss.service.FileService;
 import me.znzn.tools.module.user.entity.vo.UserInfoVO;
 import me.znzn.tools.utils.LoginUserUtil;
+import me.znzn.tools.utils.MultipartFileUtil;
 import me.znzn.tools.utils.UploadFileUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Map;
 
 /**
  * @author zhuzening
@@ -36,13 +42,7 @@ public class UploadController {
             if (!"jpg".equals(type) && !"png".equals(type)) {
                 return ResultPageUtil.error("只能上传\"jpg\"、\"png\"格式的图片");
             }
-            UserInfoVO user = LoginUserUtil.getSessionUser();
-            String fileName = UploadFileUtil.uploadOSS(file, user, OssFileTypeEnum.AVATAR);
-            String url = UploadFileUtil.getFileUrl(fileName, Long.valueOf(CommonConstant.OSS_URL_EXPIRATION));
-            FileReturnVo fileReturnVo = new FileReturnVo();
-            fileReturnVo.setName(fileName);
-            fileReturnVo.setUrl(url);
-            fileService.insertFile(fileName, OssFileTypeEnum.AVATAR, user);
+            FileReturnVo fileReturnVo = insertFile(file, OssFileTypeEnum.AVATAR, Long.valueOf(CommonConstant.OSS_URL_EXPIRATION));
             return ResultPageUtil.success(fileReturnVo);
         } catch (IOException io) {
             log.error("获取文件错误，IO异常");
@@ -57,17 +57,69 @@ public class UploadController {
             if (!"jpg".equals(type) && !"png".equals(type) && !"gif".equals(type) && !"bmp".equals(type)) {
                 return ResultPageUtil.error("只能上传图片");
             }
-            UserInfoVO user = LoginUserUtil.getSessionUser();
-            String fileName = UploadFileUtil.uploadOSS(file, user, OssFileTypeEnum.IMAGE);
-            String url = UploadFileUtil.getFileUrl(fileName, Long.valueOf(CommonConstant.OSS_URL_EXPIRATION));
-            FileReturnVo fileReturnVo = new FileReturnVo();
-            fileReturnVo.setName(fileName);
-            fileReturnVo.setUrl(url);
-            fileService.insertFile(fileName, OssFileTypeEnum.IMAGE, user);
+            FileReturnVo fileReturnVo = insertFile(file, OssFileTypeEnum.IMAGE, Long.valueOf(CommonConstant.OSS_URL_EXPIRATION));
             return ResultPageUtil.success(fileReturnVo);
         } catch (IOException io) {
             log.error("获取文件错误，IO异常");
             return ResultPageUtil.error("获取文件错误，IO异常");
         }
+    }
+
+    @PostMapping("/upload/blog")
+    public ResponseEntity blog(@RequestParam("file") MultipartFile file) {
+        try {
+            String type = FileTypeUtil.getType(file.getInputStream());
+            if (!"jpg".equals(type) && !"png".equals(type) && !"gif".equals(type) && !"bmp".equals(type)
+                && !"mp4".equals(type) && !"mpg".equals(type) && !"wmv".equals(type)) {
+                return ResultPageUtil.error("只能上传图片和视频");
+            }
+            FileReturnVo fileReturnVo = insertFile(file, OssFileTypeEnum.BLOG, Long.valueOf(CommonConstant.OSS_URL_EXPIRATION));
+            return ResultPageUtil.success(fileReturnVo);
+        } catch (IOException io) {
+            log.error("获取文件错误，IO异常");
+            return ResultPageUtil.error("获取文件错误，IO异常");
+        }
+    }
+
+    @PostMapping("/upload/file")
+    public ResponseEntity file(@RequestParam("file") MultipartFile file) {
+        FileReturnVo fileReturnVo = insertFile(file, OssFileTypeEnum.FILE, Long.valueOf(CommonConstant.OSS_URL_EXPIRATION));
+        return ResultPageUtil.success(fileReturnVo);
+    }
+
+    @PostMapping("/upload/blog/base64")
+    public ResponseEntity base64(@RequestBody Map<String, String> file) {
+        String base64 = file.get("base64");
+        String filename = file.get("filename");
+        byte[] data = Base64.decode(base64);
+        if (StringUtils.isEmpty(filename)) {
+            throw new BusinessException("需要文件名");
+        }
+        String suffix = filename.substring(filename.lastIndexOf("."));
+        InputStream inputStream = new ByteArrayInputStream(data);
+        FileReturnVo fileReturnVo = insertFile(inputStream, suffix, OssFileTypeEnum.BLOG, Long.valueOf(CommonConstant.OSS_URL_EXPIRATION));
+        return ResultPageUtil.success(fileReturnVo);
+    }
+
+    private FileReturnVo insertFile(MultipartFile file, OssFileTypeEnum fileType, Long expiration) {
+        UserInfoVO user = LoginUserUtil.getSessionUser();
+        String fileName = UploadFileUtil.uploadOSS(file, user, fileType);
+        String url = UploadFileUtil.getFileUrl(fileName, expiration);
+        FileReturnVo fileReturnVo = new FileReturnVo();
+        fileReturnVo.setName(fileName);
+        fileReturnVo.setUrl(url);
+        fileService.insertFile(fileName, fileType, user);
+        return fileReturnVo;
+    }
+
+    private FileReturnVo insertFile(InputStream inputStream, String suffix, OssFileTypeEnum fileType, Long expiration) {
+        UserInfoVO user = LoginUserUtil.getSessionUser();
+        String fileName = UploadFileUtil.uploadOSS(inputStream, suffix, user, fileType);
+        String url = UploadFileUtil.getFileUrl(fileName, expiration);
+        FileReturnVo fileReturnVo = new FileReturnVo();
+        fileReturnVo.setName(fileName);
+        fileReturnVo.setUrl(url);
+        fileService.insertFile(fileName, fileType, user);
+        return fileReturnVo;
     }
 }

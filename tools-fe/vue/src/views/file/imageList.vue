@@ -184,7 +184,7 @@
         })
       },
       handleError(err, file, fileList) {
-        this.$message.error(JSON.parse(err.message).message)
+        this.$message.error(JSON.parse(err.message).msg)
       },
       handleSuccess(response, file, fileList) {
         this.$message.success('上传成功')

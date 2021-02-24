@@ -106,7 +106,7 @@ export const asyncRoutes = [
     redirect: '/file/imagelist',
     meta: {
       title: '文件管理',
-      icon: 'global',
+      icon: 'file',
       roles: ['user','admin']
     },
     children: [{
@@ -115,12 +115,62 @@ export const asyncRoutes = [
       component: () => import('@/views/file/imageList'),
       meta: {
         title: '图床',
-        icon: 'url',
+        icon: 'image',
         roles: ['user','admin']
       }
-    }]
+    },
+      {
+        path: 'fileList',
+        name: 'fileList',
+        component: () => import('@/views/file/fileList'),
+        meta: {
+          title: '网盘',
+          icon: 'disk',
+          roles: ['user','admin']
+        }
+      }]
   },
-
+  {
+    path: '/blog',
+    component: Layout,
+    redirect: '/blog/list',
+    meta: {
+      title: '博客管理',
+      icon: 'blog',
+      roles: ['editor', 'admin']
+    },
+    children: [{
+      path: 'list',
+      name: 'articleList',
+      component: () => import('@/views/blog/index'),
+      meta: {
+        title: '文章列表',
+        icon: 'article',
+        roles: ['editor', 'admin']
+      }
+    },
+      {
+        path: 'edit',
+        name: 'editArticle',
+        component: () => import('@/views/blog/edit'),
+        hidden: true,
+        meta: {
+          title: '编辑文章',
+          icon: 'create-course',
+          roles: ['editor', 'admin']
+        }
+      },
+      {
+        path: 'add',
+        name: 'addArticle',
+        component: () => import('@/views/blog/edit'),
+        meta: {
+          title: '新建文章',
+          icon: 'create-course',
+          roles: ['editor', 'admin']
+        }
+      }]
+  },
   {
     path: '/constant',
     component: Layout,

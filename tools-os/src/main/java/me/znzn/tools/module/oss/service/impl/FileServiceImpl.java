@@ -66,9 +66,22 @@ public class FileServiceImpl implements FileService {
         File file = fileMapper.selectByPrimaryKey(id);
 
         if (file != null) {
-            user.hasOperateAuth(file);
+            user.hasOperateAuthThrowException(file);
             fileMapper.deleteByPrimaryKey(id);
             UploadFileUtil.delFile(file.getName());
+        }
+    }
+
+    @Override
+    public void delFile(String name, UserInfoVO user) {
+        File file = new File();
+        file.setName(name);
+        FileReturnVo fileReturnVo = fileMapper.selectOneByProperty(file);
+
+        if (fileReturnVo != null) {
+            user.hasOperateAuthThrowException(fileReturnVo);
+            fileMapper.deleteByPrimaryKey(fileReturnVo.getId());
+            UploadFileUtil.delFile(name);
         }
     }
 

@@ -23,6 +23,9 @@ import '@/permission' // permission control
 import VueClipboard from "vue-clipboard2";
 import permission from './directive/permission/index'//引入权限控制组件
 
+import mavonEditor from 'mavon-editor'
+import 'mavon-editor/dist/css/index.css'
+
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api
@@ -40,6 +43,8 @@ Vue.use(ElementUI)
 Vue.use(VueClipboard)
 
 Vue.use(permission)
+
+Vue.use(mavonEditor)
 
 Vue.prototype.$echarts = echarts
 

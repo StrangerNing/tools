@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+<h5>预览图片</h5>
+<span th:text="${url}"></span>
+<h1 id="v443x">你好，李焕英</h1><p>今天我去看了你好李焕英。</p><p>故事十分让我感动。</p><blockquote><p>你好，李焕英</p></blockquote><pre type="Java"><code><xmp>Long threeHours = 60 * 60 * 1000 * 3L;</xmp></code></pre><table border="0" width="100%" cellpadding="0" cellspacing="0"><tbody><tr><th>1</th><th>2</th><th>2</th><th>2</th><th>2</th></tr><tr><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td></tr><tr><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td></tr></tbody></table>
+<span id="article"></span>
+<button onclick="console.log(editor.txt.html())">查看内容</button>
+</body>
+<script
+        type="text/javascript"
+        src="https://cdn.jsdelivr.net/npm/wangeditor@latest/dist/wangEditor.min.js"
+></script>
+<script src="/static/js/vendor/jquery-1.12.4.min.js"></script>
+<script type="text/javascript">
+  const E = window.wangEditor
+  // const editor = new E("#div1")
+  const editor = new E(document.getElementById('article'))
+  editor.create()
+</script>
+</html>

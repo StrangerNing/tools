@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -60,39 +61,45 @@ public class UploadFileUtil {
     }
 
     public static String uploadOSS(MultipartFile file, UserInfoVO user, OssFileTypeEnum bucketNameEnum) {
-        String fileName = UUID.randomUUID().toString();
+
         String suffix = MultipartFileUtil.getExtFilename(file);
-        OSS client = new OSSClientBuilder().build(OSS_ENDPOINT, OSS_ACCESS_KEY_ID, OSS_ACCESS_KEY_SECRET);
         try {
-            log.info("上传文件中...");
+            return uploadOSS(file.getInputStream(), suffix, user, bucketNameEnum);
+        } catch (IOException io) {
+            log.error("IO异常", io);
+        }
+        return null;
+    }
 
-            String format;
-            if (bucketNameEnum == null) {
-                bucketNameEnum = OssFileTypeEnum.OTHERS;
-            }
-            if (bucketNameEnum.equals(OssFileTypeEnum.AVATAR)) {
-                format = bucketNameEnum.getName() + user.getId() + "/";
-            } else {
-                SimpleDateFormat sd = new SimpleDateFormat("/yyyy/MM/dd/");
-                format = bucketNameEnum.getName() + user.getId() + sd.format(new Date());
-            }
-            String newName = format + fileName + suffix;
+    public static String uploadOSS(InputStream inputStream, String suffix, UserInfoVO user, OssFileTypeEnum bucketNameEnum) {
+        String fileName = UUID.randomUUID().toString();
+        OSS client = new OSSClientBuilder().build(OSS_ENDPOINT, OSS_ACCESS_KEY_ID, OSS_ACCESS_KEY_SECRET);
 
-            ObjectMetadata objectMetadata = new ObjectMetadata();
-            objectMetadata.setContentType(getContentType(newName));
-            objectMetadata.setCacheControl("no-cache");
-            objectMetadata.setHeader("Pragma", "no-cache");
-            objectMetadata.setContentDisposition("inline;filename="+fileName + suffix);
-            PutObjectResult result = client.putObject(OSS_BUCKET_NAME, newName, file.getInputStream(), objectMetadata);
-            String eTag = result.getETag();
-            log.info("上传完成，结果{}", eTag);
-            if (StringUtils.isNotEmpty(eTag)) {
-                return newName;
-            }
-        } catch (IOException e) {
-            log.error("获取文件流失败", e);
-        } finally {
-            client.shutdown();
+        log.info("上传文件中...");
+
+        String format;
+        if (bucketNameEnum == null) {
+            bucketNameEnum = OssFileTypeEnum.OTHERS;
+        }
+        if (bucketNameEnum.equals(OssFileTypeEnum.AVATAR)) {
+            format = bucketNameEnum.getName() + user.getId() + "/";
+        } else {
+            SimpleDateFormat sd = new SimpleDateFormat("/yyyy/MM/dd/");
+            format = bucketNameEnum.getName() + user.getId() + sd.format(new Date());
+        }
+        String newName = format + fileName + suffix;
+
+        ObjectMetadata objectMetadata = new ObjectMetadata();
+        objectMetadata.setContentType(getContentType(newName));
+        objectMetadata.setCacheControl("no-cache");
+        objectMetadata.setHeader("Pragma", "no-cache");
+        objectMetadata.setContentDisposition("inline;filename="+fileName + suffix);
+        PutObjectResult result = client.putObject(OSS_BUCKET_NAME, newName, inputStream, objectMetadata);
+        String eTag = result.getETag();
+        log.info("上传完成，结果{}", eTag);
+        client.shutdown();
+        if (StringUtils.isNotEmpty(eTag)) {
+            return newName;
         }
         return null;
     }

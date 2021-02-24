@@ -15,6 +15,14 @@ export function delFile(params) {
   })
 }
 
+export function delFileByName(params) {
+  return request({
+    url: '/file/del',
+    method: 'get',
+    params: params
+  })
+}
+
 export function getFile(params) {
   return request({
     url: '/file/get/' + params,

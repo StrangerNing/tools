@@ -27,8 +27,8 @@ public class UserController {
     @Resource
     private UserService userService;
 
-    @GetMapping("/login")
-    public ResponseEntity login(LoginForm loginForm, HttpServletRequest request) {
+    @PostMapping("/login")
+    public ResponseEntity login(@RequestBody LoginForm loginForm, HttpServletRequest request) {
         ValidatorUtil.validate(loginForm);
         UserInfoVO loginUser = userService.login(loginForm);
         request.getSession().setAttribute("user", loginUser);

@@ -26,7 +26,7 @@ export function updateUrl(data) {
 
 export function getUrlStatistics(params) {
   return request({
-    url: 'url/statistics',
+    url: '/url/statistics',
     method: 'get',
     params: params
   })

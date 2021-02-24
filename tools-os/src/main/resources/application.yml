@@ -11,10 +11,10 @@ spring:
       max-file-size: 1000MB
       max-request-size: 4000MB
   mvc:
-    static-path-pattern: /static/**
+    static-path-pattern: @maven.resource.pattern.static@
     #static为存放css,js的文件夹
   resources:
-    static-locations: classpath:/static/
+    static-locations: @maven.resource.location.static@
 
   datasource:
     url: @maven.database.url@
@@ -49,7 +49,7 @@ spring:
     encoding: UTF-8
     servlet:
       content-type: text/html
-    prefix: classpath:/templates/
+    prefix: @maven.resource.location.template@
     suffix: .html
     cache: false
 
@@ -65,9 +65,11 @@ logging:
               mapper: @maven.log.level.url.mapper@
             user:
               mapper: @maven.log.level.user.mapper@
+            blog:
+              mapper: @maven.log.level.blog.mapper@
   file:
     path: @maven.log.path@
-    name: photoshare.log
+    name: tools.log
 
 #pagehelper:
 #  #标识是哪一种数据库
