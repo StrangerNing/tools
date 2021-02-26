@@ -22,8 +22,8 @@ public class WebConfigurer implements WebMvcConfigurer {
         registry.addInterceptor(new RequestInterceptor()).addPathPatterns("/**").order(1);
     }
 
-    @Override
-    public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/").setViewName("index");
-    }
+//    @Override
+//    public void addViewControllers(ViewControllerRegistry registry) {
+//        registry.addViewController("/").setViewName("index");
+//    }
 }

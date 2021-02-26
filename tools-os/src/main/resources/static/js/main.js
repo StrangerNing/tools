@@ -227,9 +227,11 @@
     var headerSticky = function() {
         $(window).on('scroll', function() {
             var scroll = $(window).scrollTop();
-            if (scroll < 245) {
+            if (scroll < 78) {
+                $(".slicknav_menu").css("margin", -1 * scroll + "px 0 0 0")
                 $(".header-sticky").removeClass("sticky-bar");
             } else {
+                $(".slicknav_menu").css("margin", "0")
                 $(".header-sticky").addClass("sticky-bar");
             }
         });
