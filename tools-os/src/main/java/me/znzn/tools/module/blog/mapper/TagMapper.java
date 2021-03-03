@@ -29,4 +29,18 @@ public interface TagMapper extends BaseDao<Tag> {
      */
     List<Tag> searchTag(String tag);
 
+    /**
+     * 获取热门标签
+     * @param size
+     * @return
+     */
+    List<Tag> hotTags(Integer size);
+
+    /**
+     * 搜索文章所有标签
+     * @param id
+     * @return
+     */
+    List<Tag> selectArticleTagsByArticleId(Long id);
+
 }

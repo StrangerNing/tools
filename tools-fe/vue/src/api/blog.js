@@ -31,6 +31,14 @@ export function searchTag(param) {
   })
 }
 
+export function searchCategory(param) {
+  return request({
+    url: '/blog/category/search',
+    method: 'get',
+    params: param
+  })
+}
+
 export function list(params) {
   return request({
     url: '/blog/article/list',

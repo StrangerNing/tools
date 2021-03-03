@@ -29,7 +29,8 @@
 
     <resultMap id="ArticleVoMap" type="me.znzn.tools.module.blog.entity.vo.ArticleVo" extends="ArticleMap">
         <result column="markdown" property="markdown" jdbcType="VARCHAR"/>
-        <collection property="tags" resultMap="me.znzn.tools.module.blog.mapper.TagMapper.TagMap" columnPrefix="tag_"/>
+        <collection property="tags" ofType="me.znzn.tools.module.blog.entity.po.Tag" select="me.znzn.tools.module.blog.mapper.TagMapper.selectArticleTagsByArticleId" column="id"/>
+        <collection property="categories" ofType="me.znzn.tools.module.blog.entity.po.Category" select="me.znzn.tools.module.blog.mapper.CategoryMapper.selectCategoryByArticleId" column="id"/>
     </resultMap>
 
     <!-- 表名 -->
@@ -480,40 +481,96 @@
         <include refid="all_query_condition_with_where"/>
     </select>
 
-    <select id="selectArticleList" resultMap="ArticleVoMap">
-        SELECT <include refid="all_columns_with_prefix"/>,
-        tag.id tag_id, tag.tag tag_tag
-        FROM <include refid="table_name"/> article
-        LEFT JOIN <include refid="me.znzn.tools.module.blog.mapper.ArticleTagMapper.table_name"></include> at ON at.article_id = article.id
-        LEFT JOIN <include refid="me.znzn.tools.module.blog.mapper.TagMapper.table_name"></include> tag ON tag.id = at.tag_id
+    <select id="selectArticleList" resultMap="ArticleVoMap" parameterType="me.znzn.tools.module.blog.entity.form.ArticleForm">
+        SELECT <include refid="all_columns_with_prefix"/>
+        FROM
+        <choose>
+            <when test="(tag == null or '' == tag) and (category == null or '' == category)">
+                (
+                SELECT <include refid="all_columns"/>
+                FROM <include refid="table_name"/>
+                WHERE 1=1 <include refid="all_query_condition_with_prefix"/>
+                <if test="isSticky != null and true == isSticky">
+                    AND priority &gt;= 100
+                </if>
+                <if test="isSticky != null and false == isSticky">
+                    AND priority &gt;= 10
+                    AND priority &lt; 100
+                </if>
+                ORDER BY priority DESC, create_time DESC, id DESC
+                <if test="startIndex != null">
+                    <if test="limit != null">
+                        LIMIT #{startIndex} , #{limit}
+                    </if>
+                </if>)
+            </when>
+            <otherwise>
+                <include refid="table_name"/>
+            </otherwise>
+        </choose>
+        article
+        <if test="tag != null and '' != tag">
+            LEFT JOIN <include refid="me.znzn.tools.module.blog.mapper.ArticleTagMapper.table_name"></include> at ON at.article_id = article.id
+            LEFT JOIN <include refid="me.znzn.tools.module.blog.mapper.TagMapper.table_name"></include> tag ON tag.id = at.tag_id
+        </if>
+        <if test="category != null and '' != category">
+            LEFT JOIN <include refid="me.znzn.tools.module.blog.mapper.ArticleCategoryMapper.table_name"></include> ac ON ac.article_id = article.id
+            LEFT JOIN <include refid="me.znzn.tools.module.blog.mapper.CategoryMapper.table_name"></include> category ON category.id = ac.category_id
+        </if>
         WHERE 1=1 <include refid="all_query_condition_with_prefix"/>
         <if test="tag != null and '' != tag">
             AND tag.tag = #{tag}
         </if>
-        <if test="startIndex != null">
-            <if test="limit != null">
-                LIMIT #{startIndex} , #{limit}
+        <if test="category != null and '' != category">
+            AND category.name = #{category}
+        </if>
+        <if test="(tag != null and '' != tag) or (category != null and '' != category)">
+            <if test="isSticky != null and true == isSticky">
+                AND priority &gt;= 100
+            </if>
+            <if test="isSticky != null and false == isSticky">
+                AND priority &gt;= 10
+                AND priority &lt; 100
+            </if>
+            ORDER BY article.priority DESC, article.create_time DESC, id DESC
+            <if test="startIndex != null">
+                <if test="limit != null">
+                    LIMIT #{startIndex} , #{limit}
+                </if>
             </if>
         </if>
     </select>
+
     <select id="countArticle" resultType="java.lang.Integer">
         SELECT count(DISTINCT article.id)
         FROM <include refid="table_name"/> article
         LEFT JOIN <include refid="me.znzn.tools.module.blog.mapper.ArticleTagMapper.table_name"></include> at ON at.article_id = article.id
         LEFT JOIN <include refid="me.znzn.tools.module.blog.mapper.TagMapper.table_name"></include> tag ON tag.id = at.tag_id
+        LEFT JOIN <include refid="me.znzn.tools.module.blog.mapper.ArticleCategoryMapper.table_name"></include> ac ON ac.article_id = article.id
+        LEFT JOIN <include refid="me.znzn.tools.module.blog.mapper.CategoryMapper.table_name"></include> category ON ac.category_id = category.id
         WHERE 1=1 <include refid="all_query_condition_with_prefix"/>
         <if test="tag != null and '' != tag">
             AND tag.tag = #{tag}
         </if>
+        <if test="category != null and '' != category">
+            AND category.name = #{category}
+        </if>
+        <if test="isSticky != null and true == isSticky">
+            AND priority &gt;= 100
+        </if>
+        <if test="isSticky != null and false == isSticky">
+            AND priority &gt;= 10
+            AND priority &lt; 100
+        </if>
     </select>
 
     <select id="selectArticleById" resultMap="ArticleVoMap">
-        SELECT <include refid="all_columns_with_prefix"/>,
-        tag.id tag_id, tag.tag tag_tag
-        FROM <include refid="table_name"/> article
-        LEFT JOIN <include refid="me.znzn.tools.module.blog.mapper.ArticleTagMapper.table_name"></include> at ON at.article_id = article.id
-        LEFT JOIN <include refid="me.znzn.tools.module.blog.mapper.TagMapper.table_name"></include> tag ON tag.id = at.tag_id
-        WHERE article.id = #{id}
+        SELECT
+        <include refid="all_columns"/>
+        FROM
+        <include refid="table_name"/>
+        WHERE
+        id = #{id}
     </select>
 
 </mapper>

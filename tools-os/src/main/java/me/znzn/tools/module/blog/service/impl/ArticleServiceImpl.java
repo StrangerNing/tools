@@ -8,15 +8,9 @@ import me.znzn.tools.module.blog.entity.enums.ArticleStatusEnum;
 import me.znzn.tools.module.blog.entity.enums.CommentLimitEnum;
 import me.znzn.tools.module.blog.entity.enums.EditTypeEnum;
 import me.znzn.tools.module.blog.entity.form.ArticleForm;
-import me.znzn.tools.module.blog.entity.po.Article;
-import me.znzn.tools.module.blog.entity.po.ArticleTag;
-import me.znzn.tools.module.blog.entity.po.Markdown;
-import me.znzn.tools.module.blog.entity.po.Tag;
+import me.znzn.tools.module.blog.entity.po.*;
 import me.znzn.tools.module.blog.entity.vo.ArticleVo;
-import me.znzn.tools.module.blog.mapper.ArticleMapper;
-import me.znzn.tools.module.blog.mapper.ArticleTagMapper;
-import me.znzn.tools.module.blog.mapper.MarkdownMapper;
-import me.znzn.tools.module.blog.mapper.TagMapper;
+import me.znzn.tools.module.blog.mapper.*;
 import me.znzn.tools.module.blog.service.ArticleService;
 import me.znzn.tools.module.user.entity.vo.UserInfoVO;
 import me.znzn.tools.utils.UploadFileUtil;
@@ -27,7 +21,9 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 服务接口实现
@@ -51,6 +47,9 @@ public class ArticleServiceImpl implements ArticleService {
     @Resource
     private MarkdownMapper markdownMapper;
 
+    @Resource
+    private ArticleCategoryMapper articleCategoryMapper;
+
     @Override
     public Boolean addArticle(ArticleVo articleVo, UserInfoVO loginUser) {
         Article article = new Article();
@@ -65,6 +64,8 @@ public class ArticleServiceImpl implements ArticleService {
         Long id = article.getId();
 
         saveArticleTag(articleVo.getTags(), id);
+
+        saveArticleCategory(articleVo.getCategories(), id);
 
         saveMarkdown(articleVo, id);
         return Boolean.TRUE;
@@ -104,6 +105,10 @@ public class ArticleServiceImpl implements ArticleService {
         delete.setArticleId(id);
         articleTagMapper.deleteByProperty(delete);
 
+        ArticleCategory deleteCategories = new ArticleCategory();
+        deleteCategories.setArticleId(id);
+        articleCategoryMapper.deleteByProperty(deleteCategories);
+
         saveArticleTag(articleVo.getTags(), id);
 
         saveMarkdown(articleVo, id);
@@ -138,6 +143,26 @@ public class ArticleServiceImpl implements ArticleService {
         }
     }
 
+    private void saveArticleCategory(List<Category> categories, Long id) {
+        if (CollectionUtil.isEmpty(categories)) {
+            return;
+        }
+        Set<Category> duplicate = new HashSet<>(categories);
+        List<ArticleCategory> list = new ArrayList<>();
+        for (Category category : duplicate) {
+            if (category.getId() == null) {
+                throw new BusinessException("文章分类出错");
+            }
+            ArticleCategory articleCategory = new ArticleCategory();
+            articleCategory.setArticleId(id);
+            articleCategory.setCategoryId(category.getId());
+            list.add(articleCategory);
+        }
+        if (CollectionUtil.isNotEmpty(list)) {
+            articleCategoryMapper.insertBatchByProperty(list);
+        }
+    }
+
     private void saveMarkdown(ArticleVo articleVo, Long id) {
         if (EditTypeEnum.MARKDOWN.getIndex().equals(articleVo.getEditType())) {
             Markdown markdown = new Markdown();
@@ -162,7 +187,9 @@ public class ArticleServiceImpl implements ArticleService {
         ArticleVo articleVo = articleMapper.selectArticleById(id);
         if (EditTypeEnum.MARKDOWN.getIndex().equals(articleVo.getEditType())) {
             Markdown markdown = markdownMapper.selectByPrimaryKey(id);
-            articleVo.setMarkdown(markdown.getMarkdown());
+            if (markdown != null) {
+                articleVo.setMarkdown(markdown.getMarkdown());
+            }
         }
         if (StringUtils.isNotEmpty(articleVo.getThumb())) {
             articleVo.setThumbPreview(UploadFileUtil.getFileUrl(articleVo.getThumb(), Long.valueOf(CommonConstant.OSS_URL_EXPIRATION)));

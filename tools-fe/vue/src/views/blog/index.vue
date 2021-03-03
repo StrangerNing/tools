@@ -33,8 +33,23 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="类别：">
-              <el-input size="small" v-model="params.type" clearable></el-input>
+            <el-form-item label="分类：">
+              <el-select
+                class="input-new-tag"
+                v-model="params.category"
+                size="small"
+                filterable
+                default-first-option
+                remote
+                clearable
+                :remote-method="queryCategorySearchAsync">
+                <el-option
+                  v-for="item in categoryOptions"
+                  :key="item.label"
+                  :label="item.label"
+                  :value="item.label">
+                </el-option>
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -108,14 +123,21 @@
       </el-row>
     </div>
     <div class="page-content">
-      <el-table :data="data" border width="100%" @current-change="choose">
+      <el-table :data="data" border width="100%" @current-change="choose" class="page-table">
         <el-table-column label="选择" width="70px">
           <template slot-scope="scope">
             <el-radio v-model="currentRowId" :label="scope.row.id"><i></i></el-radio>
           </template>
         </el-table-column>
-        <el-table-column prop="title" label="标题" width="200px" show-overflow-tooltip/>
-        <el-table-column label="标签">
+        <el-table-column prop="title" label="标题" min-width="200px" show-overflow-tooltip/>
+        <el-table-column label="分类" min-width="200px">
+          <template slot-scope="scope">
+            <span v-for="category in scope.row.categories">
+              <span :class="category.color">{{category.name + ' '}}</span>
+            </span>
+          </template>
+        </el-table-column>
+        <el-table-column label="标签" min-width="300px">
           <template slot-scope="scope">
             <el-tag
               :key="tag.tag"
@@ -124,7 +146,7 @@
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="状态" width="80px">
+        <el-table-column label="状态" min-width="80px">
           <template slot-scope="scope">
             <el-tag effect="dark" v-if="scope.row.status === 0" type="danger">{{blogEnums.articleStatusEnum.getLabelByValue(scope.row.status)}}</el-tag>
             <el-tag effect="dark" v-if="scope.row.status === 1" type="success">{{blogEnums.articleStatusEnum.getLabelByValue(scope.row.status)}}</el-tag>
@@ -132,30 +154,32 @@
             <el-tag effect="dark" v-if="scope.row.status === 3" type="warning">{{blogEnums.articleStatusEnum.getLabelByValue(scope.row.status)}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="权限" width="80px">
+        <el-table-column label="权限" min-width="80px">
           <template slot-scope="scope">
             {{blogEnums.articlePermissionEnum.getLabelByValue(scope.row.permission)}}
           </template>
         </el-table-column>
-        <el-table-column label="允许评论" width="80px">
+        <el-table-column label="优先级" prop="priority" min-width="80px">
+        </el-table-column>
+        <el-table-column label="允许评论" min-width="80px">
           <template slot-scope="scope">
             {{blogEnums.commentLimitEnum.getLabelByValue(scope.row.comment)}}
           </template>
         </el-table-column>
-        <el-table-column label="编写类型" width="90px">
+        <el-table-column label="编写类型" min-width="90px">
           <template slot-scope="scope">
             {{blogEnums.editTypeEnum.getLabelByValue(scope.row.editType)}}
           </template>
         </el-table-column>
-        <el-table-column prop="createTime" label="新建时间" width="160px"/>
-        <el-table-column prop="modifyTime" label="修改时间" width="160px"/>
+        <el-table-column prop="createTime" label="新建时间" min-width="160px"/>
+        <el-table-column prop="modifyTime" label="修改时间" min-width="160px"/>
       </el-table>
       <el-row class="hidden-xs-only">
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="params.currentPage"
-          :page-sizes="[10, 20, 50, 100]"
+          :page-sizes="[5, 10, 20, 50]"
           :page-size="params.limit"
           layout="total,sizes, prev, pager, next, jumper"
           :total="total" style="margin-top: 20px">
@@ -180,7 +204,7 @@
 </template>
 
 <script>
-  import {deleteArticle, list, searchTag} from "../../api/blog";
+  import {deleteArticle, list, searchCategory, searchTag} from "../../api/blog";
   import blogEnums from "../constant/blogEnums";
   import "mavon-editor/dist/css/index.css"
 
@@ -190,13 +214,14 @@
       return {
         params: {
           currentPage: 1,
-          limit: 10
+          limit: 5
         },
         currentRowId: null,
         currentRow: {},
         deleteButtonDisable: true,
         data: [],
         options:[],
+        categoryOptions:[],
         total: 0,
         blogEnums: blogEnums,
         previewVisible: false
@@ -255,6 +280,16 @@
           this.options = []
         })
       },
+      queryCategorySearchAsync(queryString) {
+        searchCategory({name: queryString}).then(res => {
+          if (res.data) {
+            let result = res.data.map(item => {return {label: item.name, value: item.id}})
+            this.categoryOptions = result
+            return
+          }
+          this.categoryOptions = []
+        })
+      },
       handleSizeChange(val) {
         this.params.limit = val
         this.params.currentPage = 1
@@ -275,4 +310,21 @@
 .el-select {
   width: 100%;
 }
+.page-table {
+  overflow: scroll;
+}
+
+/*Bootstrap color customize*/
+.text-primary{color:#5869DA!important;}
+.text-secondary{color:#2d3d8b!important;}
+.text-success{color:#09815C!important;}
+.text-danger{color:#e3363e!important;}
+.text-warning{color:#e38836!important;}
+.text-info{color:#4da7d4!important;}
+.text-light{color:#f8f9f9!important;}
+.text-dark{color:#000c2d!important;}
+.text-muted,
+.text-muted a{color:#687385!important;}
+.text-white{color:#FFFFFF!important;}
+
 </style>

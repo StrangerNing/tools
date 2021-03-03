@@ -7,6 +7,7 @@ import com.aliyun.oss.model.GeneratePresignedUrlRequest;
 import com.aliyun.oss.model.ObjectMetadata;
 import com.aliyun.oss.model.PutObjectResult;
 import lombok.extern.slf4j.Slf4j;
+import me.znzn.tools.common.constant.CommonConstant;
 import me.znzn.tools.common.enums.OssFileTypeEnum;
 import me.znzn.tools.common.exception.BusinessException;
 import me.znzn.tools.module.user.entity.vo.UserInfoVO;
@@ -107,6 +108,10 @@ public class UploadFileUtil {
     public static void delFile(String filename) {
         OSS client = new OSSClientBuilder().build(OSS_ENDPOINT, OSS_ACCESS_KEY_ID, OSS_ACCESS_KEY_SECRET);
         client.deleteObject(OSS_BUCKET_NAME, filename);
+    }
+
+    public static String getFileUrl(String filename) {
+        return getFileUrl(filename, Long.valueOf(OSS_URL_EXPIRATION));
     }
 
     public static String getFileUrl(String fileName, Long expiration) {

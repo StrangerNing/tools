@@ -22,12 +22,7 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        String path = request.getServletPath();
-        Map pa = request.getParameterMap();
-        String params = JsonUtils.toJson(pa);
-        LOGGER.info("=========================================================");
-        LOGGER.info("request= {}, params= {}", path, params);
-        LOGGER.info("=========================================================");
+
         return true;
     }
 

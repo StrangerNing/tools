@@ -18,4 +18,11 @@ public interface TagService {
      * @return
      */
     List<Tag> searchTag(String tag);
+
+    /**
+     * 获取热门标签
+     * @param size
+     * @return
+     */
+    List<Tag> hotTags(Integer size);
 }

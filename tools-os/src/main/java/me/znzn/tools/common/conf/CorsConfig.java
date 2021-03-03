@@ -28,6 +28,9 @@ public class CorsConfig {
         config.addAllowedOrigin("https://coucou.pet");
         config.addAllowedOrigin("https://www.coucou.pet");
         config.addAllowedOrigin("https://admin.coucou.pet");
+        config.addAllowedOrigin("https://edchu.cn");
+        config.addAllowedOrigin("https://www.edchu.cn");
+        config.addAllowedOrigin("https://ndwz.cc");
         config.addAllowedOrigin("http://localhost");
         // 如果要限制 HEADER 或 METHOD 请自行更改
         config.addAllowedHeader("*");

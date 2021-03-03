@@ -53,7 +53,7 @@ public class ShortUrlController {
     public ModelAndView getOriginUrl(@PathVariable("shortUrl") String shortUrl, HttpServletRequest request) {
         ShortUrl url = shortUrlService.getOriginUrl(shortUrl);
         if (null == url || url.getStatus().equals(StatusEnum.DISABLE.getIndex())) {
-            return new ModelAndView("/error/404");
+            return new ModelAndView("/dwz/404");
         }
         shortUrlStatisticsService.saveVisitHistory(shortUrl, request);
         String queryString = request.getQueryString();

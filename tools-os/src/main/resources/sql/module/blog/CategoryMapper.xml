@@ -1,28 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="me.znzn.tools.module.blog.mapper.TagMapper">
+<mapper namespace="me.znzn.tools.module.blog.mapper.CategoryMapper">
 
-    <!-- Tag结果集 -->
-    <resultMap id="TagMap" type="me.znzn.tools.module.blog.entity.po.Tag" >
+    <!-- Category结果集 -->
+    <resultMap id="CategoryMap" type="me.znzn.tools.module.blog.entity.po.Category" >
         <id column="id" property="id" jdbcType="BIGINT"/>
-        <result column="tag" property="tag" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="color" property="color" jdbcType="VARCHAR"/>
+        <result column="href" property="href" jdbcType="VARCHAR"/>
+        <result column="index" property="index" jdbcType="INTEGER"/>
     </resultMap>
 
     <!-- 表名 -->
-    <sql id="table_name">t_blog_tag</sql>
+    <sql id="table_name">t_blog_category</sql>
 
     <!-- 所有字段 -->
     <sql id="all_columns">
-        id, tag
+        id, name, color, href, index
     </sql>
 
     <!-- 不带主键的所有字段 -->
     <sql id="all_columns_not_with_id">
-        tag
-    </sql>
-
-    <sql id="all_columns_with_prefix">
-        tag.id, tag.tag
+        name, color, href, index
     </sql>
 
     <!-- 查询条件带where -->
@@ -31,17 +30,17 @@
             <if test="id != null">
                 AND id = #{id}
             </if>
-            <if test="tag != null and '' != tag">
-                AND tag = #{tag}
+            <if test="name != null and '' != name">
+                AND name LIKE CONCAT(CONCAT('%',#{name},'%'))
             </if>
-        </trim>
-    </sql>
-
-    <!-- 查询条件不带where带前缀 -->
-    <sql id="all_query_condition_with_prefix">
-        <trim prefixOverrides="AND|OR">
-            <if test="tag != null and '' != tag">
-                AND tag.tag = #{tag}
+            <if test="color != null and '' != color">
+                AND color = #{color}
+            </if>
+            <if test="href != null and '' != href">
+                AND href = #{href}
+            </if>
+            <if test="index != null and '' != index">
+                AND index = #{index}
             </if>
         </trim>
     </sql>
@@ -49,8 +48,17 @@
     <!-- 删除条件带where -->
     <sql id="all_delete_condition_with_where">
         <trim prefix="WHERE" prefixOverrides="AND|OR">
-            <if test="tag != null and '' != tag">
-                AND tag = #{tag}
+            <if test="name != null and '' != name">
+                AND name = #{name}
+            </if>
+            <if test="color != null and '' != color">
+                AND color = #{color}
+            </if>
+            <if test="href != null and '' != href">
+                AND href = #{href}
+            </if>
+            <if test="index != null and '' != index">
+                AND index = #{index}
             </if>
         </trim>
     </sql>
@@ -58,8 +66,17 @@
     <!-- 更新条件带set -->
     <sql id="all_set_condition_with_set">
         <set>
-            <if test="tag != null and '' != tag">
-                tag = #{tag}
+            <if test="name != null and '' != name">
+                name = #{name},
+            </if>
+            <if test="color != null and '' != color">
+                color = #{color}
+            </if>
+            <if test="href != null and '' != href">
+                href = #{href}
+            </if>
+            <if test="index != null and '' != index">
+                index = #{index}
             </if>
         </set>
     </sql>
@@ -67,20 +84,29 @@
     <!-- 批量更新条件带set -->
     <sql id="all_batch_set_condition_with_set">
         <set>
-            <if test="item.tag != null and '' != item.tag">
-                tag = #{item.tag}
+            <if test="item.name != null and '' != item.name">
+                name = #{item.name},
+            </if>
+            <if test="item.color != null and '' != item.color">
+                color = #{item.color}
+            </if>
+            <if test="item.href != null and '' != item.href">
+                href = #{item.href}
+            </if>
+            <if test="item.index != null and '' != item.index">
+                AND index = #{index}
             </if>
         </set>
     </sql>
 
     <!--根据对象属性插入-->
-    <insert id="insertByProperty" useGeneratedKeys="true" keyProperty="id" keyColumn="id" parameterType="me.znzn.tools.module.blog.entity.po.Tag">
+    <insert id="insertByProperty" useGeneratedKeys="true" keyProperty="id" keyColumn="id" parameterType="me.znzn.tools.module.blog.entity.po.Category">
         INSERT INTO <include refid="table_name"/>
         (
             <include refid="all_columns_not_with_id"/>
         )
         VALUES (
-            #{tag}
+            #{name}, #{color}, #{href}, #{index}
         )
     </insert>
 
@@ -93,13 +119,13 @@
         VALUES
         <foreach collection="list" item="item" separator="," index = "index">
         (
-            #{item.tag}
+            #{item.name}, #{item.color}, #{item.href}, #{item.index}
         )
         </foreach>
     </insert>
 
     <!--根据主键更新-->
-    <update id="updateByPrimaryKey" parameterType="me.znzn.tools.module.blog.entity.po.Tag">
+    <update id="updateByPrimaryKey" parameterType="me.znzn.tools.module.blog.entity.po.Category">
         UPDATE <include refid="table_name"/>
             <include refid="all_set_condition_with_set"/>
         WHERE
@@ -137,13 +163,13 @@
     </delete>
 
     <!--根据属性删除-->
-    <delete id="deleteByProperty" parameterType="me.znzn.tools.module.blog.entity.po.Tag">
+    <delete id="deleteByProperty" parameterType="me.znzn.tools.module.blog.entity.po.Category">
         DELETE FROM <include refid="table_name"/>
         <include refid="all_delete_condition_with_where"/>
     </delete>
 
     <!-- 根据主键查询 -->
-    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="TagMap">
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="CategoryMap">
         SELECT
             <include refid="all_columns"/>
         FROM
@@ -153,16 +179,17 @@
     </select>
 
     <!-- 根据对象属性查询 -->
-    <select id="selectByProperty" parameterType="me.znzn.tools.module.blog.entity.po.Tag" resultMap="TagMap">
+    <select id="selectByProperty" parameterType="me.znzn.tools.module.blog.entity.po.Category" resultMap="CategoryMap">
         SELECT
             <include refid="all_columns"/>
         FROM
             <include refid="table_name"/>
         <include refid="all_query_condition_with_where"/>
+        ORDER BY index DESC
     </select>
 
     <!-- 根据对象属性查询统计 -->
-    <select id="countByProperty" parameterType="me.znzn.tools.module.blog.entity.po.Tag" resultType="java.lang.Long">
+    <select id="countByProperty" parameterType="me.znzn.tools.module.blog.entity.po.Category" resultType="java.lang.Long">
         SELECT
             COUNT(*)
         FROM
@@ -170,33 +197,11 @@
         <include refid="all_query_condition_with_where"/>
     </select>
 
-    <insert id="insertAvoidDuplicate" useGeneratedKeys="true" keyProperty="id" keyColumn="id" parameterType="me.znzn.tools.module.blog.entity.po.Tag">
-        INSERT IGNORE INTO t_blog_tag (tag) VALUES (#{tag})
-    </insert>
-
-    <select id="searchTag" resultType="me.znzn.tools.module.blog.entity.po.Tag">
-        SELECT
-        <include refid="all_columns"/>
-        FROM
-        <include refid="table_name"/>
-        WHERE tag LIKE CONCAT(CONCAT('%',#{tag},'%'))
-        LIMIT 10
-    </select>
-
-    <select id="hotTags" resultType="me.znzn.tools.module.blog.entity.po.Tag">
-        SELECT at.tag_id as id, tag.tag as tag
-        FROM t_blog_r_article_tag at
-        LEFT JOIN t_blog_tag tag ON tag.id = at.tag_id
-        GROUP BY at.tag_id
-        ORDER BY COUNT(*) DESC, tag_id DESC
-        LIMIT #{size}
-    </select>
-
-    <select id="selectArticleTagsByArticleId" resultType="me.znzn.tools.module.blog.entity.po.Tag">
-        SELECT tag.id, tag.tag
-        FROM <include refid="me.znzn.tools.module.blog.mapper.ArticleTagMapper.table_name"/> at
-        LEFT JOIN <include refid="table_name"/> tag ON at.tag_id = tag.id
-        WHERE at.article_id = #{id}
+    <select id="selectCategoryByArticleId" resultType="me.znzn.tools.module.blog.entity.po.Category">
+        SELECT category.id as id, category.name, category.color, category.href, category.index
+        FROM <include refid="me.znzn.tools.module.blog.mapper.ArticleCategoryMapper.table_name"/> ac
+        LEFT JOIN <include refid="table_name"/> category ON ac.category_id = category.id
+        WHERE ac.article_id = #{id}
     </select>
 
 

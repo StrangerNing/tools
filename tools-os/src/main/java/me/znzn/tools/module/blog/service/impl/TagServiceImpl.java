@@ -27,4 +27,11 @@ public class TagServiceImpl implements TagService {
         List<Tag> tagList = tagMapper.searchTag(tag);
         return tagList;
     }
+
+    @Override
+    public List<Tag> hotTags(Integer size) {
+        return tagMapper.hotTags(size);
+    }
+
+
 }
