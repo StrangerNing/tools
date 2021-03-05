@@ -64,7 +64,7 @@
                                     <h5 class="post-title mb-15 text-limit-2-row" th:text="${sticky.title}"></h5>
                                     <div class="entry-meta meta-1 float-left font-x-small text-uppercase">
                                         <span class="post-on text-white time" th:datetime="${#dates.format(sticky.createTime,'yyyy-MM-dd HH:mm:ss')}"></span>
-                                        <span class="post-by has-dot text-white" th:text="${sticky.views}"></span>
+                                        <span class="post-by has-dot text-white"><i class="elegant-icon icon_genius mr-5"></i><span th:text="${sticky.views}"></span></span>
                                     </div>
                                 </div>
                             </div>

@@ -119,6 +119,72 @@
         </trim>
     </sql>
 
+    <sql id="all_query_condition_without_where">
+            <if test="id != null">
+                AND id = #{id}
+            </if>
+            <if test="title != null and '' != title">
+                AND title = #{title}
+            </if>
+            <if test="content != null and '' != content">
+                AND content = #{content}
+            </if>
+            <if test="alias != null and '' != alias">
+                AND alias = #{alias}
+            </if>
+            <if test="type != null">
+                AND type = #{type}
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+            <if test="permission != null">
+                AND permission = #{permission}
+            </if>
+            <if test="priority != null">
+                AND priority = #{priority}
+            </if>
+            <if test="author != null and '' != author">
+                AND author = #{author}
+            </if>
+            <if test="comment != null">
+                AND comment = #{comment}
+            </if>
+            <if test="views != null">
+                AND views = #{views}
+            </if>
+            <if test="minutes != null">
+                AND minutes = #{minutes}
+            </if>
+            <if test="orderPublishTime != null">
+                AND order_publish_time = #{orderPublishTime}
+            </if>
+            <if test="editType != null">
+                AND edit_type = #{editType}
+            </if>
+            <if test="createAccount != null">
+                AND create_account = #{createAccount}
+            </if>
+            <if test="createTime != null">
+                AND create_time = #{createTime}
+            </if>
+            <if test="modifyAccount != null">
+                AND modify_account = #{modifyAccount}
+            </if>
+            <if test="modifyTime != null">
+                AND modify_time = #{modifyTime}
+            </if>
+            <if test="remark != null and '' != remark">
+                AND remark = #{remark}
+            </if>
+            <if test="version != null and '' != version">
+                AND version = #{version}
+            </if>
+            <if test="thumb != null and '' != thumb">
+                AND thumb = #{thumb}
+            </if>
+    </sql>
+
     <!-- 查询条件不带where带前缀 -->
     <sql id="all_query_condition_with_prefix">
             <if test="id != null">
@@ -489,7 +555,7 @@
                 (
                 SELECT <include refid="all_columns"/>
                 FROM <include refid="table_name"/>
-                WHERE 1=1 <include refid="all_query_condition_with_prefix"/>
+                WHERE 1=1 <include refid="all_query_condition_without_where"/>
                 <if test="isSticky != null and true == isSticky">
                     AND priority &gt;= 100
                 </if>

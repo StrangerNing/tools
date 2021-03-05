@@ -3,10 +3,7 @@ package me.znzn.tools.module.blog.service.impl;
 import cn.hutool.core.collection.CollectionUtil;
 import me.znzn.tools.common.constant.CommonConstant;
 import me.znzn.tools.common.exception.BusinessException;
-import me.znzn.tools.module.blog.entity.enums.ArticlePermissionEnum;
-import me.znzn.tools.module.blog.entity.enums.ArticleStatusEnum;
-import me.znzn.tools.module.blog.entity.enums.CommentLimitEnum;
-import me.znzn.tools.module.blog.entity.enums.EditTypeEnum;
+import me.znzn.tools.module.blog.entity.enums.*;
 import me.znzn.tools.module.blog.entity.form.ArticleForm;
 import me.znzn.tools.module.blog.entity.po.*;
 import me.znzn.tools.module.blog.entity.vo.ArticleVo;
@@ -83,6 +80,12 @@ public class ArticleServiceImpl implements ArticleService {
         }
         if (article.getVersion() == null) {
             article.setVersion(0);
+        }
+        if (article.getPriority() == null) {
+            article.setPriority(ArticlePriorityEnum.NORMAL.getIndex());
+        }
+        if (article.getViews() == null) {
+            article.setViews(0);
         }
     }
 

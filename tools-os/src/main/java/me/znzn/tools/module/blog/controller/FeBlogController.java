@@ -1,6 +1,7 @@
 package me.znzn.tools.module.blog.controller;
 
 import me.znzn.tools.common.component.ResultPageUtil;
+import me.znzn.tools.module.blog.entity.enums.ArticleStatusEnum;
 import me.znzn.tools.module.blog.entity.form.ArticleForm;
 import me.znzn.tools.module.blog.entity.vo.ArticleVo;
 import me.znzn.tools.module.blog.service.CategoryService;
@@ -36,15 +37,10 @@ public class FeBlogController {
 
     @GetMapping("/")
     public String index(Model model) {
-        List<String> navi = new ArrayList<>();
-        navi.add("Lifestyle");
-        navi.add("IT");
-        navi.add("Cook");
-        navi.add("Coucou");
-        model.addAttribute("navis", navi);
 
         ArticleForm querySticky = new ArticleForm();
         querySticky.setIsSticky(true);
+        querySticky.setStatus(ArticleStatusEnum.NORMAL.getIndex());
         List<ArticleVo> stickyArticles = feBlogService.getArticleList(querySticky);
         model.addAttribute("stickies", stickyArticles);
 
@@ -62,17 +58,12 @@ public class FeBlogController {
     @GetMapping("/wapi/list")
     @ResponseBody
     public ResponseEntity blogList(ArticleForm articleForm) {
+        articleForm.setStatus(ArticleStatusEnum.NORMAL.getIndex());
         return ResultPageUtil.successWithPage(feBlogService.getArticleList(articleForm), feBlogService.countArticleList(articleForm), articleForm.getCurrentPage());
     }
 
     @RequestMapping("/404")
     public String notFound(Model model) {
-        List<String> navi = new ArrayList<>();
-        navi.add("Lifestyle");
-        navi.add("IT");
-        navi.add("Cook");
-        navi.add("Coucou");
-        model.addAttribute("navis", navi);
 
         return "/error/404";
     }

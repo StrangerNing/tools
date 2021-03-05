@@ -106,6 +106,7 @@
                          :action="uploadUrl"
                          :show-file-list="false"
                          :on-success = "handleThumbSuccess"
+                         :on-error="handleThumbError"
                          with-credentials>
                 <el-button size="small" type="primary">点击上传</el-button>
               </el-upload>
@@ -344,6 +345,9 @@
         this.$message.success('上传成功')
         this.article.thumb = response.data.name
         this.article.thumbPreview = response.data.url
+      },
+      handleThumbError(err, file, fileList) {
+        this.$message.error(JSON.parse(err.message).msg)
       },
       closeViewer() {
         document.body.style.overflow = null
