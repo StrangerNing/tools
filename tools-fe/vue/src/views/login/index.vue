@@ -203,6 +203,11 @@ export default {
     login() {
       this.loading = true
       this.$store.dispatch('user/login', this.loginForm).then(() => {
+        if (this.redirect.startsWith('http')) {
+          console.log('开往 ', this.redirect)
+          window.location = this.redirect
+          return
+        }
         this.$router.push({ path: this.redirect || '/' })
         this.loading = false
       }).catch(() => {

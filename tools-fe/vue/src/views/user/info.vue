@@ -2,7 +2,7 @@
   <div class="page-container">
     <el-form label-width="100px">
       <el-row>
-        <el-col :span="8">
+        <el-col :xs="24" :sm="16" :md="12" :lg="8">
           <el-form-item label="头像">
             <el-upload
               class="avatar-uploader"
@@ -18,21 +18,21 @@
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="8">
+        <el-col :xs="24" :sm="16" :md="12" :lg="8">
           <el-form-item label="用户名">
             <el-input v-model="userInfo.username"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="8">
+        <el-col :xs="24" :sm="16" :md="12" :lg="8">
           <el-form-item label="昵称">
             <el-input v-model="userInfo.nickname"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="8">
+        <el-col :xs="24" :sm="16" :md="12" :lg="8">
           <el-form-item label="性别">
             <el-select style="width: 99%" v-model="userInfo.sex" placeholder="请选择" filterable>
               <el-option label="男" :value= 0>男</el-option>
@@ -43,21 +43,21 @@
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="8">
+        <el-col :xs="24" :sm="16" :md="12" :lg="8">
           <el-form-item label="手机号">
             <el-input v-model="userInfo.mobile"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="8">
+        <el-col :xs="24" :sm="16" :md="12" :lg="8">
           <el-form-item label="邮箱">
             <el-input v-model="userInfo.email"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="8" style="text-align: right;">
+        <el-col :xs="24" :sm="16" :md="12" :lg="8" style="text-align: right;">
           <el-button type="primary" size="small" @click="submit">提交</el-button>
         </el-col>
       </el-row>
