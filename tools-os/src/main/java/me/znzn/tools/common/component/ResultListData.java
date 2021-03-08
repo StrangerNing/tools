@@ -18,4 +18,14 @@ public class ResultListData<T> implements Serializable {
 
     /** 总条数 **/
     private Integer totalCount;
+
+    public ResultListData(T list, Integer totalCount, Integer currentPage){
+        this.list = list;
+        this.totalCount = totalCount;
+        this.currentPage = currentPage;
+    }
+
+    public ResultListData() {
+
+    }
 }

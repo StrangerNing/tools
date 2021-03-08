@@ -2,6 +2,7 @@ package me.znzn.tools.module.blog.controller;
 
 
 import me.znzn.tools.common.component.ResultPageUtil;
+import me.znzn.tools.module.blog.entity.form.CategoryForm;
 import me.znzn.tools.module.blog.entity.po.Category;
 import me.znzn.tools.module.blog.service.CategoryService;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +28,7 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @GetMapping("/search")
-    public ResponseEntity search(Category category) {
+    public ResponseEntity search(CategoryForm category) {
         return ResultPageUtil.success(categoryService.searchCategory(category));
     }
 

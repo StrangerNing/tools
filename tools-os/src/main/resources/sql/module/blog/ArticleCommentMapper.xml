@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.znzn.tools.module.blog.mapper.ArticleCommentMapper">
+
+    <!-- ArticleComment结果集 -->
+    <resultMap id="ArticleCommentMap" type="me.znzn.tools.module.blog.entity.po.ArticleComment" >
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="article_id" property="articleId" jdbcType="BIGINT"/>
+        <result column="parent_id" property="parentId" jdbcType="BIGINT"/>
+        <result column="content" property="content" jdbcType="VARCHAR"/>
+        <result column="reply_id" property="replyId" jdbcType="BIGINT"/>
+        <result column="create_name" property="createName" jdbcType="VARCHAR"/>
+        <result column="create_email" property="createEmail" jdbcType="VARCHAR"/>
+        <result column="create_website" property="createWebsite" jdbcType="VARCHAR"/>
+        <result column="create_account" property="createAccount" jdbcType="BIGINT"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="modify_account" property="modifyAccount" jdbcType="BIGINT"/>
+        <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <resultMap id="ArticleCommentVoMap" type="me.znzn.tools.module.blog.entity.vo.ArticleCommentVo" extends="ArticleCommentMap">
+
+    </resultMap>
+
+    <!-- 表名 -->
+    <sql id="table_name">t_blog_article_comment</sql>
+
+    <!-- 所有字段 -->
+    <sql id="all_columns">
+        id, article_id, parent_id, content, reply_id, create_name, create_email, create_website, create_account, create_time, modify_account, modify_time
+    </sql>
+
+    <!-- 不带主键的所有字段 -->
+    <sql id="all_columns_not_with_id">
+        article_id, parent_id, content, reply_id, create_name, create_email, create_website, create_account, create_time, modify_account, modify_time
+    </sql>
+
+    <!-- 查询条件带where -->
+    <sql id="all_query_condition_with_where">
+        <trim prefix="WHERE" prefixOverrides="AND|OR">
+            <if test="id != null">
+                AND id = #{id}
+            </if>
+            <if test="articleId != null">
+                AND article_id = #{articleId}
+            </if>
+            <if test="parentId != null">
+                AND parent_id = #{parentId}
+            </if>
+            <if test="content != null and '' != content">
+                AND content = #{content}
+            </if>
+            <if test="replyId != null">
+                AND reply_id = #{replyId}
+            </if>
+            <if test="createName != null and '' != createName">
+                AND create_name = #{createName}
+            </if>
+            <if test="createEmail != null and '' != createEmail">
+                AND create_email = #{createEmail}
+            </if>
+            <if test="createWebsite != null and '' != createWebsite">
+                AND create_website = #{createWebsite}
+            </if>
+            <if test="createAccount != null">
+                AND create_account = #{createAccount}
+            </if>
+            <if test="createTime != null">
+                AND create_time = #{createTime}
+            </if>
+            <if test="modifyAccount != null">
+                AND modify_account = #{modifyAccount}
+            </if>
+            <if test="modifyTime != null">
+                AND modify_time = #{modifyTime}
+            </if>
+        </trim>
+    </sql>
+
+    <!-- 删除条件带where -->
+    <sql id="all_delete_condition_with_where">
+        <trim prefix="WHERE" prefixOverrides="AND|OR">
+            <if test="articleId != null">
+                AND article_id = #{articleId}
+            </if>
+            <if test="parentId != null">
+                AND parent_id = #{parentId}
+            </if>
+            <if test="content != null and '' != content">
+                AND content = #{content}
+            </if>
+            <if test="replyId != null">
+                AND reply_id = #{replyId}
+            </if>
+            <if test="createName != null and '' != createName">
+                AND create_name = #{createName}
+            </if>
+            <if test="createEmail != null and '' != createEmail">
+                AND create_email = #{createEmail}
+            </if>
+            <if test="createWebsite != null and '' != createWebsite">
+                AND create_website = #{createWebsite}
+            </if>
+            <if test="createAccount != null">
+                AND create_account = #{createAccount}
+            </if>
+            <if test="createTime != null">
+                AND create_time = #{createTime}
+            </if>
+            <if test="modifyAccount != null">
+                AND modify_account = #{modifyAccount}
+            </if>
+            <if test="modifyTime != null">
+                AND modify_time = #{modifyTime}
+            </if>
+        </trim>
+    </sql>
+
+    <!-- 更新条件带set -->
+    <sql id="all_set_condition_with_set">
+        <set>
+            <if test="articleId != null">
+                article_id = #{articleId},
+            </if>
+            <if test="parentId != null">
+                parent_id = #{parentId},
+            </if>
+            <if test="content != null and '' != content">
+                content = #{content},
+            </if>
+            <if test="replyId != null">
+                reply_id = #{replyId},
+            </if>
+            <if test="createName != null and '' != createName">
+                create_name = #{createName},
+            </if>
+            <if test="createEmail != null and '' != createEmail">
+                create_email = #{createEmail},
+            </if>
+            <if test="createWebsite != null and '' != createWebsite">
+                create_website = #{createWebsite},
+            </if>
+            <if test="createAccount != null">
+                create_account = #{createAccount},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="modifyAccount != null">
+                modify_account = #{modifyAccount},
+            </if>
+            <if test="modifyTime != null">
+                modify_time = #{modifyTime}
+            </if>
+        </set>
+    </sql>
+
+    <!-- 批量更新条件带set -->
+    <sql id="all_batch_set_condition_with_set">
+        <set>
+            <if test="item.articleId != null">
+                article_id = #{item.articleId},
+            </if>
+            <if test="item.parentId != null">
+                parent_id = #{item.parentId},
+            </if>
+            <if test="item.content != null and '' != item.content">
+                content = #{item.content},
+            </if>
+            <if test="item.replyId != null">
+                reply_id = #{item.replyId},
+            </if>
+            <if test="item.createName != null and '' != item.createName">
+                create_name = #{item.createName},
+            </if>
+            <if test="item.createEmail != null and '' != item.createEmail">
+                create_email = #{item.createEmail},
+            </if>
+            <if test="item.createWebsite != null and '' != item.createWebsite">
+                create_website = #{item.createWebsite},
+            </if>
+            <if test="item.createAccount != null">
+                create_account = #{item.createAccount},
+            </if>
+            <if test="item.createTime != null">
+                create_time = #{item.createTime},
+            </if>
+            <if test="item.modifyAccount != null">
+                modify_account = #{item.modifyAccount},
+            </if>
+            <if test="item.modifyTime != null">
+                modify_time = #{item.modifyTime}
+            </if>
+        </set>
+    </sql>
+
+    <!--根据对象属性插入-->
+    <insert id="insertByProperty" useGeneratedKeys="true" keyProperty="id" keyColumn="id" parameterType="me.znzn.tools.module.blog.entity.po.ArticleComment">
+        INSERT INTO <include refid="table_name"/>
+        (
+            <include refid="all_columns_not_with_id"/>
+        )
+        VALUES (
+            #{articleId}, #{parentId}, #{content}, #{replyId}, #{createName}, #{createEmail}, #{createWebsite}, #{createAccount}, #{createTime}, #{modifyAccount}, #{modifyTime}
+        )
+    </insert>
+
+    <!--根据对象属性插入-->
+    <insert id="insertBatchByProperty" useGeneratedKeys="true" keyProperty="id" keyColumn="id" parameterType="java.util.List">
+        INSERT INTO <include refid="table_name"/>
+        (
+            <include refid="all_columns_not_with_id"/>
+        )
+        VALUES
+        <foreach collection="list" item="item" separator="," index = "index">
+        (
+            #{item.articleId}, #{item.parentId}, #{item.content}, #{item.replyId}, #{item.createName}, #{item.createEmail}, #{item.createWebsite}, #{item.createAccount}, #{item.createTime}, #{item.modifyAccount}, #{item.modifyTime}
+        )
+        </foreach>
+    </insert>
+
+    <!--根据主键更新-->
+    <update id="updateByPrimaryKey" parameterType="me.znzn.tools.module.blog.entity.po.ArticleComment">
+        UPDATE <include refid="table_name"/>
+            <include refid="all_set_condition_with_set"/>
+        WHERE
+            id = #{id}
+    </update>
+
+    <!--根据主键批量更新-->
+    <update id="updateBatchByPrimaryKey" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" separator=";">
+            UPDATE <include refid="table_name"/>
+                <include refid="all_batch_set_condition_with_set"/>
+            WHERE
+                id = #{item.id}
+        </foreach>
+    </update>
+
+    <!--根据主键删除-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        DELETE FROM
+            <include refid="table_name"/>
+        WHERE
+            id = #{id}
+    </delete>
+
+    <!--根据主键列表批量删除-->
+    <delete id="deleteBatchByPrimaryKey" parameterType="java.util.List">
+        DELETE FROM
+            <include refid="table_name"/>
+        WHERE
+            id
+        IN
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!--根据属性删除-->
+    <delete id="deleteByProperty" parameterType="me.znzn.tools.module.blog.entity.po.ArticleComment">
+        DELETE FROM <include refid="table_name"/>
+        <include refid="all_delete_condition_with_where"/>
+    </delete>
+
+    <!-- 根据主键查询 -->
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ArticleCommentMap">
+        SELECT
+            <include refid="all_columns"/>
+        FROM
+            <include refid="table_name"/>
+        WHERE
+            id = #{id}
+    </select>
+
+    <!-- 根据对象属性查询 -->
+    <select id="selectByProperty" parameterType="me.znzn.tools.module.blog.entity.po.ArticleComment" resultMap="ArticleCommentMap">
+        SELECT
+            <include refid="all_columns"/>
+        FROM
+            <include refid="table_name"/>
+        <include refid="all_query_condition_with_where"/>
+        ORDER BY ${orderBy}
+    </select>
+
+    <!-- 根据对象属性查询统计 -->
+    <select id="countByProperty" parameterType="me.znzn.tools.module.blog.entity.po.ArticleComment" resultType="java.lang.Long">
+        SELECT
+            COUNT(*)
+        FROM
+            <include refid="table_name"/>
+        <include refid="all_query_condition_with_where"/>
+    </select>
+
+    <select id="selectVoByArticleId" resultMap="ArticleCommentVoMap">
+        SELECT <include refid="all_columns"/>
+        FROM <include refid="table_name"/>
+        WHERE article_id = #{articleId}
+    </select>
+
+</mapper>

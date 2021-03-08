@@ -27,4 +27,6 @@ public class ArticleForm extends Article {
      * 分类
      */
     public String category;
+
+    public String categoryHref;
 }

@@ -69,6 +69,7 @@ public class UserServiceImpl implements UserService {
         User newUser = new User();
         newUser.setRoles("[\"user\"]");
         newUser.setUsername(username);
+        newUser.setNickname(username);
         newUser.setPassword(MD5Util.generate(registerForm.getPassword()));
         newUser.setSex(SexEnum.UNKNOWN.getIndex());
         newUser.setStatus(StatusEnum.ENABLE.getIndex());

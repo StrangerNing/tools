@@ -1,22 +1,8 @@
 import "https://cdn.bootcss.com/timeago.js/3.0.2/timeago.js"
 $('#featureMoreBtn').click(function () {
-  let currentPage = $(this).data('id')
-  let limit = $(this).data('limit')
-  let params = {
-    isSticky: false,
-    currentPage: currentPage,
-    limit: limit
-  }
-  let url = '/wapi/list'
-  getNextPage(params, url, 'get').then(res => {
-    if (res.data.list) {
-      let articleList = res.data.list
-      let more = ''
-      var timeagoInstance = timeago();// 实例
-
-      let template = ''
-      for (let temp = 0; temp < limit; temp ++) {
-        template += `<article class="col-lg-4 col-md-6 mb-30 wow template" data-wow-delay="0.2s">
+  let template = ''
+  for (let temp = 0; temp < limit; temp ++) {
+    template += `<article class="col-lg-4 col-md-6 mb-30 wow template" data-wow-delay="0.2s">
                         <div class="post-card-1 border-radius-10 hover-up">
                             <div class="post-thumb img-hover-slide position-relative" style="background-color:rgb(22 29 39 / 12%)">
                                 <a class="img-link"></a>
@@ -37,8 +23,22 @@ $('#featureMoreBtn').click(function () {
                             </div>
                         </div>
                     </article>`
-      }
-      $('#articleList').append(template)
+  }
+  $('#articleList').append(template)
+
+  let currentPage = $(this).data('id')
+  let limit = $(this).data('limit')
+  let params = {
+    isSticky: false,
+    currentPage: currentPage,
+    limit: limit
+  }
+  let url = '/wapi/list'
+  getNextPage(params, url, 'get').then(res => {
+    if (res.data.list) {
+      let articleList = res.data.list
+      let more = ''
+      var timeagoInstance = timeago();// 实例
 
       for (let index = 0; index < articleList.length; index++) {
         more += `<article class="col-lg-4 col-md-6 mb-30 wow animated">

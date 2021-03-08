@@ -36,6 +36,8 @@ public class BaseModel {
 
     private String remark;
 
+    private String orderBy = "create_time DESC";
+
     public Integer getStartIndex() {
         if (getLimit() != null || getCurrentPage() != null) {
             return getLimit() * (getCurrentPage() - 1);

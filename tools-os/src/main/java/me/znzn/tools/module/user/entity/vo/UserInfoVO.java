@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import me.znzn.tools.common.component.BaseModel;
 import me.znzn.tools.common.exception.BusinessException;
+import me.znzn.tools.utils.UploadFileUtil;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -129,6 +130,13 @@ public class UserInfoVO implements Serializable {
         if (!hasOperateAuth(baseModel)) {
             throw new BusinessException("没有操作权限");
         }
+    }
+
+    public String getAvatar() {
+        if (this.avatar == null) {
+            return null;
+        }
+        return UploadFileUtil.getFileUrl(this.avatar);
     }
 
 }

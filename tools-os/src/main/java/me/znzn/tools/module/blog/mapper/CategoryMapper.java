@@ -1,7 +1,10 @@
 package me.znzn.tools.module.blog.mapper;
 import me.znzn.tools.common.dao.BaseDao;
+import me.znzn.tools.module.blog.entity.form.CategoryForm;
 import me.znzn.tools.module.blog.entity.po.Category;
 import java.util.List;
+
+import me.znzn.tools.module.blog.entity.vo.CategoryVo;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -21,5 +24,12 @@ public interface CategoryMapper extends BaseDao<Category> {
      * @return
      */
     List<Category> selectCategoryByArticleId(Long id);
+
+    /**
+     * 搜索分类
+     * @param categoryForm
+     * @return
+     */
+    List<CategoryVo> selectCategoryVoByProperty(CategoryForm categoryForm);
 
 }

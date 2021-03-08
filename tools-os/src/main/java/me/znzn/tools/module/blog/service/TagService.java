@@ -25,4 +25,11 @@ public interface TagService {
      * @return
      */
     List<Tag> hotTags(Integer size);
+
+    /**
+     * 获取一个标签
+     * @param tag
+     * @return
+     */
+    Tag getOneTag(Tag tag);
 }

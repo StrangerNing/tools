@@ -1,5 +1,7 @@
 package me.znzn.tools.module.blog.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
+import me.znzn.tools.common.exception.NotFoundException;
 import me.znzn.tools.module.blog.mapper.TagMapper;
 import me.znzn.tools.module.blog.entity.po.Tag;
 import me.znzn.tools.module.blog.service.TagService;
@@ -31,6 +33,15 @@ public class TagServiceImpl implements TagService {
     @Override
     public List<Tag> hotTags(Integer size) {
         return tagMapper.hotTags(size);
+    }
+
+    @Override
+    public Tag getOneTag(Tag tag) {
+        List<Tag> tagList = tagMapper.selectByProperty(tag);
+        if (CollectionUtil.isEmpty(tagList)) {
+            throw new NotFoundException("没有找到标签");
+        }
+        return tagList.get(0);
     }
 
 

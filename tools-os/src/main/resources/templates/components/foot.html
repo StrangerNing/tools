@@ -16,16 +16,16 @@
                             </div>
                             <div class="textwidget">
                                 <p>
-                                    Start writing, no matter what. The water does not flow until the faucet is turned on.
+                                    程序猿一枚，目前在「神州优车」做一条咸鱼。
                                 </p>
-                                <p><strong class="color-black">Address</strong><br>
-                                    123 Main Street<br>
-                                    New York, NY 10001</p>
+                                <p>
+                                    无志青年，只想养老。
+                                </p>
                                 <p><strong class="color-black">Follow me</strong><br>
                                 <ul class="header-social-network d-inline-block list-inline color-white mb-20">
-                                    <li class="list-inline-item"><a class="fb" href="#" target="_blank" title="Facebook"><i class="elegant-icon social_facebook"></i></a></li>
-                                    <li class="list-inline-item"><a class="tw" href="#" target="_blank" title="Tweet now"><i class="elegant-icon social_twitter"></i></a></li>
-                                    <li class="list-inline-item"><a class="pt" href="#" target="_blank" title="Pin it"><i class="elegant-icon social_pinterest"></i></a></li>
+                                    <li class="list-inline-item"><a class="bilibili" href="https://space.bilibili.com/10641577" target="_blank" title="Bilibili"><img src="/static/imgs/icons/bilibili.svg"></a></li>
+                                    <li class="list-inline-item"><a class="tw" href="https://twitter.com/edchu_cn" target="_blank" title="Tweet now"><i class="elegant-icon social_twitter"></i></a></li>
+                                    <li class="list-inline-item"><a class="ig" href="https://www.instagram.com/edchu_cn/" target="_blank" title="Instagram"><i class="elegant-icon social_instagram"></i></a></li>
                                 </ul>
                             </div>
                         </div>
@@ -51,13 +51,7 @@
                                 <h5 class="mt-5 mb-30">Tagcloud</h5>
                             </div>
                             <div class="tagcloud mt-50">
-                                <a class="tag-cloud-link" href="category.html">beautiful</a>
-                                <a class="tag-cloud-link" href="category.html">New York</a>
-                                <a class="tag-cloud-link" href="category.html">droll</a>
-                                <a class="tag-cloud-link" href="category.html">intimate</a>
-                                <a class="tag-cloud-link" href="category.html">loving</a>
-                                <a class="tag-cloud-link" href="category.html">travel</a>
-                                <a class="tag-cloud-link" href="category.html">fighting </a>
+                                <a class="tag-cloud-link" th:each="hotTag : ${hotTags}" th:href="'/tag/' + ${hotTag.tag}" th:text="${hotTag.tag}"></a>
                             </div>
                         </div>
                     </div>
@@ -67,21 +61,21 @@
                                 <h5 class="mt-5 mb-30">Newsletter</h5>
                             </div>
                             <div class="newsletter">
-                                <p class="font-medium">Subscribe to our newsletter and get our newest updates right on your inbox.</p>
+                                <p class="font-large">订阅我，</p>
+                                <p class="font-medium">你就可以在你的收件箱里第一时间看到最新文章啦！</p>
                                 <form class="input-group form-subcriber mt-30 d-flex">
-                                    <input type="email" class="form-control bg-white font-small" placeholder="Enter your email">
-                                    <button class="btn bg-primary text-white" type="submit">Subscribe</button>
-                                    <label class="mt-20"> <input class="mr-5" name="name" type="checkbox" value="1" required=""> I agree to the <a href="#" target="_blank">terms &amp; conditions</a> </label>
+                                    <input type="email" class="form-control bg-white font-small" placeholder="输入你的邮箱地址">
+                                    <button class="btn bg-primary text-white" type="submit">订&nbsp阅</button>
                                 </form>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="footer-copy-right pt-30 mt-20 wow fadeInUp animated">
-                    <p class="float-md-left font-small text-muted">© 2020, Stories - Personal Blog HTML Template </p>
-                    <p class="float-md-right font-small text-muted">
-                        Design by <a href="https://alithemes.com" target="_blank">AliThemes</a> | All rights reserved
-                    </p>
+                    <div class="col-lg-12 col-md-12 footer-copy-right pt-30 mt-20">
+                        <p class="float-md-left font-small text-muted">CopyRight © 2021-2021 <a href="#">EdChu的独立博客</a></p>
+                        <p class="float-md-right font-small text-muted">
+                            Design by <a href="https://alithemes.com" target="_blank">AliThemes</a> | All rights reserved
+                        </p>
+                    </div>
                 </div>
             </div>
         </footer>

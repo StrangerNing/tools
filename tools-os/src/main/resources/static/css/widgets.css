@@ -3,6 +3,7 @@
 /*Widget header*/
 .widget-header-1 h5,
 .widget-header-2 h5{font-size:12px;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid var(--mutted-border-color);padding-bottom:10px;position:relative;}
+.widget-header-1-no-border h5{font-size:12px;text-transform:uppercase;letter-spacing:1px;padding-bottom:10px;position:relative;}
 .widget-header-2 h5::after{content:"";background:var(--color-dark);height:3px;width:50px;position:absolute;bottom:0;left:0;}
 .widget-header-3 h5{text-transform:uppercase;font-size:14px;}
 
@@ -67,6 +68,7 @@ button.box-shadow{box-shadow:0px 0px 10px 0px rgba(0,0,0,0.1);}
 figure .post-format{background:#fff;display:block;width:25px;height:25px;text-align:center;line-height:28px;border-radius:2px;}
 .post-thumb-80 img{width:90px;height:80px;}
 .post-thumb-64 img{width:64px;height:64px;border-radius:50%;}
+.post-content-64 {height: 64px}
 .position-left-bottom{position:absolute;bottom:15px;left:15px;z-index:1}
 .position-top-right{position:absolute;top:15px;right:15px;z-index:1}
 .entry-meta.meta-0 span{position:relative;}
@@ -189,8 +191,10 @@ figure .social-share:hover li:last-child,
 .header-social-network .list-inline-item a.fb{background:#3b5999;}
 .post-thumb .social-share li a.tw,
 .header-social-network .list-inline-item a.tw{background:#55acee;}
-.post-thumb .social-share li a.pt,
-.header-social-network .list-inline-item a.pt{background:#bd081c;}
+.post-thumb .social-share li a.ig,
+.header-social-network .list-inline-item a.ig{background:#bd081c;}
+.post-thumb .social-share li a.ig,
+.header-social-network .list-inline-item a.bilibili{background:#ef6eaf;}
 .thumb-overlay .post-thumb .social-share{right:35px;}
 
 /*More articles*/

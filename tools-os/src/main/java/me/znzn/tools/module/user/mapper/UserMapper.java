@@ -1,6 +1,7 @@
 package me.znzn.tools.module.user.mapper;
 import me.znzn.tools.common.dao.BaseDao;
 import me.znzn.tools.module.user.entity.po.User;
+import me.znzn.tools.module.user.entity.vo.UserInfoVO;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -12,5 +13,12 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface UserMapper extends BaseDao<User> {
+
+    /**
+     * 根据用户id查询用户信息
+     * @param id
+     * @return
+     */
+    UserInfoVO selectByUserId(Long id);
 
 }

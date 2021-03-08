@@ -4,6 +4,7 @@ import me.znzn.tools.module.blog.entity.form.ArticleForm;
 import me.znzn.tools.module.blog.entity.po.Article;
 import java.util.List;
 
+import me.znzn.tools.module.blog.entity.po.Tag;
 import me.znzn.tools.module.blog.entity.vo.ArticleVo;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -38,5 +39,18 @@ public interface ArticleMapper extends BaseDao<Article> {
      * @return
      */
     ArticleVo selectArticleById(Long id);
+
+    /**获取文章详情
+     * @param alias
+     * @return
+     */
+    ArticleVo selectArticleByAlias(String alias);
+
+    /**
+     * 根据标签集合获取文章集合
+     * @param articleVo
+     * @return
+     */
+    List<ArticleVo> selectArticleByTags(ArticleVo articleVo);
 
 }

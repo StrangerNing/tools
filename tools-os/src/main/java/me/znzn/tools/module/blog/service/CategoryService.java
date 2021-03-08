@@ -1,6 +1,8 @@
 package me.znzn.tools.module.blog.service;
 
+import me.znzn.tools.module.blog.entity.form.CategoryForm;
 import me.znzn.tools.module.blog.entity.po.Category;
+import me.znzn.tools.module.blog.entity.vo.CategoryVo;
 
 import java.util.List;
 
@@ -18,7 +20,7 @@ public interface CategoryService {
      * @param category
      * @return
      */
-    List<Category> searchCategory(Category category);
+    List<CategoryVo> searchCategory(CategoryForm category);
 
     /**
      * 计数
@@ -26,5 +28,12 @@ public interface CategoryService {
      * @return
      */
     Integer countCategory(String name);
+
+    /**
+     * 获取一个分类
+     * @param category
+     * @return
+     */
+    Category getOneCategory(Category category);
 
 }

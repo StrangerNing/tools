@@ -33,12 +33,6 @@ public class UserController {
         UserInfoVO loginUser = userService.login(loginForm);
         request.getSession().setAttribute("user", loginUser);
 
-        Long threeHours = 60 * 60 * 1000 * 3L;
-        String avatar = loginUser.getAvatar();
-        if (!StringUtils.isEmpty(avatar)) {
-            String avatarUrl = UploadFileUtil.getFileUrl(avatar, threeHours);
-            loginUser.setAvatarUrl(avatarUrl);
-        }
         return ResultPageUtil.success(loginUser);
     }
 
@@ -58,13 +52,7 @@ public class UserController {
 
     @GetMapping("/info")
     public ResponseEntity getUserInfo() {
-        Long threeHours = 60 * 60 * 1000 * 3L;
         UserInfoVO loginUser = LoginUserUtil.getSessionUser();
-        String avatar = loginUser.getAvatar();
-        if (!StringUtils.isEmpty(avatar)) {
-            String avatarUrl = UploadFileUtil.getFileUrl(avatar, threeHours);
-            loginUser.setAvatarUrl(avatarUrl);
-        }
         return ResultPageUtil.success(loginUser);
     }
 

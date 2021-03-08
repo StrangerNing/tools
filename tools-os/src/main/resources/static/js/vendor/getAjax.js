@@ -15,7 +15,7 @@ const getAjax = (data, url, method) => {
         resolve(res)
       },
       error: error => {
-        reject(error.status)
+        reject(error.responseJSON.message)
       }
     })
   })

@@ -115,12 +115,11 @@ public class UploadFileUtil {
     }
 
     public static String getFileUrl(String fileName, Long expiration) {
-        OSS client = new OSSClientBuilder().build(OSS_ENDPOINT, OSS_ACCESS_KEY_ID, OSS_ACCESS_KEY_SECRET);
-        Date expirationDate = new Date(System.currentTimeMillis() + expiration);
-        GeneratePresignedUrlRequest request = new GeneratePresignedUrlRequest(OSS_BUCKET_NAME, fileName);
-        request.setExpiration(expirationDate);
-        URL url = client.generatePresignedUrl(request);
-        return url.toString();
+        return getFileUrl(fileName, expiration, null);
+    }
+
+    public static String getFileUrl(String filename, String style) {
+        return getFileUrl(filename, Long.valueOf(OSS_URL_EXPIRATION), style);
     }
 
     public static String getFileUrl(String filename, Long expiration, String style) {

@@ -24,13 +24,14 @@
         <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP"/>
         <result column="remark" property="remark" jdbcType="VARCHAR"/>
         <result column="version" property="version" jdbcType="INTEGER"/>
+        <result column="likes" property="likes" jdbcType="INTEGER"/>
         <result column="thumb" property="thumb" jdbcType="VARCHAR"/>
     </resultMap>
 
     <resultMap id="ArticleVoMap" type="me.znzn.tools.module.blog.entity.vo.ArticleVo" extends="ArticleMap">
         <result column="markdown" property="markdown" jdbcType="VARCHAR"/>
         <collection property="tags" ofType="me.znzn.tools.module.blog.entity.po.Tag" select="me.znzn.tools.module.blog.mapper.TagMapper.selectArticleTagsByArticleId" column="id"/>
-        <collection property="categories" ofType="me.znzn.tools.module.blog.entity.po.Category" select="me.znzn.tools.module.blog.mapper.CategoryMapper.selectCategoryByArticleId" column="id"/>
+        <collection property="categories" ofType="me.znzn.tools.module.blog.entity.vo.CategoryVo" select="me.znzn.tools.module.blog.mapper.CategoryMapper.selectCategoryByArticleId" column="id"/>
     </resultMap>
 
     <!-- 表名 -->
@@ -38,16 +39,16 @@
 
     <!-- 所有字段 -->
     <sql id="all_columns">
-        id, title, content, alias, type, status, permission, priority, author, comment, views, minutes, order_publish_time, edit_type, create_account, create_time, modify_account, modify_time, remark, version, thumb
+        id, title, content, alias, type, status, permission, priority, author, comment, views, minutes, order_publish_time, edit_type, create_account, create_time, modify_account, modify_time, remark, version, thumb, likes
     </sql>
 
     <!-- 不带主键的所有字段 -->
     <sql id="all_columns_not_with_id">
-        title, content, alias, type, status, permission, priority, author, comment, views, minutes, order_publish_time, edit_type, create_account, create_time, modify_account, modify_time, remark, version, thumb
+        title, content, alias, type, status, permission, priority, author, comment, views, minutes, order_publish_time, edit_type, create_account, create_time, modify_account, modify_time, remark, version, thumb, likes
     </sql>
 
     <sql id="all_columns_with_prefix">
-        article.id, article.title, article.content, article.alias, article.type, article.status, article.permission, article.priority, article.author, article.comment, article.views, article.minutes, article.order_publish_time, article.edit_type, article.create_account, article.create_time, article.modify_account, article.modify_time, article.remark, article.version, article.thumb
+        article.id, article.title, article.content, article.alias, article.type, article.status, article.permission, article.priority, article.author, article.comment, article.views, article.minutes, article.order_publish_time, article.edit_type, article.create_account, article.create_time, article.modify_account, article.modify_time, article.remark, article.version, article.thumb, article.likes
     </sql>
 
     <!-- 查询条件带where -->
@@ -116,6 +117,9 @@
             <if test="thumb != null and '' != thumb">
                 AND thumb = #{thumb}
             </if>
+            <if test="likes != null and '' != likes">
+                AND likes = #{likes}
+            </if>
         </trim>
     </sql>
 
@@ -182,6 +186,9 @@
             </if>
             <if test="thumb != null and '' != thumb">
                 AND thumb = #{thumb}
+            </if>
+            <if test="likes != null and '' != likes">
+                AND likes = #{likes}
             </if>
     </sql>
 
@@ -250,6 +257,9 @@
             <if test="thumb != null and '' != thumb">
                 AND article.thumb = #{thumb}
             </if>
+            <if test="likes != null and '' != likes">
+                AND article.likes = #{likes}
+            </if>
     </sql>
 
     <!-- 删除条件带where -->
@@ -314,6 +324,9 @@
             </if>
             <if test="thumb != null and '' != thumb">
                 AND thumb = #{thumb}
+            </if>
+            <if test="likes != null and '' != likes">
+                AND likes = #{likes}
             </if>
         </trim>
     </sql>
@@ -381,6 +394,9 @@
             <if test="thumb != null and '' != thumb">
                 thumb = #{thumb}
             </if>
+            <if test="likes != null and '' != likes">
+                likes = #{likes}
+            </if>
         </set>
     </sql>
 
@@ -447,6 +463,9 @@
             <if test="item.thumb != null and '' != item.thumb">
                 thumb = #{item.thumb}
             </if>
+            <if test="likes != null and '' != likes">
+                likes = #{item.likes}
+            </if>
         </set>
     </sql>
 
@@ -457,7 +476,7 @@
             <include refid="all_columns_not_with_id"/>
         )
         VALUES (
-            #{title}, #{content}, #{alias}, #{type}, #{status}, #{permission}, #{priority}, #{author}, #{comment}, #{views}, #{minutes}, #{orderPublishTime}, #{editType}, #{createAccount}, #{createTime}, #{modifyAccount}, #{modifyTime}, #{remark}, #{version}, #{thumb}
+            #{title}, #{content}, #{alias}, #{type}, #{status}, #{permission}, #{priority}, #{author}, #{comment}, #{views}, #{minutes}, #{orderPublishTime}, #{editType}, #{createAccount}, #{createTime}, #{modifyAccount}, #{modifyTime}, #{remark}, #{version}, #{thumb}, #{likes}
         )
     </insert>
 
@@ -470,7 +489,7 @@
         VALUES
         <foreach collection="list" item="item" separator="," index = "index">
         (
-            #{item.title}, #{item.content}, #{item.alias}, #{item.type}, #{item.status}, #{item.permission}, #{item.priority}, #{item.author}, #{item.comment}, #{item.views}, #{item.minutes}, #{item.orderPublishTime}, #{item.editType}, #{item.createAccount}, #{item.createTime}, #{item.modifyAccount}, #{item.modifyTime}, #{item.remark}, #{item.version}, #{item.thumb}
+            #{item.title}, #{item.content}, #{item.alias}, #{item.type}, #{item.status}, #{item.permission}, #{item.priority}, #{item.author}, #{item.comment}, #{item.views}, #{item.minutes}, #{item.orderPublishTime}, #{item.editType}, #{item.createAccount}, #{item.createTime}, #{item.modifyAccount}, #{item.modifyTime}, #{item.remark}, #{item.version}, #{item.thumb}, #{item.likes}
         )
         </foreach>
     </insert>
@@ -551,19 +570,21 @@
         SELECT <include refid="all_columns_with_prefix"/>
         FROM
         <choose>
-            <when test="(tag == null or '' == tag) and (category == null or '' == category)">
+            <when test="(tag == null or '' == tag) and
+             (category == null or '' == category) and
+              (categoryHref == null or '' == categoryHref)">
                 (
                 SELECT <include refid="all_columns"/>
-                FROM <include refid="table_name"/>
+                FROM <include refid="table_name"/> article
                 WHERE 1=1 <include refid="all_query_condition_without_where"/>
                 <if test="isSticky != null and true == isSticky">
-                    AND priority &gt;= 100
+                    AND article.priority &gt;= 100
                 </if>
                 <if test="isSticky != null and false == isSticky">
-                    AND priority &gt;= 10
-                    AND priority &lt; 100
+                    AND article.priority &gt;= 10
+                    AND article.priority &lt; 100
                 </if>
-                ORDER BY priority DESC, create_time DESC, id DESC
+                ORDER BY ${orderBy}
                 <if test="startIndex != null">
                     <if test="limit != null">
                         LIMIT #{startIndex} , #{limit}
@@ -579,7 +600,7 @@
             LEFT JOIN <include refid="me.znzn.tools.module.blog.mapper.ArticleTagMapper.table_name"></include> at ON at.article_id = article.id
             LEFT JOIN <include refid="me.znzn.tools.module.blog.mapper.TagMapper.table_name"></include> tag ON tag.id = at.tag_id
         </if>
-        <if test="category != null and '' != category">
+        <if test="(category != null and '' != category) or (categoryHref != null and '' != categoryHref)">
             LEFT JOIN <include refid="me.znzn.tools.module.blog.mapper.ArticleCategoryMapper.table_name"></include> ac ON ac.article_id = article.id
             LEFT JOIN <include refid="me.znzn.tools.module.blog.mapper.CategoryMapper.table_name"></include> category ON category.id = ac.category_id
         </if>
@@ -590,15 +611,20 @@
         <if test="category != null and '' != category">
             AND category.name = #{category}
         </if>
-        <if test="(tag != null and '' != tag) or (category != null and '' != category)">
+        <if test="categoryHref != null and '' != categoryHref">
+            AND category.href = #{categoryHref}
+        </if>
+        <if test="(tag != null and '' != tag) or
+         (category != null and '' != category) or
+          (categoryHref != null and '' != categoryHref)">
             <if test="isSticky != null and true == isSticky">
-                AND priority &gt;= 100
+                AND article.priority &gt;= 100
             </if>
             <if test="isSticky != null and false == isSticky">
-                AND priority &gt;= 10
-                AND priority &lt; 100
+                AND article.priority &gt;= 10
+                AND article.priority &lt; 100
             </if>
-            ORDER BY article.priority DESC, article.create_time DESC, id DESC
+            ORDER BY ${orderBy}
             <if test="startIndex != null">
                 <if test="limit != null">
                     LIMIT #{startIndex} , #{limit}
@@ -637,6 +663,30 @@
         <include refid="table_name"/>
         WHERE
         id = #{id}
+    </select>
+
+    <select id="selectArticleByAlias" resultMap="ArticleVoMap">
+        SELECT
+        <include refid="all_columns"/>
+        FROM
+        <include refid="table_name"/>
+        WHERE
+        alias = #{alias}
+        LIMIT 1
+    </select>
+
+    <select id="selectArticleByTags" resultMap="ArticleVoMap">
+        SELECT <include refid="all_columns_with_prefix"/>
+        FROM <include refid="table_name"/> article
+        LEFT JOIN <include refid="me.znzn.tools.module.blog.mapper.ArticleTagMapper.table_name"/> at ON at.article_id = article.id
+        WHERE at.tag_id in
+        <foreach collection="tags" item="item" open="(" separator="," close=")">
+            #{item.id}
+        </foreach>
+        AND article.id != #{id}
+        GROUP BY at.article_id
+        ORDER BY article.views DESC
+        LIMIT 2
     </select>
 
 </mapper>

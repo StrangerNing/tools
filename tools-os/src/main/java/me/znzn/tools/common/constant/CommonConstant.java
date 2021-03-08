@@ -37,4 +37,8 @@ public class CommonConstant {
     public static String OSS_URL_EXPIRATION = "3600000";
 
     public static String FILE_REQUEST_PREFIX = "";
+
+    public static String ARTICLE_URL_PREFIX = "/posts/";
+
+    public static String CATEGORY_URL_PREFIX = "/category/";
 }

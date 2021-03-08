@@ -2,6 +2,7 @@ package me.znzn.tools.common.handler;
 
 import me.znzn.tools.common.component.ResultPageUtil;
 import me.znzn.tools.common.exception.BusinessException;
+import me.znzn.tools.common.exception.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -27,9 +28,12 @@ public class ExceptionHandle {
         if (e instanceof BusinessException){
             BusinessException businessException = (BusinessException)e;
             return ResultPageUtil.error(HttpStatus.INTERNAL_SERVER_ERROR, businessException.getTextMessage(), Integer.valueOf(businessException.getCode()));
-        }else {
-            logger.error("系统异常，{}",e);
-            return ResultPageUtil.error(HttpStatus.INTERNAL_SERVER_ERROR, "系统异常");
+        }else if (e instanceof NotFoundException) {
+            NotFoundException notFoundException = (NotFoundException) e;
+            return ResultPageUtil.error(HttpStatus.NOT_FOUND, notFoundException.getMessage());
+        } else {
+                logger.error("系统异常，{}",e);
+                return ResultPageUtil.error(HttpStatus.INTERNAL_SERVER_ERROR, "系统异常");
         }
     }
 }

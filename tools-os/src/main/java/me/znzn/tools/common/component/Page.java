@@ -1,5 +1,7 @@
 package me.znzn.tools.common.component;
 
+import cn.hutool.core.collection.CollectionUtil;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,117 +13,87 @@ import java.util.List;
  * @version 1.0
  * @date 2019/3/1 10:49
  */
-public class Page<T> implements Serializable {
+public class Page implements Serializable {
     private static final long serialVersionUID = -6910120640655966888L;
-    /**
-     * 页码
-     */
-    private Integer pageNum;
 
-    /**
-     * 每页记录数
-     */
-    private Integer pageSize;
+    private Integer currentPage;
 
-    /**
-     * 记录总数 参数类型:输出
-     */
-    private Long total;
+    private Integer limit;
 
-    /**
-     * 记录结果集
-     */
-    private List<T> list;
+    private Integer totalCount;
 
-    public Page() {
+    private List<Integer> pageNumList;
 
+    private Integer totalPage;
+
+    private Boolean isLastPage;
+
+    private Boolean isFirstPage;
+
+    public void setPageNumList() {
+        Integer totalPage = new Integer(this.totalPage);
+        if (totalPage < 6) {
+            List<Integer> pageNumList = new ArrayList<>();
+            for (int i = 1; i <= totalPage; i++) {
+                pageNumList.add(i);
+            }
+            this.pageNumList =  pageNumList;
+            return;
+        }
+        if (currentPage < 4) {
+            this.pageNumList = CollectionUtil.newArrayList(1,2,3,4,5);
+            return;
+        }
+        if (currentPage + 2 > this.totalPage) {
+            this.pageNumList = CollectionUtil.newArrayList(totalPage - 4, totalPage - 3, totalPage - 2, totalPage - 1, totalPage);
+            return;
+        }
+        this.pageNumList = CollectionUtil.newArrayList(currentPage - 2, currentPage - 1, currentPage, currentPage + 1, currentPage + 2);
     }
 
-    /**
-     * @param pageNum  页码
-     * @param pageSize 分页大小
-     * @param total    总记录数
-     */
-    public Page(int pageNum, int pageSize, Long total) {
-        this.pageNum = pageNum;
-        this.pageSize = pageSize;
-        this.total = total;
+    public void setTotalPage() {
+        if (totalCount == null || limit == null || limit == 0) {
+            this.totalPage = 0;
+            return;
+        }
+        this.totalPage = (totalCount + limit - 1) / limit;
     }
 
-    /**
-     * @param pageNum  页码
-     * @param pageSize 分页大小
-     * @param total    总记录数
-     * @param list     数据List
-     */
-    public Page(int pageNum, int pageSize, Long total, List<T> list) {
-        this.pageNum = pageNum;
-        this.pageSize = pageSize;
-        this.total = total;
-        this.list = list;
+    public Page(int totalCount, int currentPage, int limit) {
+        this.totalCount = totalCount;
+        this.currentPage = currentPage;
+        this.limit = limit;
+        setTotalPage();
+        setPageNumList();
+        this.isFirstPage = currentPage == 1;
+        this.isLastPage = totalPage.equals(currentPage);
     }
 
-    /**
-     * @param list  数据List
-     * @param total 总记录数
-     */
-    public Page(List<T> list, Long total) {
-        this.list = list;
-        this.total = total;
+    public Integer getCurrentPage() {
+        return currentPage;
     }
 
-    public Page(int pageNum, int pageSize) {
-        this.pageNum = pageNum;
-        this.pageSize = pageSize;
+    public Integer getLimit() {
+        return limit;
     }
 
-    public static <T> Page<T> empty() {
-        return new Page<T>(new ArrayList<T>(), 0L);
+    public Integer getTotalCount() {
+        return totalCount;
     }
 
-    public static <T> Page<T> with(Long total, List<T> list) {
-        return new Page<T>(list, total);
+    public List<Integer> getPageNumList() {
+        return pageNumList;
     }
 
-    public static <T> Page<T> with(Integer pageNum, Integer pageSize, Long total, List<T> list) {
-        return new Page<T>(pageNum, pageSize, total, list);
+    public Integer getTotalPage() {
+        return totalPage;
     }
 
-    public Integer getPageNum() {
-        return pageNum;
+    public Boolean isFirstPage() {
+        return isFirstPage;
     }
 
-    public void setPageNum(Integer pageNum) {
-        this.pageNum = pageNum;
-    }
-
-    public Integer getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(Integer pageSize) {
-        this.pageSize = pageSize;
-    }
-
-    public Long getTotal() {
-        return total;
-    }
-
-    public void setTotal(Long total) {
-        this.total = total;
-    }
-
-    public List<T> getList() {
-        return list;
-    }
-
-    public void setList(List<T> list) {
-        this.list = list;
-    }
-
-    @Override
-    public String toString() {
-        return "Page{" + "pageNum=" + pageNum + ", pageSize=" + pageSize + ", total=" + total + ", list=" + list
-                + '}';
+    public Boolean isLastPage() {
+        return isLastPage;
     }
 }

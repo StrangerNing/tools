@@ -1,6 +1,8 @@
 package me.znzn.tools.module.blog.entity.po;
 
 import lombok.Data;
+import me.znzn.tools.common.constant.CommonConstant;
+
 import java.io.Serializable;
 
 /**
@@ -35,5 +37,9 @@ public class Category implements Serializable {
      * 排序
      */
     private Integer index;
+
+    private String words;
+
+    private String pic;
 
 }

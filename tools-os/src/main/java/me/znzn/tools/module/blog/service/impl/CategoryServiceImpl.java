@@ -1,6 +1,11 @@
 package me.znzn.tools.module.blog.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
+import me.znzn.tools.common.exception.BusinessException;
+import me.znzn.tools.common.exception.NotFoundException;
+import me.znzn.tools.module.blog.entity.form.CategoryForm;
 import me.znzn.tools.module.blog.entity.po.Category;
+import me.znzn.tools.module.blog.entity.vo.CategoryVo;
 import me.znzn.tools.module.blog.mapper.CategoryMapper;
 import me.znzn.tools.module.blog.service.CategoryService;
 import org.springframework.stereotype.Service;
@@ -22,8 +27,9 @@ public class CategoryServiceImpl implements CategoryService {
     private CategoryMapper categoryMapper;
 
     @Override
-    public List<Category> searchCategory(Category category) {
-        return categoryMapper.selectByProperty(category);
+    public List<CategoryVo> searchCategory(CategoryForm category) {
+        category.setAccurate(false);
+        return categoryMapper.selectCategoryVoByProperty(category);
     }
 
     @Override
@@ -31,5 +37,14 @@ public class CategoryServiceImpl implements CategoryService {
         Category query = new Category();
         query.setName(name);
         return categoryMapper.countByProperty(query);
+    }
+
+    @Override
+    public Category getOneCategory(Category category) {
+        List<Category> categories = categoryMapper.selectByProperty(category);
+        if (CollectionUtil.isEmpty(categories)) {
+            throw new NotFoundException("没有找到分类");
+        }
+        return categories.get(0);
     }
 }

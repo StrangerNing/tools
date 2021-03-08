@@ -7,6 +7,7 @@ import me.znzn.tools.module.blog.entity.enums.*;
 import me.znzn.tools.module.blog.entity.form.ArticleForm;
 import me.znzn.tools.module.blog.entity.po.*;
 import me.znzn.tools.module.blog.entity.vo.ArticleVo;
+import me.znzn.tools.module.blog.entity.vo.CategoryVo;
 import me.znzn.tools.module.blog.mapper.*;
 import me.znzn.tools.module.blog.service.ArticleService;
 import me.znzn.tools.module.user.entity.vo.UserInfoVO;
@@ -87,6 +88,9 @@ public class ArticleServiceImpl implements ArticleService {
         if (article.getViews() == null) {
             article.setViews(0);
         }
+        if (article.getLikes() == null) {
+            article.setLikes(0);
+        }
     }
 
     @Override
@@ -146,7 +150,7 @@ public class ArticleServiceImpl implements ArticleService {
         }
     }
 
-    private void saveArticleCategory(List<Category> categories, Long id) {
+    private void saveArticleCategory(List<CategoryVo> categories, Long id) {
         if (CollectionUtil.isEmpty(categories)) {
             return;
         }

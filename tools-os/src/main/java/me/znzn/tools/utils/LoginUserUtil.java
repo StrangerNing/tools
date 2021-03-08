@@ -46,11 +46,16 @@ public class LoginUserUtil {
     }
 
     public static UserInfoVO getSessionUser() {
-        HttpServletRequest request = ((ServletRequestAttributes) (RequestContextHolder.currentRequestAttributes())).getRequest();
-        UserInfoVO loginUser = (UserInfoVO)request.getSession().getAttribute("user");
+        UserInfoVO loginUser = getSessionUserWithoutThrow();
         if (null == loginUser) {
             throw new BusinessException("401", "用户未登陆，请先登陆");
         }
+        return loginUser;
+    }
+
+    public static UserInfoVO getSessionUserWithoutThrow() {
+        HttpServletRequest request = ((ServletRequestAttributes) (RequestContextHolder.currentRequestAttributes())).getRequest();
+        UserInfoVO loginUser = (UserInfoVO)request.getSession().getAttribute("user");
         return loginUser;
     }
 

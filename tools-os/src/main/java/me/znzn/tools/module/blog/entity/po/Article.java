@@ -87,4 +87,6 @@ public class Article extends BaseModel implements Serializable {
 
     private String thumb;
 
+    private Integer likes;
+
 }

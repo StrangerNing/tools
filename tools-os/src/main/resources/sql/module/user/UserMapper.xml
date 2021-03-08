@@ -21,6 +21,10 @@
         <result column="avatar" property="avatar" jdbcType="VARCHAR"/>
     </resultMap>
 
+    <resultMap id="UserInfoVoMap" type="me.znzn.tools.module.user.entity.vo.UserInfoVO" extends="UserMap">
+
+    </resultMap>
+
     <!-- 表名 -->
     <sql id="table_name">t_b_user</sql>
 
@@ -318,6 +322,15 @@
         FROM
             <include refid="table_name"/>
         <include refid="all_query_condition_with_where"/>
+    </select>
+
+    <select id="selectByUserId" resultMap="UserInfoVoMap">
+        SELECT
+        <include refid="all_columns"/>
+        FROM
+        <include refid="table_name"/>
+        WHERE
+        id = #{id}
     </select>
 
 </mapper>

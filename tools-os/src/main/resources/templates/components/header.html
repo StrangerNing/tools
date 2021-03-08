@@ -11,47 +11,13 @@
                 <div class="container">
                     <div class="row pt-20 pb-20">
                         <div class="col-md-3 col-xs-6">
-                            <a href="index.html"><img class="logo" src="/static/imgs/theme/logo.png" alt="" style="height: 40px"></a>
+                            <a href="/"><img class="logo" src="/static/imgs/theme/logo.png" alt="" style="height: 40px"></a>
                         </div>
                         <div class="col-md-9 col-xs-6 text-right header-top-right ">
-                            <ul class="list-inline nav-topbar d-none d-md-inline">
-                                <li class="list-inline-item menu-item-has-children"><a href="#">Layouts</a>
-                                    <ul class="sub-menu font-small">
-                                        <li class="menu-item-has-children"><a href="#">Pages</a>
-                                            <ul class="sub-menu font-small">
-                                                <li><a href="page-about.html">About</a></li>
-                                                <li><a href="page-contact.html">Contact</a></li>
-                                                <li><a href="page-typography.html">Typography</a></li>
-                                                <li><a href="page-register.html">Register</a></li>
-                                                <li><a href="page-login.html">Login</a></li>
-                                                <li><a href="page-search.html">Search</a></li>
-                                                <li><a href="page-author.html">Author</a></li>
-                                                <li><a href="page-404.html">404 page</a></li>
-                                            </ul>
-                                        </li>
-                                        <li class="menu-item-has-children"><a href="#">Category</a>
-                                            <ul class="sub-menu font-small">
-                                                <li><a href="category-list.html">List layout</a></li>
-                                                <li><a href="category-grid.html">Grid layout</a></li>
-                                                <li><a href="category-masonry.html">Masonry layout</a></li>
-                                                <li><a href="category-big.html">Big layout</a></li>
-                                            </ul>
-                                        </li>
-                                        <li class="menu-item-has-children"><a href="#">Single post</a>
-                                            <ul class="sub-menu font-small">
-                                                <li><a href="single.html">Default</a></li>
-                                                <li><a href="single-2.html">Big image</a></li>
-                                                <li><a href="single-3.html">Left image</a></li>
-                                                <li><a href="single-4.html">With sidebar</a></li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li class="list-inline-item"><a href="http://demos.alithemes.com/html/stories/docs/"><i class="elegant-icon icon_document_alt mr-5"></i>Document</a></li>
-                            </ul>
-                            <span class="vertical-divider mr-20 ml-20 d-none d-md-inline"></span>
-                            <button class="search-icon d-none d-md-inline"><span class="mr-15 text-muted font-small"><i class="elegant-icon icon_search mr-5"></i>Search</span></button>
-                            <button class="btn btn-radius bg-primary text-white ml-15 font-small box-shadow">Buy Now</button>
+<!--                            <span class="vertical-divider mr-20 ml-20 d-none d-md-inline"></span>-->
+                            <button class="search-icon d-none d-md-inline"><span class="mr-15 text-muted font-small"><i class="elegant-icon icon_search mr-5"></i>搜索</span></button>
+                            <button th:if='${session.user}' class="no-play d-md-inline"><a href="http://localhost" class="text-muted font-small" th:text='${session.user.nickname}'>登录</a></button>
+                            <button th:unless='${session.user}' class="no-play d-md-inline"><a href="http://localhost/#/login?redirect=http://localhost:8080" class="text-muted font-small">登录</a></button>
                         </div>
                     </div>
                 </div>
@@ -67,13 +33,13 @@
                                     <a href="/"> <i class="elegant-icon icon_house_alt mr-5"></i> 首页</a>
                                 </li>
                                 <li>
-                                    <a href="/it"> IT</a>
+                                    <a href="/category/it"> IT</a>
                                 </li>
                                 <li>
-                                    <a href="/lifestyle">生活方式</a>
+                                    <a href="/category/lifestyle">生活方式</a>
                                 </li>
                                 <li>
-                                    <a href="/travel"> 旅行</a>
+                                    <a href="/category/travel"> 旅行</a>
                                 </li>
                                 <li>
                                     <a href="/moment"> 说说</a>
@@ -91,13 +57,13 @@
                                     <a href="/"> <i class="elegant-icon icon_house_alt mr-5"></i> 首页</a>
                                 </li>
                                 <li>
-                                    <a href="/it"> IT</a>
+                                    <a href="/category/it"> IT</a>
                                 </li>
                                 <li>
-                                    <a href="/lifestyle">生活方式</a>
+                                    <a href="/category/lifestyle">生活方式</a>
                                 </li>
                                 <li>
-                                    <a href="/travel"> 旅行</a>
+                                    <a href="/category/travel"> 旅行</a>
                                 </li>
                                 <li>
                                     <a href="/moment"> 说说</a>
@@ -113,9 +79,9 @@
                     </div>
                     <div class="float-right header-tools text-muted font-small">
                         <ul class="header-social-network d-inline-block list-inline mr-15">
-                            <li class="list-inline-item"><a class="social-icon fb text-xs-center" target="_blank" href="#"><i class="elegant-icon social_facebook"></i></a></li>
-                            <li class="list-inline-item"><a class="social-icon tw text-xs-center" target="_blank" href="#"><i class="elegant-icon social_twitter "></i></a></li>
-                            <li class="list-inline-item"><a class="social-icon pt text-xs-center" target="_blank" href="#"><i class="elegant-icon social_pinterest "></i></a></li>
+                            <li class="list-inline-item"><a class="bilibili" href="https://space.bilibili.com/10641577" target="_blank" title="Bilibili"><img src="/static/imgs/icons/bilibili.svg"></a></li>
+                            <li class="list-inline-item"><a class="tw" href="https://twitter.com/edchu_cn" target="_blank" title="Tweet now"><i class="elegant-icon social_twitter"></i></a></li>
+                            <li class="list-inline-item"><a class="ig" href="https://www.instagram.com/edchu_cn/" target="_blank" title="Instagram"><i class="elegant-icon social_instagram"></i></a></li>
                         </ul>
                         <div class="off-canvas-toggle-cover d-inline-block">
                             <div class="off-canvas-toggle hidden d-inline-block" id="off-canvas-toggle">
