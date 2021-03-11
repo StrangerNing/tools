@@ -2,6 +2,7 @@ package me.znzn.tools.module.oss.controller;
 
 
 import cn.hutool.system.UserInfo;
+import lombok.extern.slf4j.Slf4j;
 import me.znzn.tools.common.component.ResultPage;
 import me.znzn.tools.common.component.ResultPageUtil;
 import me.znzn.tools.common.enums.OssFileTypeEnum;
@@ -29,6 +30,7 @@ import javax.servlet.http.HttpServletRequest;
  * @version 1.0.0
  * @date 2021/01/27 11:23:13
  */
+@Slf4j
 @Controller
 @RequestMapping("/file")
 public class FileController {
@@ -55,7 +57,8 @@ public class FileController {
             }
             return new ModelAndView("redirect:" + url);
         } catch (Exception e) {
-            return new ModelAndView("404");
+            e.printStackTrace();
+            return new ModelAndView("dwz/404");
         }
     }
 

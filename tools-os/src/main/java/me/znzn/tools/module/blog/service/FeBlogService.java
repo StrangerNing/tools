@@ -54,6 +54,13 @@ public interface FeBlogService {
     ResultListData getComments(Long articleId);
 
     /**
+     * 获取最新的评论
+     * @param articleForm
+     * @return
+     */
+    List<ArticleCommentVo> getLatestComments(ArticleForm articleForm);
+
+    /**
      * 添加文章评论
      * @param articleComment
      * @param loginUser
@@ -63,6 +70,14 @@ public interface FeBlogService {
     /**
      * 阅读量
      * @param id
+     * @param sourceKey
      */
-    void addViews(Long id);
+    void addViews(Long id, String sourceKey);
+
+    /**
+     * 阅读量持久化
+     */
+    void cacheViewsPersistent();
+
+    void like(Long id, String sourceKey);
 }

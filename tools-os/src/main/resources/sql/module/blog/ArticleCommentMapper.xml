@@ -19,11 +19,16 @@
     </resultMap>
 
     <resultMap id="ArticleCommentVoMap" type="me.znzn.tools.module.blog.entity.vo.ArticleCommentVo" extends="ArticleCommentMap">
-
+        <result column="avatar" property="avatar" jdbcType="VARCHAR"/>
+        <result column="alias" property="articleHref" jdbcType="VARCHAR"/>
     </resultMap>
 
     <!-- 表名 -->
     <sql id="table_name">t_blog_article_comment</sql>
+
+    <sql id="all_columns_with_prefix">
+        comment.id, comment.article_id, comment.parent_id, comment.content, comment.reply_id, comment.create_name, comment.create_email, comment.create_website, comment.create_account, comment.create_time, comment.modify_account, comment.modify_time
+    </sql>
 
     <!-- 所有字段 -->
     <sql id="all_columns">
@@ -293,9 +298,22 @@
     </select>
 
     <select id="selectVoByArticleId" resultMap="ArticleCommentVoMap">
-        SELECT <include refid="all_columns"/>
-        FROM <include refid="table_name"/>
+        SELECT <include refid="all_columns_with_prefix"/>, u.avatar
+        FROM <include refid="table_name"/> comment
+        LEFT JOIN t_b_user u ON u.id = comment.create_account
         WHERE article_id = #{articleId}
+    </select>
+
+    <select id="selectLatestComments" resultMap="ArticleCommentVoMap">
+        SELECT <include refid="all_columns_with_prefix"/>, u.avatar, article.alias
+        FROM <include refid="table_name"/> comment
+        LEFT JOIN <include refid="me.znzn.tools.module.blog.mapper.ArticleMapper.table_name"/> article ON article.id = comment.article_id
+        LEFT JOIN <include refid="me.znzn.tools.module.blog.mapper.ArticleCategoryMapper.table_name"></include> ac ON ac.article_id = article.id
+        LEFT JOIN <include refid="me.znzn.tools.module.blog.mapper.CategoryMapper.table_name"></include> category ON category.id = ac.category_id
+        LEFT JOIN t_b_user u ON u.id = comment.create_account
+        WHERE category.name = #{category}
+        ORDER BY comment.create_time DESC
+        LIMIT 3
     </select>
 
 </mapper>

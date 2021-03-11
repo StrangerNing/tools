@@ -1,14 +1,16 @@
 package me.znzn.tools.module.blog.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
-import me.znzn.tools.common.component.BaseModel;
+import lombok.extern.slf4j.Slf4j;
 import me.znzn.tools.common.component.Page;
 import me.znzn.tools.common.component.ResultListData;
-import me.znzn.tools.common.component.ResultPageUtil;
 import me.znzn.tools.common.constant.CommonConstant;
 import me.znzn.tools.common.exception.BusinessException;
 import me.znzn.tools.common.exception.NotFoundException;
+import me.znzn.tools.module.blog.entity.constant.BlogRedisConstant;
+import me.znzn.tools.module.blog.entity.enums.ArticleStatusEnum;
 import me.znzn.tools.module.blog.entity.form.ArticleForm;
+import me.znzn.tools.module.blog.entity.po.Article;
 import me.znzn.tools.module.blog.entity.po.ArticleComment;
 import me.znzn.tools.module.blog.entity.po.Tag;
 import me.znzn.tools.module.blog.entity.vo.ArticleCommentVo;
@@ -16,17 +18,19 @@ import me.znzn.tools.module.blog.entity.vo.ArticleVo;
 import me.znzn.tools.module.blog.mapper.ArticleCommentMapper;
 import me.znzn.tools.module.blog.mapper.ArticleMapper;
 import me.znzn.tools.module.blog.service.FeBlogService;
-import me.znzn.tools.module.user.entity.po.User;
 import me.znzn.tools.module.user.entity.vo.UserInfoVO;
 import me.znzn.tools.module.user.mapper.UserMapper;
-import me.znzn.tools.utils.UploadFileUtil;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.http.ResponseEntity;
+import org.redisson.api.RedissonClient;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.GenericToStringSerializer;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -34,15 +38,20 @@ import java.util.stream.Collectors;
  * @version 1.0
  * @since 2021/2/28
  */
+@Slf4j
 @Service
 public class FeBlogServiceImpl<x> implements FeBlogService {
 
+    @Resource
+    private RedissonClient redissonClient;
     @Resource
     private ArticleMapper articleMapper;
     @Resource
     private UserMapper userMapper;
     @Resource
     private ArticleCommentMapper articleCommentMapper;
+    @Resource
+    private RedisTemplate redisTemplate;
 
 
     @Override
@@ -70,7 +79,7 @@ public class FeBlogServiceImpl<x> implements FeBlogService {
     @Override
     public ArticleVo getOneArticle(String alias) {
         ArticleVo article = articleMapper.selectArticleByAlias(alias);
-        if (null == article) {
+        if (null == article || !ArticleStatusEnum.NORMAL.getIndex().equals(article.getStatus())) {
             throw new NotFoundException("没有找到文章");
         }
         UserInfoVO author = userMapper.selectByUserId(article.getCreateAccount());
@@ -104,6 +113,11 @@ public class FeBlogServiceImpl<x> implements FeBlogService {
     }
 
     @Override
+    public List<ArticleCommentVo> getLatestComments(ArticleForm articleForm) {
+        return articleCommentMapper.selectLatestComments(articleForm);
+    }
+
+    @Override
     public void addArticleComment(ArticleComment articleComment, UserInfoVO loginUser) {
         if (null != loginUser) {
             loginUser.setCreateUser(articleComment);
@@ -133,7 +147,47 @@ public class FeBlogServiceImpl<x> implements FeBlogService {
 
     @Async
     @Override
-    public void addViews(Long id) {
+    public void addViews(Long id, String sourceKey) {
+        redisTemplate.setValueSerializer(new GenericToStringSerializer<Long>(Long.class));
+        Long version = (Long)redisTemplate.opsForValue().get(BlogRedisConstant.VIEW_CACHE_VERSION);
+
+        if (!redisTemplate.opsForValue().setIfAbsent(BlogRedisConstant.VIEW_SOURCE_PREFIX+id+"_"+sourceKey, 1, Long.valueOf(CommonConstant.VALID_ARTICLE_VIEW_INTERVAL), TimeUnit.MILLISECONDS)) {
+            log.info("{}已阅读过文章{}", sourceKey, id);
+            return;
+        }
+
+        redisTemplate.opsForSet().add(BlogRedisConstant.VIEW_CACHE_PREFIX + version, id);
+        log.info("{} 阅读文章 {}", sourceKey, id);
+        redisTemplate.opsForValue().increment(BlogRedisConstant.VIEW_CACHE_PREFIX + version + "_" + id);
+    }
+
+    @Override
+    @Scheduled(fixedRate = 60000)
+    public void cacheViewsPersistent() {
+        redisTemplate.setValueSerializer(new GenericToStringSerializer<Long>(Long.class));
+        Long version = (Long)redisTemplate.opsForValue().increment(BlogRedisConstant.VIEW_CACHE_VERSION) - 1;
+
+        Set<Long> articleIds = redisTemplate.opsForSet().members(BlogRedisConstant.VIEW_CACHE_PREFIX + version);
+        redisTemplate.delete(BlogRedisConstant.VIEW_CACHE_PREFIX + version);
+        if (CollectionUtil.isEmpty(articleIds)) {
+            return;
+        }
+        List<Article> articles = new ArrayList<>(articleIds.size());
+        List<String> keys = new ArrayList<>();
+        articleIds.forEach(articleId -> {
+            Long views = (Long)redisTemplate.opsForValue().get(BlogRedisConstant.VIEW_CACHE_PREFIX + version + "_" + articleId);
+            keys.add(BlogRedisConstant.VIEW_CACHE_PREFIX + version + "_" + articleId);
+            Article article = new Article();
+            article.setId(articleId);
+            article.setViews(views.intValue());
+            articles.add(article);
+        });
+        articleMapper.updateArticleViews(articles);
+        redisTemplate.delete(keys);
+    }
+
+    @Override
+    public void like(Long id, String sourceKey) {
 
     }
 }

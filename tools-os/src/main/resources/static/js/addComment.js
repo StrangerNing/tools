@@ -44,7 +44,7 @@ $('#clearReply').click(function () {
   $('#content').val('')
 })
 
-$('.thumb > img').attr('src', function () {
+$('.thumb > .avatar').attr('src', function () {
   let name = $(this).data('name')
   return textToImage(name)
 })

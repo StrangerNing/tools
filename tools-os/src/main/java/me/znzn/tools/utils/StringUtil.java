@@ -1,5 +1,7 @@
 package me.znzn.tools.utils;
 
+import cn.hutool.http.HtmlUtil;
+
 /**
  * @author zhuzening
  * @date 2019/9/16
@@ -99,28 +101,26 @@ public class StringUtil {
         return StringUtil.parse("{", "}", text, args);
     }
 
-//    public static void main(String... args) {
-//
-//        String[] params = new String[]{"雷锋","true","100"};
-        //{}被转义，不会被替换
-//        System.out.println(StringUtil.parse("{", "}", "我的名字是\\{},结果是{}，可信度是%{}", "雷锋","true","100"));
-//
-//        System.out.println(StringUtil.parse0("我的名字是${},结果是${}，可信度是%${}", params));
-//
-//        System.out.println(StringUtil.parseBrace("我的名字是{111},结果是{222}，可信度是%{333}", null));
+    public static Integer countWords(String string) {
+        if (string == null) {
+            return 0;
+        }
+        String englishString = string.replaceAll("[\u4e00-\u9fa5]", "");
+        String[] englishWords = englishString.split("[\\p{P}\\p{S}\\p{Z}\\s]+");
+        int chineseWordCount = string.length() - englishString.length();
+        int otherWordCount = englishWords.length;
+        if (englishWords.length > 0 && englishWords[0].length() < 1) {
+            otherWordCount--;
+        }
+        if (englishWords.length > 1 && englishWords[englishWords.length - 1].length() < 1) {
+            otherWordCount--;
+        }
+        return chineseWordCount + otherWordCount;
+    }
 
-//        {}被转义，不会被替换
-//        System.out.println(StringUtil.parse("{", "}", "我的名字是\\{},结果是{}，可信度是%{}", "雷锋", true, 100));
-//
-//        System.out.println(StringUtil.parse0("我的名字是${},结果是${}，可信度是%${}", "雷锋", true, 100));
-//
-//        System.out.println(StringUtil.parse1("我的名字是{},结果是{}，可信度是%{}", "雷锋", true, 100));
-
-//        输出结果如下：
-//
-//        我的名字是{},结果是true，可信度是%100
-//        我的名字是雷锋,结果是true，可信度是%100
-//        我的名字是雷锋,结果是true，可信度是%100
-//    }
-
+    public static Integer countHtmlWords(String html) {
+        Integer count = StringUtil.countWords(HtmlUtil.cleanHtmlTag(html));
+        int mins = count / 400;
+        return Math.max(mins, 1);
+    }
 }

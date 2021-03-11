@@ -1,10 +1,11 @@
 package me.znzn.tools.module.blog.controller;
 
 import cn.hutool.core.collection.CollectionUtil;
-import com.sun.org.apache.xpath.internal.operations.Mod;
 import me.znzn.tools.common.component.ResultPageUtil;
 import me.znzn.tools.common.exception.NotFoundException;
 import me.znzn.tools.module.blog.entity.enums.ArticleStatusEnum;
+import me.znzn.tools.module.blog.entity.enums.ArticleTypeEnum;
+import me.znzn.tools.module.blog.entity.enums.PageTypeEnum;
 import me.znzn.tools.module.blog.entity.form.ArticleForm;
 import me.znzn.tools.module.blog.entity.form.CategoryForm;
 import me.znzn.tools.module.blog.entity.po.ArticleComment;
@@ -16,13 +17,13 @@ import me.znzn.tools.module.blog.service.FeBlogService;
 import me.znzn.tools.module.blog.service.TagService;
 import me.znzn.tools.module.user.entity.vo.UserInfoVO;
 import me.znzn.tools.utils.LoginUserUtil;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -85,17 +86,21 @@ public class FeBlogController {
             query.setHref(category);
             query = categoryService.getOneCategory(query);
 
+            PageTypeEnum page = PageTypeEnum.getPageTypeEnum(query.getPageType());
+
             ArticleForm articleForm = new ArticleForm();
             articleForm.setCategory(query.getName());
-            List<ArticleVo> articles = getArticles(model, articleForm, currentPage);
+            List<ArticleVo> articles = getArticles(model, articleForm, currentPage, page.getLimit());
             model.addAttribute("name", query.getName());
             model.addAttribute("href", "/category/" + category + "/");
 
             getHotArticles(model, articles);
-            return "category-list";
+
+            return page.getName();
         } catch (NotFoundException ntf) {
             return "error/404";
         } finally {
+            model.addAttribute("categories", categoryService.searchCategory(new CategoryForm()));
             model.addAttribute("hotTags", tagService.hotTags(10));
         }
 
@@ -110,12 +115,12 @@ public class FeBlogController {
 
             ArticleForm articleForm = new ArticleForm();
             articleForm.setTag(query.getTag());
-            List<ArticleVo> articles = getArticles(model, articleForm, currentPage);
+            List<ArticleVo> articles = getArticles(model, articleForm, currentPage, PageTypeEnum.LIST.getLimit());
             model.addAttribute("name", tag);
             model.addAttribute("href", "/tag/" + tag + "/");
 
             getHotArticles(model, articles);
-            return "category-list";
+            return PageTypeEnum.LIST.getName();
         } catch (NotFoundException ntf) {
             return "error/404";
         } finally {
@@ -123,16 +128,48 @@ public class FeBlogController {
         }
     }
 
+    @GetMapping(value = {"/archive","/archive/{currentPage}"})
+    public String archive(Model model, @PathVariable(required = false) Integer currentPage) {
+        List<ArticleVo> articles = getArticles(model, new ArticleForm(), currentPage, PageTypeEnum.LIST.getLimit());
+        getHotArticles(model, articles);
+        model.addAttribute("name", "归档");
+        model.addAttribute("href", "/archive/");
+        model.addAttribute("hotTags", tagService.hotTags(10));
+        return PageTypeEnum.LIST.getName();
+    }
+
+    @GetMapping(value = {"/blackboard"})
+    public String blackboard(Model model) {
+        model.addAttribute("comments", feBlogService.getComments(0L));
+        model.addAttribute("categories", categoryService.searchCategory(new CategoryForm()));
+        model.addAttribute("hotTags", tagService.hotTags(10));
+        return "blackboard";
+    }
+
+    @GetMapping(value = {"/coucou","/coucou/{currentPage}"})
+    public String coucou(Model model, @PathVariable(required = false) Integer currentPage) {
+        model.addAttribute("hotTags", tagService.hotTags(10));
+        ArticleForm articleForm = new ArticleForm();
+        articleForm.setCategory("凑凑");
+        getArticles(model, articleForm, currentPage, 8);
+        model.addAttribute("href", "/coucou/");
+        model.addAttribute("latestComments", feBlogService.getLatestComments(articleForm));
+        return "page-coucou";
+    }
+
     @GetMapping("/posts/{alias}")
-    public String posts(@PathVariable String alias, Model model) {
+    public String posts(@PathVariable String alias, Model model, HttpServletRequest request) {
         try {
             ArticleVo article = feBlogService.getOneArticle(alias);
             model.addAttribute("article", article);
-            feBlogService.addViews(article.getId());
+            UserInfoVO userInfoVO = LoginUserUtil.getSessionUserWithoutThrow();
+            feBlogService.addViews(article.getId(), userInfoVO == null ? request.getSession().getId() : String.valueOf(userInfoVO.getId()));
 
             model.addAttribute("comments", feBlogService.getComments(article.getId()));
             model.addAttribute("recommends", feBlogService.getRecommendArticle(article.getId()));
-            return "single";
+
+            Integer type = article.getType();
+            return ArticleTypeEnum.getMsg(type);
         } catch (NotFoundException ntf) {
             return "error/404";
         } finally {
@@ -147,9 +184,9 @@ public class FeBlogController {
         return "/error/404";
     }
 
-    private List<ArticleVo> getArticles(Model model, ArticleForm articleForm, Integer currentPage) {
+    private List<ArticleVo> getArticles(Model model, ArticleForm articleForm, Integer currentPage, Integer limit) {
         articleForm.setCurrentPage(currentPage == null ? 1 : currentPage);
-        articleForm.setLimit(5);
+        articleForm.setLimit(limit);
         articleForm.setStatus(ArticleStatusEnum.NORMAL.getIndex());
         articleForm.setOrderBy("article.priority DESC, article.id DESC");
         List<ArticleVo> articles = feBlogService.getArticleList(articleForm);

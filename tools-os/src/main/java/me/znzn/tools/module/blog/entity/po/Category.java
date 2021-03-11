@@ -42,4 +42,6 @@ public class Category implements Serializable {
 
     private String pic;
 
+    private Integer pageType;
+
 }

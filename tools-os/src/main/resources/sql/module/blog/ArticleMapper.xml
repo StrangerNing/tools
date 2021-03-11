@@ -689,4 +689,13 @@
         LIMIT 2
     </select>
 
+    <update id="updateArticleViews">
+        <foreach collection="list" item="item" index="index" separator=";">
+            UPDATE <include refid="table_name"/>
+            SET views = views + #{item.views}
+            WHERE
+             id = #{item.id}
+        </foreach>
+    </update>
+
 </mapper>

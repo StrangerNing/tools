@@ -13,6 +13,8 @@ import me.znzn.tools.module.user.entity.vo.UserInfoVO;
 import me.znzn.tools.utils.UploadFileUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -87,6 +89,7 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public FileReturnVo getFile(Long id, UserInfoVO user) {
+        redisTemplate.setValueSerializer(new JdkSerializationRedisSerializer());
         FileReturnVo cache = (FileReturnVo) redisTemplate.opsForValue().get(FILE_KEY + id);
         if (cache != null) {
             return cache;
@@ -102,6 +105,7 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public FileReturnVo getFile(String name) {
+        redisTemplate.setValueSerializer(new JdkSerializationRedisSerializer());
         FileReturnVo cache = (FileReturnVo) redisTemplate.opsForValue().get(FILE_KEY + name);
         if (cache != null) {
             return cache;

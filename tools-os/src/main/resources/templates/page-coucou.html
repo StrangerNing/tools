@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>凑凑喵的喵生</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/x-icon" href="/static/imgs/theme/favicon.png">
+    <!-- NewsBoard CSS  -->
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/widgets.css">
+    <link rel="stylesheet" href="/static/css/responsive.css">
+</head>
+
+<body>
+    <div class="scroll-progress primary-bg"></div>
+    <!-- Start Preloader -->
+    <!--     <div class="preloader text-center">
+        <div class="circle"></div>
+    </div> -->
+    <!--Offcanvas sidebar-->
+    <div th:replace="components/aside :: aside"></div>
+    <!-- Start Header -->
+    <div th:replace="components/header :: header"></div>
+    <!--Start search form-->
+    <div th:replace="components/search :: search"></div>
+    <!-- Start Main content -->
+    <main class="bg-grey pt-50 pb-50">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <!--author box-->
+                    <div class="author-bio mb-50 bg-white p-30 border-radius-10">
+                        <div class="author-image mb-30">
+                            <a href="author.html"><img src="http://oss.edchu.cn/others/1/2021/03/11/97203420-b4e6-4d02-9422-1f7455ad978b.png" alt="" class="avatar"></a>
+                        </div>
+                        <div class="author-info">
+                            <h3 class="font-weight-900"><span class="vcard author"><span class="fn"><a href="author.html" title="Posts by Steven" rel="author">凑凑</a></span></span>
+                            </h3>
+                            <h5 class="text-muted">关于凑凑</h5>
+                            <div class="author-description text-muted">
+                                <p>凑凑喵出生于公元2020年4月29日，她的父母是一只蓝猫和一只英短。</p>
+                                <p>原本准备取名叫臭臭，因为拉屎太臭，但女孩子叫臭臭不淑女，所以叫了凑凑。</p>
+                                <p>脾气很好，从不呲牙咧嘴。有些调皮，喜欢钻塑料袋，馋猫不挑食，啥都吃。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="post-module-2">
+                        <div class="widget-header-2 position-relative mb-30  wow fadeInUp animated">
+                            <h5 class="mt-5 mb-30">凑凑的生活记录</h5>
+                        </div>
+                        <div class="loop-list loop-list-style-1">
+                            <div class="row">
+                                <article class="col-md-6 mb-40 wow fadeInUp  animated" th:each="article, stat : ${articles}" th:if="${stat.index < 2}">
+                                    <div class="post-card-1 border-radius-10 hover-up">
+                                        <div class="post-thumb thumb-overlay img-hover-slide position-relative" th:style="'background-image: url(' + ${article.thumbPreview} + ')'">
+                                            <a class="img-link" th:href="${article.alias}"></a>
+                                            <ul class="social-share">
+                                                <li><a href="#"><i class="elegant-icon social_share"></i></a></li>
+                                                <li><a class="fb" href="#" title="Share on Facebook" target="_blank"><i class="elegant-icon social_facebook"></i></a></li>
+                                                <li><a class="tw" href="#" target="_blank" title="Tweet now"><i class="elegant-icon social_twitter"></i></a></li>
+                                                <li><a class="pt" href="#" target="_blank" title="Pin it"><i class="elegant-icon social_pinterest"></i></a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="post-content p-30">
+                                            <div class="entry-meta meta-0 font-small mb-10">
+                                                <a th:each="category : ${article.categories}" th:href="${category.href}"><span class="post-cat text-uppercase" th:classappend="${category.color}" th:text="${category.name}"></span></a>
+                                            </div>
+                                            <div class="d-flex post-card-content">
+                                                <h5 class="post-title mb-20 font-weight-900">
+                                                    <a th:href="${article.alias}" th:text="${article.title}"></a>
+                                                </h5>
+<!--                                                <div class="post-excerpt mb-25 font-small text-muted">-->
+<!--                                                    <p>Graduating from a top accelerator or incubator can be as career-defining for a&nbsp;startup founder&nbsp;as an elite university diploma. The intensive programmes, which…</p>-->
+<!--                                                </div>-->
+                                                <div class="entry-meta meta-1 float-left font-x-small text-uppercase">
+                                                    <span class="post-on time" th:datetime="${#dates.format(article.createTime,'yyyy-MM-dd HH:mm:ss')}"></span>
+                                                    <span class="time-reading has-dot">[[${article.minutes}]] mins read</span>
+                                                    <span class="post-by has-dot" th:text="${article.views} + ' views'"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </article>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="post-module-3">
+                        <div class="loop-list loop-list-style-1">
+                            <article class="hover-up-2 transition-normal wow fadeInUp animated" th:each="article, stat : ${articles}" th:if="${stat.index > 1}">
+                                <div class="row mb-40 list-style-2">
+                                    <div class="col-md-4">
+                                        <div class="post-thumb position-relative border-radius-5">
+                                            <div class="img-hover-slide border-radius-5 position-relative" th:style="'background-image: url(' + ${article.thumbPreview} + ')'">
+                                                <a class="img-link" th:href="${article.alias}"></a>
+                                            </div>
+                                            <ul class="social-share">
+                                                <li><a href="#"><i class="elegant-icon social_share"></i></a></li>
+                                                <li><a class="fb" href="#" title="Share on Facebook" target="_blank"><i class="elegant-icon social_facebook"></i></a></li>
+                                                <li><a class="tw" href="#" target="_blank" title="Tweet now"><i class="elegant-icon social_twitter"></i></a></li>
+                                                <li><a class="pt" href="#" target="_blank" title="Pin it"><i class="elegant-icon social_pinterest"></i></a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8 align-self-center">
+                                        <div class="post-content">
+                                            <div class="entry-meta meta-0 font-small mb-10">
+                                                <a th:each="category : ${article.categories}" th:href="${category.href}"><span class="post-cat text-uppercase" th:classappend="${category.color}" th:text="${category.name}"></span></a>
+                                            </div>
+                                            <h5 class="post-title font-weight-900 mb-20">
+                                                <a th:href="${article.alias}" th:text="${article.title}"></a>
+<!--                                                <span class="post-format-icon"><i class="elegant-icon icon_star_alt"></i></span>-->
+                                            </h5>
+                                            <div class="entry-meta meta-1 float-left font-x-small text-uppercase">
+                                                <span class="post-on time" th:datetime="${#dates.format(article.createTime,'yyyy-MM-dd HH:mm:ss')}"></span>
+                                                <span class="time-reading has-dot">[[${article.minutes}]] mins read</span>
+                                                <span class="post-by has-dot" th:text="${article.views} + ' views'"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+                        </div>
+                    </div>
+                    <div class="pagination-area mb-30 wow fadeInUp animated">
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination justify-content-start">
+                                <li class="page-item" th:classappend="${pageInfo.isFirstPage()} ? js-hidden"><a class="page-link" th:href="${href} + (${pageInfo.currentPage} - 1)"><i class="elegant-icon arrow_left"></i></a></li>
+                                <li th:each="page : ${pageInfo.pageNumList}" class="page-item" th:classappend="(${pageInfo.currentPage} eq ${page}) ? active"><a class="page-link" th:href="${href} + ${page}" th:text="${page}"></a></li>
+                                <li class="page-item" th:classappend="${pageInfo.isLastPage()} ? js-hidden"><a class="page-link" th:href="${href} + (${pageInfo.currentPage} + 1)"><i class="elegant-icon arrow_right"></i></a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+                <div class="col-lg-4 primary-sidebar sticky-sidebar">
+                    <div class="widget-area">
+                        <div class="sidebar-widget widget-about mb-50 pt-30 pr-30 pb-30 pl-30 bg-white border-radius-5 has-border  wow fadeInUp animated">
+                            <img class="about-author-img mb-25" src="http://oss.edchu.cn/others/1/2021/03/11/915f7afa-cabe-4cf4-97b2-e0c3bf66ec81.png" alt="">
+                            <h5 class="mb-20">Hi, 我是Ed Chu</h5>
+                            <p class="font-medium text-muted">你好，如果你是通过扫描凑凑身上的二维码进入这个网站的，那么凑凑一定是走丢了！</p>
+                            <p class="font-medium text-muted">真心十分感谢你能够留下她现在的位置，我会第一时间收到提醒并过来找她的！</p>
+                        </div>
+                        <div class="sidebar-widget widget-latest-posts mb-50 wow fadeInUp animated">
+                            <div class="widget-header-2 position-relative mb-30">
+                                <h5 class="mt-5 mb-30">最新评论</h5>
+                            </div>
+                            <div class="post-block-list post-module-2">
+                                <ul class="list-post">
+                                    <li class="mb-30 wow fadeInUp animated" th:each="comment : ${latestComments}">
+                                        <div class="d-flex bg-white has-border p-25 hover-up transition-normal border-radius-5">
+                                            <div class="post-thumb post-thumb-64 d-flex mr-15 border-radius-5 img-hover-scale overflow-hidden">
+                                                <a class="color-white thumb" th:href="${comment.articleHref}">
+                                                    <img th:if="${comment.avatar}" th:src="${comment.avatar}" th:data-name="${comment.createName}" alt="">
+                                                    <img th:unless="${comment.avatar}" class="avatar" src="" th:data-name="${comment.createName}" alt="">
+                                                </a>
+                                            </div>
+                                            <div class="post-content media-body">
+                                                <p class="mb-10"><a th:href="${comment.articleHref}"><strong th:text="${comment.createName}">Ed Chu</strong></a>
+                                                    <span class="ml-15 font-small text-muted has-dot time" th:datetime="${#dates.format(comment.createTime,'yyyy-MM-dd HH:mm:ss')}">30 May 1997</span>
+                                                </p>
+                                                <p class="text-muted font-small" th:text="${comment.content}">A writer is someone for whom writing is more difficult than...</p>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="sidebar-widget widget_instagram wow fadeInUp animated">
+                            <div class="widget-header-2 position-relative mb-30">
+                                <h5 class="mt-5 mb-30">Instagram</h5>
+                            </div>
+                            <div class="instagram-gellay">
+                                <ul class="insta-feed">
+                                    <li>
+                                        <a href="/static/imgs/thumbnail-3.jpg" class="play-video" data-animate="zoomIn" data-duration="1.5s" data-delay="0.1s"><img class="border-radius-5" src="/static/imgs/news/thumb-1.jpg" alt=""></a>
+                                    </li>
+                                    <li>
+                                        <a href="/static/imgs/thumbnail-4.jpg" class="play-video" data-animate="zoomIn" data-duration="1.5s" data-delay="0.1s"><img class="border-radius-5" src="/static/imgs/news/thumb-2.jpg" alt=""></a>
+                                    </li>
+                                    <li>
+                                        <a href="/static/imgs/thumbnail-5.jpg" class="play-video" data-animate="zoomIn" data-duration="1.5s" data-delay="0.1s"><img class="border-radius-5" src="/static/imgs/news/thumb-3.jpg" alt=""></a>
+                                    </li>
+                                    <li>
+                                        <a href="/static/imgs/thumbnail-3.jpg" class="play-video" data-animate="zoomIn" data-duration="1.5s" data-delay="0.1s"><img class="border-radius-5" src="/static/imgs/news/thumb-4.jpg" alt=""></a>
+                                    </li>
+                                    <li>
+                                        <a href="/static/imgs/thumbnail-4.jpg" class="play-video" data-animate="zoomIn" data-duration="1.5s" data-delay="0.1s"><img class="border-radius-5" src="/static/imgs/news/thumb-5.jpg" alt=""></a>
+                                    </li>
+                                    <li>
+                                        <a href="/static/imgs/thumbnail-5.jpg" class="play-video" data-animate="zoomIn" data-duration="1.5s" data-delay="0.1s"><img class="border-radius-5" src="/static/imgs/news/thumb-6.jpg" alt=""></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <!-- End Main content -->
+    <!-- Footer Start-->
+    <div th:replace="components/foot :: foot"></div>
+    <!-- End Footer -->
+    <div class="dark-mark"></div>
+    <!-- Vendor JS-->
+    <script src="/static/js/vendor/timeago.js"></script>
+    <script>
+      // 自动更新
+      var timeagoInstance = timeago();// 实例
+      timeagoInstance.render(document.querySelectorAll('.time'),'zh_CN');
+    </script>
+    <script src="/static/js/vendor/modernizr-3.5.0.min.js"></script>
+    <script src="/static/js/vendor/jquery-1.12.4.min.js"></script>
+    <script src="/static/js/vendor/popper.min.js"></script>
+    <script src="/static/js/vendor/bootstrap.min.js"></script>
+    <script src="/static/js/vendor/jquery.slicknav.js"></script>
+    <script src="/static/js/vendor/slick.min.js"></script>
+    <script src="/static/js/vendor/wow.min.js"></script>
+    <script src="/static/js/vendor/jquery.ticker.js"></script>
+    <script src="/static/js/vendor/jquery.vticker-min.js"></script>
+    <script src="/static/js/vendor/jquery.scrollUp.min.js"></script>
+    <script src="/static/js/vendor/jquery.nice-select.min.js"></script>
+    <script src="/static/js/vendor/jquery.magnific-popup.js"></script>
+    <script src="/static/js/vendor/jquery.sticky.js"></script>
+    <script src="/static/js/vendor/perfect-scrollbar.js"></script>
+    <script src="/static/js/vendor/waypoints.min.js"></script>
+    <script src="/static/js/vendor/jquery.theia.sticky.js"></script>
+    <!-- NewsBoard JS -->
+    <script src="/static/js/main.js"></script>
+
+    <script src="/static/js/addComment.js"></script>
+    <script src="/static/js/vendor/getAjax.js"></script>
+</body>
+
+</html>

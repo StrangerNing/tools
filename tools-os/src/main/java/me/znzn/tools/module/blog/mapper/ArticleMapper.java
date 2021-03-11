@@ -53,4 +53,10 @@ public interface ArticleMapper extends BaseDao<Article> {
      */
     List<ArticleVo> selectArticleByTags(ArticleVo articleVo);
 
+    /**
+     * 更新文章阅读量
+     * @param articleList
+     */
+    void updateArticleViews(List<Article> articleList);
+
 }

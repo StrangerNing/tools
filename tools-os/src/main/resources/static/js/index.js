@@ -1,5 +1,8 @@
 import "https://cdn.bootcss.com/timeago.js/3.0.2/timeago.js"
 $('#featureMoreBtn').click(function () {
+  let currentPage = $(this).data('id')
+  let limit = $(this).data('limit')
+
   let template = ''
   for (let temp = 0; temp < limit; temp ++) {
     template += `<article class="col-lg-4 col-md-6 mb-30 wow template" data-wow-delay="0.2s">
@@ -26,8 +29,6 @@ $('#featureMoreBtn').click(function () {
   }
   $('#articleList').append(template)
 
-  let currentPage = $(this).data('id')
-  let limit = $(this).data('limit')
   let params = {
     isSticky: false,
     currentPage: currentPage,
@@ -45,7 +46,6 @@ $('#featureMoreBtn').click(function () {
                         <div class="post-card-1 border-radius-10 hover-up">
                             <div class="post-thumb thumb-overlay img-hover-slide position-relative" style="background-image: url(`+ articleList[index].thumbPreview +`)">
                                 <a class="img-link" href="` + articleList[index].alias + `"></a>
-                                <span class="top-right-icon bg-success"><i class="elegant-icon icon_camera_alt"></i></span>
                                 <ul class="social-share">
                                     <li><a href="#"><i class="elegant-icon social_share"></i></a></li>
                                     <li><a class="fb" href="#" title="Share on Facebook" target="_blank"><i class="elegant-icon social_facebook"></i></a></li>
@@ -69,7 +69,7 @@ $('#featureMoreBtn').click(function () {
                        <div class="entry-meta meta-1 float-left font-x-small">
                           <span class="post-on time">`
         more += timeagoInstance.format(articleList[index].createTime, 'zh_CN') +`</span>
-<!--                      <span class="time-reading has-dot">12 mins read</span>-->
+                          <span class="time-reading has-dot">` + articleList[index].minutes + ` mins read</span>
                           <span class="post-by has-dot">`+ articleList[index].views +` views</span>
                        </div>
                     </div>

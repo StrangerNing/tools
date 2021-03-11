@@ -1,6 +1,7 @@
 package me.znzn.tools.module.blog.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.http.HtmlUtil;
 import me.znzn.tools.common.constant.CommonConstant;
 import me.znzn.tools.common.exception.BusinessException;
 import me.znzn.tools.module.blog.entity.enums.*;
@@ -11,6 +12,8 @@ import me.znzn.tools.module.blog.entity.vo.CategoryVo;
 import me.znzn.tools.module.blog.mapper.*;
 import me.znzn.tools.module.blog.service.ArticleService;
 import me.znzn.tools.module.user.entity.vo.UserInfoVO;
+import me.znzn.tools.utils.SpringUtil;
+import me.znzn.tools.utils.StringUtil;
 import me.znzn.tools.utils.UploadFileUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.checkerframework.checker.units.qual.A;
@@ -55,6 +58,9 @@ public class ArticleServiceImpl implements ArticleService {
         loginUser.setCreateUser(article);
         setDefaultProps(article);
         article.setAuthor(loginUser.getNickname());
+
+        article.setMinutes(StringUtil.countHtmlWords(articleVo.getContent()));
+
         Long result = articleMapper.insertByProperty(article);
         if (!result.equals(1L)) {
             throw new BusinessException("操作失败");
@@ -85,6 +91,9 @@ public class ArticleServiceImpl implements ArticleService {
         if (article.getPriority() == null) {
             article.setPriority(ArticlePriorityEnum.NORMAL.getIndex());
         }
+        if (article.getType() == null) {
+            article.setType(ArticleTypeEnum.DEFAULT.getIndex());
+        }
         if (article.getViews() == null) {
             article.setViews(0);
         }
@@ -103,6 +112,7 @@ public class ArticleServiceImpl implements ArticleService {
         Article article = new Article();
         BeanUtils.copyProperties(articleVo, article);
         loginUser.setModifyUser(article);
+        article.setMinutes(StringUtil.countHtmlWords(articleVo.getContent()));
         Integer result = articleMapper.updateByPrimaryKey(article);
         if (!result.equals(1)) {
             throw new BusinessException("修改失败");

@@ -11,6 +11,7 @@
         <result column="words" property="words" jdbcType="VARCHAR"/>
         <result column="pic" property="pic" jdbcType="VARCHAR"/>
         <result column="index" property="index" jdbcType="INTEGER"/>
+        <result column="page_type" property="pageType" jdbcType="INTEGER"/>
     </resultMap>
 
     <!-- 表名 -->
@@ -18,12 +19,12 @@
 
     <!-- 所有字段 -->
     <sql id="all_columns">
-        id, name, color, href, `index`, words, pic
+        id, name, color, href, `index`, words, pic, page_type
     </sql>
 
     <!-- 不带主键的所有字段 -->
     <sql id="all_columns_not_with_id">
-        name, color, href, `index`, words, pic
+        name, color, href, `index`, words, pic, page_type
     </sql>
 
     <!-- 查询条件带where -->
@@ -57,6 +58,9 @@
             <if test="pic != null and '' != pic">
                 AND `pic` = #{pic}
             </if>
+            <if test="pageType != null and '' != pageType">
+                AND `page_type` = #{pageType}
+            </if>
         </trim>
     </sql>
 
@@ -81,6 +85,9 @@
             <if test="pic != null and '' != pic">
                 AND `pic` = #{pic}
             </if>
+            <if test="pageType != null and '' != pageType">
+                AND `page_type` = #{pageType}
+            </if>
         </trim>
     </sql>
 
@@ -103,7 +110,10 @@
                 `words` = #{words},
             </if>
             <if test="pic != null and '' != pic">
-                `pic` = #{pic}
+                `pic` = #{pic},
+            </if>
+            <if test="pageType != null and '' != pageType">
+                `page_type` = #{pageType}
             </if>
         </set>
     </sql>
@@ -121,13 +131,16 @@
                 href = #{item.href},
             </if>
             <if test="item.index != null and '' != item.index">
-                `index` = #{index},
+                `index` = #{item.index},
             </if>
-            <if test="words != null and '' != words">
-                `words` = #{words},
+            <if test="item.words != null and '' != item.words">
+                `words` = #{item.words},
             </if>
-            <if test="pic != null and '' != pic">
-                `pic` = #{pic}
+            <if test="item.pic != null and '' != item.pic">
+                `pic` = #{item.pic},
+            </if>
+            <if test="item.pageType != null and '' != item.pageType">
+                `page_type` = #{item.pageType}
             </if>
         </set>
     </sql>
@@ -139,7 +152,7 @@
             <include refid="all_columns_not_with_id"/>
         )
         VALUES (
-            #{name}, #{color}, #{href}, #{index}, #{words}, #{pic}
+            #{name}, #{color}, #{href}, #{index}, #{words}, #{pic}, #{pageType}
         )
     </insert>
 
@@ -152,7 +165,7 @@
         VALUES
         <foreach collection="list" item="item" separator="," index = "index">
         (
-            #{item.name}, #{item.color}, #{item.href}, #{item.index}, #{item.words}, #{item.pic}
+            #{item.name}, #{item.color}, #{item.href}, #{item.index}, #{item.words}, #{item.pic}, #{item.pageType}
         )
         </foreach>
     </insert>
@@ -231,7 +244,7 @@
     </select>
 
     <select id="selectCategoryByArticleId" resultType="me.znzn.tools.module.blog.entity.vo.CategoryVo">
-        SELECT category.id as id, category.name, category.color, category.href, category.index
+        SELECT category.id as id, category.name, category.color, category.href, category.index, category.page_type as pageType
         FROM <include refid="me.znzn.tools.module.blog.mapper.ArticleCategoryMapper.table_name"/> ac
         LEFT JOIN <include refid="table_name"/> category ON ac.category_id = category.id
         WHERE ac.article_id = #{id}
@@ -243,7 +256,7 @@
         FROM
         <include refid="table_name"/>
         <include refid="all_query_condition_with_where"/>
-        ORDER BY `index` DESC
+        ORDER BY `index` ASC
     </select>
 
 
