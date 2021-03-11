@@ -21,7 +21,6 @@ import me.znzn.tools.module.blog.service.FeBlogService;
 import me.znzn.tools.module.user.entity.vo.UserInfoVO;
 import me.znzn.tools.module.user.mapper.UserMapper;
 import org.apache.commons.lang3.StringUtils;
-import org.redisson.api.RedissonClient;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericToStringSerializer;
 import org.springframework.scheduling.annotation.Async;
@@ -42,8 +41,6 @@ import java.util.stream.Collectors;
 @Service
 public class FeBlogServiceImpl<x> implements FeBlogService {
 
-    @Resource
-    private RedissonClient redissonClient;
     @Resource
     private ArticleMapper articleMapper;
     @Resource
