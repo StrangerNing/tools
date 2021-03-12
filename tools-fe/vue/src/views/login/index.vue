@@ -208,6 +208,9 @@ export default {
           window.location = this.redirect
           return
         }
+        if (this.redirect && this.redirect.startsWith('login')) {
+          this.redirect = this.redirect.substring(5)
+        }
         this.$router.push({ path: this.redirect || '/' })
         this.loading = false
       }).catch(() => {

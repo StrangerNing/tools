@@ -82,10 +82,6 @@ router.beforeEach(async (to, from, next) => {
           window.location.href = redirect
           return;
         }
-        if (redirect && redirect.startsWith('login')) {
-          next(`/login?redirect=${redirect.substring(5)}`)
-          return;
-        }
       }
       // in the free login whitelist, go directly
       next()
