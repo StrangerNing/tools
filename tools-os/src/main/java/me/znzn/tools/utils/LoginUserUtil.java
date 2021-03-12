@@ -41,6 +41,7 @@ public class LoginUserUtil {
                 if (redisTemplate.hasKey(cookie.getValue())) {
                     Map cacheUser = redisTemplate.opsForHash().entries(cookie.getValue());
                     request.getSession().setAttribute("user", cacheUser);
+                    return cacheUser;
                 }
             }
         }
@@ -66,13 +67,24 @@ public class LoginUserUtil {
         request.getSession().setAttribute("user", user);
     }
 
+    public static void login(String ticket) {
+        HttpServletRequest request = ((ServletRequestAttributes) (RequestContextHolder.currentRequestAttributes())).getRequest();
+        RedisTemplate redisTemplate = (RedisTemplate)SpringUtil.getBean("redisTemplate");
+        if (redisTemplate.hasKey(ticket)) {
+            Map cacheUser = redisTemplate.opsForHash().entries(ticket);
+            redisTemplate.expire(cacheUser.get("token"), 3, TimeUnit.HOURS);
+            request.getSession().setAttribute("user", cacheUser);
+        }
+    }
+
     public static void logout() {
         HttpServletRequest request = ((ServletRequestAttributes) (RequestContextHolder.currentRequestAttributes())).getRequest();
         Cookie[] cookies = request.getCookies();
         for (Cookie cookie : cookies) {
             if ("user".equals(cookie.getName())) {
                 RedisTemplate redisTemplate = (RedisTemplate)SpringUtil.getBean("redisTemplate");
-                redisTemplate.opsForHash().delete(cookie.getValue());
+                redisTemplate.delete(cookie.getValue());
+                request.getSession().removeAttribute("user");
             }
         }
     }

@@ -12,6 +12,7 @@ public class CommonConstant {
      */
     public static String BACKGROUND_DOMAIN = "";
 
+    public static String SHORT_URL_PREFIX = "";
 
     /**
      * 百度地图AK

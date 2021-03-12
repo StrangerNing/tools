@@ -2,6 +2,7 @@ package me.znzn.tools.module.blog.controller;
 
 import cn.hutool.core.collection.CollectionUtil;
 import me.znzn.tools.common.component.ResultPageUtil;
+import me.znzn.tools.common.constant.CommonConstant;
 import me.znzn.tools.common.exception.NotFoundException;
 import me.znzn.tools.module.blog.entity.enums.ArticleStatusEnum;
 import me.znzn.tools.module.blog.entity.enums.ArticleTypeEnum;
@@ -17,10 +18,12 @@ import me.znzn.tools.module.blog.service.FeBlogService;
 import me.znzn.tools.module.blog.service.TagService;
 import me.znzn.tools.module.user.entity.vo.UserInfoVO;
 import me.znzn.tools.utils.LoginUserUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -43,7 +46,6 @@ public class FeBlogController {
 
     @GetMapping("/")
     public String index(Model model) {
-
         ArticleForm querySticky = new ArticleForm();
         querySticky.setIsSticky(true);
         querySticky.setStatus(ArticleStatusEnum.NORMAL.getIndex());
@@ -62,6 +64,14 @@ public class FeBlogController {
         model.addAttribute("hotTags", tagService.hotTags(10));
         model.addAttribute("categories", categoryService.searchCategory(new CategoryForm()));
         return "index";
+    }
+
+    @GetMapping("/login")
+    public ModelAndView login(@RequestParam("ticket") String ticket, @RequestParam("redirect") String redirect) {
+        if (StringUtils.isNotEmpty(ticket)) {
+            LoginUserUtil.login(ticket);
+        }
+        return new ModelAndView("redirect:" + redirect);
     }
 
     @GetMapping("/wapi/list")

@@ -46,7 +46,7 @@ public class ShortUrlServiceImpl implements ShortUrlService {
         shortUrl.setStatus(StatusEnum.ENABLE.getIndex());
         Long num = shortUrlMapper.insertByProperty(shortUrl);
         if (num.equals(1L)) {
-            return CommonConstant.BACKGROUND_DOMAIN + LongNumUtil.encode(shortUrl.getId());
+            return CommonConstant.SHORT_URL_PREFIX + LongNumUtil.encode(shortUrl.getId());
         }
         throw new BusinessException("保存失败");
     }
@@ -75,7 +75,7 @@ public class ShortUrlServiceImpl implements ShortUrlService {
         shortUrl.setCurrentPage(page.getCurrentPage());
         shortUrl.setLimit(page.getLimit());
         List<ShortUrlVO> result = shortUrlMapper.selectShortUrlByCondition(shortUrl);
-        result.forEach(item -> item.setShortUrl(CommonConstant.BACKGROUND_DOMAIN + LongNumUtil.encode(item.getId())));
+        result.forEach(item -> item.setShortUrl(CommonConstant.SHORT_URL_PREFIX + LongNumUtil.encode(item.getId())));
         return new ResultPage(shortUrlMapper.countByProperty(shortUrl), page.getLimit(), page.getCurrentPage(), result);
     }
 
