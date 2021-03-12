@@ -6,8 +6,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import me.znzn.tools.common.component.BaseModel;
+import me.znzn.tools.common.constant.CommonConstant;
 import me.znzn.tools.common.exception.BusinessException;
-import me.znzn.tools.utils.UploadFileUtil;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -136,7 +136,7 @@ public class UserInfoVO implements Serializable {
         if (this.avatar == null) {
             return null;
         }
-        return UploadFileUtil.getFileUrl(this.avatar);
+        return CommonConstant.FILE_REQUEST_PREFIX + this.avatar;
     }
 
 }

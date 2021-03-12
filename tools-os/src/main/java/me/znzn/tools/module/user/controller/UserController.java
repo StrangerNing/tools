@@ -31,7 +31,6 @@ public class UserController {
     public ResponseEntity login(@RequestBody LoginForm loginForm, HttpServletRequest request) {
         ValidatorUtil.validate(loginForm);
         UserInfoVO loginUser = userService.login(loginForm);
-        request.getSession().setAttribute("user", loginUser);
 
         return ResultPageUtil.success(loginUser);
     }
@@ -52,8 +51,7 @@ public class UserController {
 
     @GetMapping("/info")
     public ResponseEntity getUserInfo() {
-        UserInfoVO loginUser = LoginUserUtil.getSessionUser();
-        return ResultPageUtil.success(loginUser);
+        return ResultPageUtil.success(LoginUserUtil.getLoginUserMap());
     }
 
     @PostMapping("/info/update")
@@ -70,39 +68,34 @@ public class UserController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity logout(HttpServletRequest request) {
-        request.getSession().removeAttribute("user");
+    public ResponseEntity logout() {
+        LoginUserUtil.logout();
         return ResultPageUtil.success();
     }
 
     @GetMapping("/api/list")
     public ResponseEntity getApiList() {
-        UserInfoVO loginUser = LoginUserUtil.getSessionUser();
-        return ResultPageUtil.success(userService.getApiKeyList(loginUser.getId()));
+        return ResultPageUtil.success(userService.getApiKeyList(LoginUserUtil.getUserId()));
     }
 
     @PostMapping("/api/create")
     public ResponseEntity getApiKey(@RequestBody ApiKeyForm apiKey) {
-        UserInfoVO loginUser = LoginUserUtil.getSessionUser();
-        apiKey.setCreateId(loginUser.getId());
+        apiKey.setCreateId(LoginUserUtil.getUserId());
         return ResultPageUtil.success(userService.getApiKey(apiKey));
     }
 
     @GetMapping("/api/del/{id}")
     public ResponseEntity delApiKey(@PathVariable Long id) {
-        UserInfoVO loginUser = LoginUserUtil.getSessionUser();
-        return ResultPageUtil.success(userService.delApiKey(id, loginUser.getId()));
+        return ResultPageUtil.success(userService.delApiKey(id, LoginUserUtil.getUserId()));
     }
 
     @PostMapping("/api/update")
     public ResponseEntity updateApiKey(@RequestBody ApiKeyForm apiKeyForm) {
-        UserInfoVO loginUser = LoginUserUtil.getSessionUser();
-        return ResultPageUtil.success(userService.updateApiKey(apiKeyForm, loginUser.getId()));
+        return ResultPageUtil.success(userService.updateApiKey(apiKeyForm, LoginUserUtil.getUserId()));
     }
 
     @GetMapping("/api/search")
     public ResponseEntity searchByKey(String ak) {
-        UserInfoVO loginUser = LoginUserUtil.getSessionUser();
-        return ResultPageUtil.success(userService.getApiKeyByKey(ak, loginUser.getId()));
+        return ResultPageUtil.success(userService.getApiKeyByKey(ak, LoginUserUtil.getUserId()));
     }
 }

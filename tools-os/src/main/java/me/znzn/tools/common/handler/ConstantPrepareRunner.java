@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
  */
 
 @Component
-@Order(value = 1)
+@Order(value = 2)
 public class ConstantPrepareRunner implements ApplicationRunner {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(ConstantPrepareRunner.class);

@@ -16,7 +16,7 @@ import javax.annotation.Resource;
  */
 @Slf4j
 @Component
-@Order(value = 2)
+@Order(value = 3)
 public class InitMusicSyncServer implements ApplicationRunner {
 
     @Resource

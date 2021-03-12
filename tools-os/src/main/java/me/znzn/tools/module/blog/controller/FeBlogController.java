@@ -157,6 +157,13 @@ public class FeBlogController {
         return "page-coucou";
     }
 
+    @GetMapping("/aboutme")
+    public String aboutMe(Model model) {
+        model.addAttribute("categories", categoryService.searchCategory(new CategoryForm()));
+        model.addAttribute("hotTags", tagService.hotTags(10));
+        return "page-about";
+    }
+
     @GetMapping("/posts/{alias}")
     public String posts(@PathVariable String alias, Model model, HttpServletRequest request) {
         try {

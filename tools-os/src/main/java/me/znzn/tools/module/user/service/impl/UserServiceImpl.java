@@ -1,5 +1,6 @@
 package me.znzn.tools.module.user.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import lombok.extern.slf4j.Slf4j;
 import me.znzn.tools.common.exception.BusinessException;
 import me.znzn.tools.module.user.entity.enums.SexEnum;
@@ -13,9 +14,11 @@ import me.znzn.tools.module.user.entity.vo.UserInfoVO;
 import me.znzn.tools.module.user.mapper.ApiKeyMapper;
 import me.znzn.tools.module.user.mapper.UserMapper;
 import me.znzn.tools.module.user.service.UserService;
+import me.znzn.tools.utils.LoginUserUtil;
 import me.znzn.tools.utils.MD5Util;
 import me.znzn.tools.utils.ValidatorUtil;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Base64Utils;
 import org.thymeleaf.util.ListUtils;
@@ -40,6 +43,9 @@ public class UserServiceImpl implements UserService {
     @Resource
     private ApiKeyMapper apiKeyMapper;
 
+    @Resource
+    private RedisTemplate redisTemplate;
+
     @Override
     public UserInfoVO login(LoginForm loginForm) {
         String username = loginForm.getUsername();
@@ -53,7 +59,7 @@ public class UserServiceImpl implements UserService {
             BeanUtils.copyProperties(user, userInfo, "password");
             String token = UUID.randomUUID().toString();
             userInfo.setToken(token);
-//            LOGIN_USER.put(token, userInfo);
+            LoginUserUtil.login(userInfo);
             return userInfo;
         }
         throw new BusinessException("用户名或密码错误");

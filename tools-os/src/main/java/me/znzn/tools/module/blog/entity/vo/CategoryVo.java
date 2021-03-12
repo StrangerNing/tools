@@ -24,6 +24,6 @@ public class CategoryVo extends Category {
         if (super.getPic() == null) {
             return null;
         }
-        return UploadFileUtil.getFileUrl(super.getPic());
+        return CommonConstant.FILE_REQUEST_PREFIX + super.getPic();
     }
 }

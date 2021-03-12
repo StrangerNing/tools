@@ -2,6 +2,7 @@ package me.znzn.tools.common.handler;
 
 import com.google.gson.Gson;
 import me.znzn.tools.utils.JsonUtils;
+import me.znzn.tools.utils.LoginUserUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.ModelAndView;
@@ -22,7 +23,7 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-
+        LoginUserUtil.renewLoginInfo(request);
         return true;
     }
 

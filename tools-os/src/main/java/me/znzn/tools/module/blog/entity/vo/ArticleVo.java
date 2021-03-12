@@ -5,9 +5,7 @@ import lombok.EqualsAndHashCode;
 import me.znzn.tools.common.constant.CommonConstant;
 import me.znzn.tools.module.blog.entity.po.Article;
 import me.znzn.tools.module.blog.entity.po.Tag;
-import me.znzn.tools.module.user.entity.po.User;
 import me.znzn.tools.module.user.entity.vo.UserInfoVO;
-import me.znzn.tools.utils.UploadFileUtil;
 
 import java.io.Serializable;
 import java.util.List;
@@ -34,7 +32,7 @@ public class ArticleVo extends Article implements Serializable {
     private UserInfoVO authorInfo;
 
     public String getThumbPreview() {
-        return UploadFileUtil.getFileUrl(this.getThumb());
+        return CommonConstant.FILE_REQUEST_PREFIX + this.getThumb();
     }
 
     @Override
