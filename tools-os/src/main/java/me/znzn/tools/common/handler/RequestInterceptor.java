@@ -33,7 +33,7 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
                 url +="?" + request.getQueryString();
             }
 
-            response.sendRedirect("http://admin.edchu.cn/#/login?redirect=" + url);
+            response.sendRedirect("https://admin.edchu.cn/#/login?redirect=" + url);
             return false;
         }
         if (!"false".equals(isLogin)) {
