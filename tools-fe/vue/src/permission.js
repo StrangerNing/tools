@@ -78,8 +78,12 @@ router.beforeEach(async (to, from, next) => {
       if (to.path === '/login') {
 
         let redirect = to.query.redirect
+        if (redirect && redirect.startsWith('http')) {
+          window.location.href = redirect
+          return;
+        }
         if (redirect && redirect.startsWith('login')) {
-          window.location.href = redirect.substring(5)
+          next(`/login?redirect=${redirect.substring(5)}`)
           return;
         }
       }
