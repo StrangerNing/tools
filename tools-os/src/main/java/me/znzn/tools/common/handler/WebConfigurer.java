@@ -23,6 +23,8 @@ public class WebConfigurer implements WebMvcConfigurer {
                 .excludePathPatterns("/sso/**")
                 .excludePathPatterns("/static/**")
                 .excludePathPatterns("/wapi/**")
+                .excludePathPatterns("/file/**")
+                .excludePathPatterns("/getUrl/**")
                 .order(1);
     }
 

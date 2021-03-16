@@ -21,19 +21,28 @@ public class CorsConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         // 设置你要允许的网站域名，如果全允许则设为 *
-        config.addAllowedOrigin("http://admin.znzn.me");
         config.addAllowedOrigin("https://admin.znzn.me");
-        config.addAllowedOrigin("http://music.znzn.me");
         config.addAllowedOrigin("https://music.znzn.me");
         config.addAllowedOrigin("https://coucou.pet");
         config.addAllowedOrigin("https://www.coucou.pet");
-        config.addAllowedOrigin("https://admin.coucou.pet");
         config.addAllowedOrigin("https://edchu.cn");
+        config.addAllowedOrigin("https://admin.coucou.pet");
         config.addAllowedOrigin("https://www.edchu.cn");
+        config.addAllowedOrigin("https://sso.edchu.cn");
         config.addAllowedOrigin("https://admin.edchu.cn");
-        config.addAllowedOrigin("http://admin.edchu.cn");
-        config.addAllowedOrigin("http://sso.edchu.cn");
         config.addAllowedOrigin("https://ndwz.cc");
+
+        config.addAllowedOrigin("http://admin.znzn.me");
+        config.addAllowedOrigin("http://music.znzn.me");
+        config.addAllowedOrigin("http://coucou.pet");
+        config.addAllowedOrigin("http://www.coucou.pet");
+        config.addAllowedOrigin("http://edchu.cn");
+        config.addAllowedOrigin("http://admin.coucou.pet");
+        config.addAllowedOrigin("http://www.edchu.cn");
+        config.addAllowedOrigin("http://sso.edchu.cn");
+        config.addAllowedOrigin("http://admin.edchu.cn");
+        config.addAllowedOrigin("http://ndwz.cc");
+
         config.addAllowedOrigin("http://localhost:81");
         // 如果要限制 HEADER 或 METHOD 请自行更改
         config.addAllowedHeader("*");
