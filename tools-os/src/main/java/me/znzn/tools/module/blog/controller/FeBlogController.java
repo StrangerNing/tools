@@ -200,10 +200,10 @@ public class FeBlogController {
         }
         UserInfoVO userInfoVO = LoginUserUtil.getSessionUserWithoutThrow();
         if (userInfoVO == null) {
-            String url = "http://edchu.cn/login";
+            String url = CommonConstant.BLOG_LOGIN_URL;
             redirectAttributes.addAttribute("redirect", redirect);
             redirectAttributes.addAttribute("login", url);
-            return new RedirectView("http://sso.edchu.cn");
+            return new RedirectView(CommonConstant.SSO_URL);
         }
         if (StringUtils.isNotEmpty(redirect)) {
             return new RedirectView(redirect);

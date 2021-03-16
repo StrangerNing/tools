@@ -1,5 +1,6 @@
 package me.znzn.tools.common.handler;
 
+import me.znzn.tools.common.constant.CommonConstant;
 import me.znzn.tools.utils.LoginUserUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -40,7 +41,7 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
             if (request.getQueryString() !=null){
                 url +="?" + request.getQueryString();
             }
-            response.sendRedirect("http://sso.edchu.cn?forceLogin=false&redirect="+url);
+            response.sendRedirect(CommonConstant.SSO_URL + "?forceLogin=false&redirect="+url);
         }
         return true;
     }

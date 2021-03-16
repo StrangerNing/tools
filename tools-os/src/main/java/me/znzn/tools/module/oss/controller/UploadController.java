@@ -38,7 +38,7 @@ public class UploadController {
     @Resource
     private FileService fileService;
 
-    @GetMapping("/getUrl/**")
+    @GetMapping("/file/getUrl/**")
     public ModelAndView getFileUrl(HttpServletRequest request) {
         try {
             String path = request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE).toString();

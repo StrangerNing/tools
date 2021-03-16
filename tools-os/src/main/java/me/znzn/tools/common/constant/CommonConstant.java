@@ -73,4 +73,8 @@ public class CommonConstant {
      * 有效的阅读量间隔
      */
     public static String VALID_ARTICLE_VIEW_INTERVAL = "10800000";
+
+    public static String SSO_URL = "";
+
+    public static String BLOG_LOGIN_URL = "";
 }
