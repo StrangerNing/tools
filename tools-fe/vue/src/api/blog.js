@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function add (data) {
   return request({
-    url: '/blog/article/add',
+    url: '/wapi/blog/article/add',
     method: 'post',
     data: data
   })
@@ -10,7 +10,7 @@ export function add (data) {
 
 export function edit(data) {
   return request({
-    url: '/blog/article/edit',
+    url: '/wapi/blog/article/edit',
     method: 'post',
     data: data
   })
@@ -18,14 +18,14 @@ export function edit(data) {
 
 export function deleteArticle(params) {
   return request({
-    url: '/blog/article/del/' + params,
+    url: '/wapi/blog/article/del/' + params,
     method: 'get'
   })
 }
 
 export function searchTag(param) {
   return request({
-    url: '/blog/tag/search',
+    url: '/wapi/blog/tag/search',
     method: 'get',
     params: param
   })
@@ -33,7 +33,7 @@ export function searchTag(param) {
 
 export function searchCategory(param) {
   return request({
-    url: '/blog/category/search',
+    url: '/wapi/blog/category/search',
     method: 'get',
     params: param
   })
@@ -41,7 +41,7 @@ export function searchCategory(param) {
 
 export function list(params) {
   return request({
-    url: '/blog/article/list',
+    url: '/wapi/blog/article/list',
     method: 'get',
     params: params
   })
@@ -49,7 +49,7 @@ export function list(params) {
 
 export function getArticle(params) {
   return request({
-    url: '/blog/article/detail/' + params,
+    url: '/wapi/blog/article/detail/' + params,
     method: 'get'
   })
 }

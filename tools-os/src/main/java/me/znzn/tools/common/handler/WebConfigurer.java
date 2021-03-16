@@ -19,7 +19,11 @@ public class WebConfigurer implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new RequestInterceptor()).addPathPatterns("/**").order(1);
+        registry.addInterceptor(new RequestInterceptor()).addPathPatterns("/**")
+                .excludePathPatterns("/sso/**")
+                .excludePathPatterns("/static/**")
+                .excludePathPatterns("/wapi/**")
+                .order(1);
     }
 
 //    @Override

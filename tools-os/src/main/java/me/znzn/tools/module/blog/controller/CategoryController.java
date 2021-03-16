@@ -21,7 +21,7 @@ import javax.annotation.Resource;
  * @copyright
  */
 @Controller
-@RequestMapping("/blog/category")
+@RequestMapping("/wapi/blog/category")
 public class CategoryController {
 
     @Resource

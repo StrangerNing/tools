@@ -21,7 +21,7 @@ import javax.annotation.Resource;
  * @date 2021/02/22 15:22:20
  */
 @Controller
-@RequestMapping("/blog/article")
+@RequestMapping("/wapi/blog/article")
 public class ArticleController {
 
     @Resource

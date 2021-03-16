@@ -1,14 +1,15 @@
 package me.znzn.tools.common.handler;
 
 import me.znzn.tools.utils.LoginUserUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-import org.thymeleaf.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 /**
  * @author zhuzening
@@ -21,10 +22,17 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        Object isLogin = request.getSession().getAttribute("user");
-
-        if (isLogin == null) {
-            request.getSession().setAttribute("user", "false");
+        Object isLogin = request.getSession().getAttribute("isLogin");
+        String ticket = request.getParameter("ticket");
+        if (StringUtils.isNotEmpty(ticket)) {
+            LoginUserUtil.login(ticket);
+        }
+        if (isLogin != null) {
+            return true;
+        }
+        Map user = LoginUserUtil.getLoginUserMap();
+        if (user == null) {
+            request.getSession().setAttribute("isLogin", 1);
             String url ="";
             url = request.getScheme() +"://" + request.getServerName()
                     +":" +request.getServerPort()
@@ -32,12 +40,7 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
             if (request.getQueryString() !=null){
                 url +="?" + request.getQueryString();
             }
-
-            response.sendRedirect("https://admin.edchu.cn/#/login?redirect=" + url);
-            return false;
-        }
-        if (!"false".equals(isLogin)) {
-            LoginUserUtil.renewLoginInfo(request);
+            response.sendRedirect("http://sso.edchu.cn?forceLogin=false&redirect="+url);
         }
         return true;
     }

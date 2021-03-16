@@ -24,9 +24,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -64,14 +68,6 @@ public class FeBlogController {
         model.addAttribute("hotTags", tagService.hotTags(10));
         model.addAttribute("categories", categoryService.searchCategory(new CategoryForm()));
         return "index";
-    }
-
-    @GetMapping("/login")
-    public ModelAndView login(@RequestParam("ticket") String ticket, @RequestParam("redirect") String redirect) {
-        if (StringUtils.isNotEmpty(ticket)) {
-            LoginUserUtil.login(ticket);
-        }
-        return new ModelAndView("redirect:" + redirect);
     }
 
     @GetMapping("/wapi/list")
@@ -193,6 +189,26 @@ public class FeBlogController {
             model.addAttribute("categories", categoryService.searchCategory(new CategoryForm()));
             model.addAttribute("hotTags", tagService.hotTags(10));
         }
+    }
+
+    @GetMapping("/login")
+    public RedirectView login(RedirectAttributes redirectAttributes,
+                              @RequestParam(name = "ticket", required = false)String ticket,
+                              @RequestParam(name = "redirect", required = false)String redirect) {
+        if (StringUtils.isNotEmpty(ticket)) {
+            LoginUserUtil.login(ticket);
+        }
+        UserInfoVO userInfoVO = LoginUserUtil.getSessionUserWithoutThrow();
+        if (userInfoVO == null) {
+            String url = "http://edchu.cn/login";
+            redirectAttributes.addAttribute("redirect", redirect);
+            redirectAttributes.addAttribute("login", url);
+            return new RedirectView("http://sso.edchu.cn");
+        }
+        if (StringUtils.isNotEmpty(redirect)) {
+            return new RedirectView(redirect);
+        }
+        return new RedirectView("/");
     }
 
     @RequestMapping("/404")

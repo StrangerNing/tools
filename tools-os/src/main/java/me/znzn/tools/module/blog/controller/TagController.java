@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @date 2021/02/22 15:22:20
  */
 @Controller
-@RequestMapping("/blog/tag/")
+@RequestMapping("/wapi/blog/tag/")
 public class TagController {
 
     @Autowired

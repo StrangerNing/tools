@@ -11,14 +11,17 @@ import me.znzn.tools.module.oss.entity.vo.FileReturnVo;
 import me.znzn.tools.module.oss.service.FileService;
 import me.znzn.tools.module.user.entity.vo.UserInfoVO;
 import me.znzn.tools.utils.LoginUserUtil;
-import me.znzn.tools.utils.MultipartFileUtil;
 import me.znzn.tools.utils.UploadFileUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.HandlerMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,10 +33,34 @@ import java.util.Map;
  * @since 2021/1/24
  */
 @Slf4j
-@RestController()
+@RestController
 public class UploadController {
     @Resource
     private FileService fileService;
+
+    @GetMapping("/getUrl/**")
+    public ModelAndView getFileUrl(HttpServletRequest request) {
+        try {
+            String path = request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE).toString();
+            String bestMatchingPattern = request.getAttribute(HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE).toString();
+
+            String name = new AntPathMatcher().extractPathWithinPattern(bestMatchingPattern, path);
+
+            FileReturnVo file = fileService.getFile(name);
+            String url = file.getUrl();
+
+            String referer = request.getHeader("Referer");
+            if (org.springframework.util.StringUtils.isEmpty(referer)) {
+                ModelAndView modelAndView = new ModelAndView("preview_file");
+                modelAndView.addObject("url", url);
+                return modelAndView;
+            }
+            return new ModelAndView("redirect:" + url);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ModelAndView("dwz/404");
+        }
+    }
 
     @PostMapping("/upload/avatar")
     public ResponseEntity avatar(@RequestParam("file") MultipartFile file) {

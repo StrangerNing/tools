@@ -16,7 +16,7 @@ import javax.annotation.Resource;
  * @since 1.0
  */
 @RestController
-@RequestMapping("/constant")
+@RequestMapping("/wapi/constant")
 public class DictionaryController {
 
     @Resource

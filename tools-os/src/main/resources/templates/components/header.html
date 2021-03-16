@@ -17,7 +17,7 @@
 <!--                            <span class="vertical-divider mr-20 ml-20 d-none d-md-inline"></span>-->
                             <button class="search-icon d-none d-md-inline"><span class="mr-15 text-muted font-small"><i class="elegant-icon icon_search mr-5"></i>搜索</span></button>
                             <button th:if='${session.user}' class="no-play d-md-inline"><a href="https://admin.edchu.cn" class="text-muted font-small" th:text='${session.user.nickname}'>登录</a></button>
-                            <button th:unless='${session.user}' class="no-play d-md-inline"><a href="https://admin.edchu.cn/#/login?redirect=loginhttp://www.edchu.cn" class="text-muted font-small">登录</a></button>
+                            <button th:unless='${session.user}' class="no-play d-md-inline"><a href="/login" class="text-muted font-small">登录</a></button>
                         </div>
                     </div>
                 </div>

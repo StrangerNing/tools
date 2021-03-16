@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function submitUrl(param) {
   return request({
-    url: '/url/save',
+    url: '/wapi/url/save',
     method: 'post',
     data: param
   })
@@ -10,7 +10,7 @@ export function submitUrl(param) {
 
 export function queryUrl(params) {
   return request({
-    url: '/url/query',
+    url: '/wapi/url/query',
     method: 'get',
     params: params
   })
@@ -18,7 +18,7 @@ export function queryUrl(params) {
 
 export function updateUrl(data) {
   return request({
-    url: '/url/update',
+    url: '/wapi/url/update',
     method: 'post',
     data: data
   })
@@ -26,7 +26,7 @@ export function updateUrl(data) {
 
 export function getUrlStatistics(params) {
   return request({
-    url: '/url/statistics',
+    url: '/wapi/url/statistics',
     method: 'get',
     params: params
   })

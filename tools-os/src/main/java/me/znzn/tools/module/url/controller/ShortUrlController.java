@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
  * @since 1.0
  */
 @Controller
+@RequestMapping("/wapi")
 public class ShortUrlController {
 
     @Resource
@@ -47,28 +48,6 @@ public class ShortUrlController {
         UserInfoVO loginUser = LoginUserUtil.getSessionUser();
         ResultPage page = shortUrlService.getUserUrlList(loginUser, shortUrl);
         return ResultPageUtil.successWithPage(page.getList(), page.getTotalCount(), page.getCurrentPage());
-    }
-
-    @RequestMapping("/getUrl/{shortUrl}")
-    public ModelAndView getOriginUrl(@PathVariable("shortUrl") String shortUrl, HttpServletRequest request) {
-        ShortUrl url = shortUrlService.getOriginUrl(shortUrl);
-        if (null == url || url.getStatus().equals(StatusEnum.DISABLE.getIndex())) {
-            return new ModelAndView("/dwz/404");
-        }
-        shortUrlStatisticsService.saveVisitHistory(shortUrl, request);
-        String queryString = request.getQueryString();
-        if (null == queryString) {
-            queryString = "";
-        }
-        String originUrl = "";
-        if (url.getOriginUrl() != null) {
-            if (url.getOriginUrl().contains("?")) {
-                originUrl = url.getOriginUrl().concat("&").concat(queryString);
-            } else {
-                originUrl = url.getOriginUrl().concat("?").concat(queryString);
-            }
-        }
-        return new ModelAndView("redirect:" + originUrl);
     }
 
     @PostMapping("/url/update")

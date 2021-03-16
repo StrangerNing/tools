@@ -35,13 +35,16 @@ public class LoginUserUtil {
             return user;
         }
         Cookie[] cookies = request.getCookies();
-        for (Cookie cookie : cookies) {
-            if ("user".equals(cookie.getName())) {
-                RedisTemplate redisTemplate = (RedisTemplate)SpringUtil.getBean("redisTemplate");
-                if (redisTemplate.hasKey(cookie.getValue())) {
-                    Map cacheUser = redisTemplate.opsForHash().entries(cookie.getValue());
-                    request.getSession().setAttribute("user", cacheUser);
-                    return cacheUser;
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("user".equals(cookie.getName())) {
+                    RedisTemplate redisTemplate = (RedisTemplate) SpringUtil.getBean("redisTemplate");
+                    if (redisTemplate.hasKey(cookie.getValue())) {
+                        Map cacheUser = redisTemplate.opsForHash().entries(cookie.getValue());
+                        redisTemplate.expire(cookie.getValue(), 3, TimeUnit.HOURS);
+                        request.getSession().setAttribute("user", cacheUser);
+                        return cacheUser;
+                    }
                 }
             }
         }
@@ -49,7 +52,11 @@ public class LoginUserUtil {
     }
 
     public static UserInfoVO getSessionUserWithoutThrow() {
-        return BeanUtil.mapToBean(getLoginUserMap(), UserInfoVO.class, true, CopyOptions.create());
+        Map user = getLoginUserMap();
+        if (user == null) {
+            return null;
+        }
+        return BeanUtil.mapToBean(user, UserInfoVO.class, true, CopyOptions.create());
     }
 
     public static void setSessionUser(UserInfoVO loginUser) {

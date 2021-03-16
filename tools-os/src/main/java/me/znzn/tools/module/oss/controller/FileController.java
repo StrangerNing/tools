@@ -32,35 +32,11 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Slf4j
 @Controller
-@RequestMapping("/file")
+@RequestMapping("/wapi/file")
 public class FileController {
 
     @Autowired
     private FileService fileService;
-
-    @GetMapping("/getUrl/**")
-    public ModelAndView getFileUrl(HttpServletRequest request) {
-        try {
-            String path = request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE).toString();
-            String bestMatchingPattern = request.getAttribute(HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE).toString();
-
-            String name = new AntPathMatcher().extractPathWithinPattern(bestMatchingPattern, path);
-
-            FileReturnVo file = fileService.getFile(name);
-            String url = file.getUrl();
-
-            String referer = request.getHeader("Referer");
-            if (StringUtils.isEmpty(referer)) {
-                ModelAndView modelAndView = new ModelAndView("preview_file");
-                modelAndView.addObject("url", url);
-                return modelAndView;
-            }
-            return new ModelAndView("redirect:" + url);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ModelAndView("dwz/404");
-        }
-    }
 
     @GetMapping("/get/{id}")
     @ResponseBody

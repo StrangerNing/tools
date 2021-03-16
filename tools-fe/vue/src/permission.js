@@ -25,14 +25,6 @@ router.beforeEach(async (to, from, next) => {
   if (hasToken) {
     if (to.path === '/login') {
       // if is logged in, redirect to the home page
-      console.log(to, from ,next)
-      let redirect = to.query.redirect
-      console.log(redirect)
-      if (redirect && redirect.startsWith('http')) {
-        console.log('111')
-        window.location.href = baseURL + '/login?redirect=' + redirect + '&ticket=' + hasToken
-        return;
-      }
       next({ path: '/' })
       NProgress.done()
     } else {
@@ -75,14 +67,6 @@ router.beforeEach(async (to, from, next) => {
     /* has no token */
 
     if (whiteList.indexOf(to.path) !== -1) {
-      if (to.path === '/login') {
-
-        let redirect = to.query.redirect
-        if (redirect && redirect.startsWith('http')) {
-          window.location.href = redirect
-          return;
-        }
-      }
       // in the free login whitelist, go directly
       next()
     } else {

@@ -2,7 +2,8 @@
 mybatis:
   typeAliasesPackage: me.znzn.tools.entity
   mapperLocations: classpath:sql/module/*/*.xml
-
+server:
+  port: 8081
 ---
 #开发配置
 spring:

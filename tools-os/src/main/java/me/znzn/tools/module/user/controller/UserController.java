@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletRequest;
  * @since 1.0
  */
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/wapi/user")
 public class UserController {
 
     @Resource
@@ -51,7 +51,7 @@ public class UserController {
 
     @GetMapping("/info")
     public ResponseEntity getUserInfo() {
-        return ResultPageUtil.success(LoginUserUtil.getLoginUserMap());
+        return ResultPageUtil.success(LoginUserUtil.getSessionUser());
     }
 
     @PostMapping("/info/update")
