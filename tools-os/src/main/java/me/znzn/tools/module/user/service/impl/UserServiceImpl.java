@@ -2,6 +2,7 @@ package me.znzn.tools.module.user.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import lombok.extern.slf4j.Slf4j;
+import me.znzn.tools.common.constant.CommonConstant;
 import me.znzn.tools.common.exception.BusinessException;
 import me.znzn.tools.module.user.entity.enums.SexEnum;
 import me.znzn.tools.module.user.entity.enums.StatusEnum;
@@ -59,6 +60,7 @@ public class UserServiceImpl implements UserService {
             BeanUtils.copyProperties(user, userInfo, "password");
             String token = UUID.randomUUID().toString();
             userInfo.setToken(token);
+            userInfo.setAvatar(CommonConstant.FILE_REQUEST_PREFIX + user.getAvatar());
             LoginUserUtil.login(userInfo);
             return userInfo;
         }

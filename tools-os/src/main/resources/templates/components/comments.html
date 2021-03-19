@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div th:fragment="comments">
+        <div class="comments-area" id="comments-area">
+            <div class="widget-header-2 position-relative mb-30">
+                <h5 class="mt-5 mb-30">Comments</h5>
+            </div>
+            <div class="comment-list wow fadeIn animated" th:unless="${comments.list}">
+                <p>暂无评论</p>
+            </div>
+            <div class="comment-list wow fadeIn animated" th:each="comment : ${comments.list}">
+                <div class="single-comment justify-content-between d-flex">
+                    <div class="user justify-content-between d-flex w-100">
+                        <div class="thumb">
+                            <img th:if="${comment.avatar}" th:src="${comment.avatar}" th:data-name="${comment.createName}" alt="">
+                            <img th:unless="${comment.avatar}" class="avatar" src="" th:data-name="${comment.createName}" alt="">
+                        </div>
+                        <div class="desc w-100">
+                            <p class="comment" th:text="${comment.content}">
+                                This blog is so great!
+                            </p>
+                            <div class="d-flex justify-content-between">
+                                <div class="d-flex align-items-center">
+                                    <h5>
+                                        <a href="#" th:text="${comment.createName}">EdChu</a>
+                                    </h5>
+                                    <p class="date time" th:datetime="${#dates.format(comment.createTime,'yyyy-MM-dd HH:mm:ss')}">May 30, 1997</p>
+                                </div>
+                                <div class="reply-btn">
+                                    <span class="btn-reply" th:data-reply="${comment.id}" th:data-name="${comment.createName}" th:data-parent="${comment.id}">Reply</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="single-comment depth-2 justify-content-between d-flex mt-50" th:each="child : ${comment.childrenComments}">
+                    <div class="user justify-content-between d-flex w-100">
+                        <div class="thumb">
+                            <img th:if="${child.avatar}" th:src="${comment.avatar}" th:data-name="${child.createName}" alt="">
+                            <img th:unless="${child.avatar}" class="avatar" src="" th:data-name="${child.createName}" alt="">
+                        </div>
+                        <div class="desc w-100">
+                            <p class="comment" th:text="${child.content}">
+                                Can't agree more!
+                            </p>
+                            <div class="d-flex justify-content-between">
+                                <div class="d-flex align-items-center">
+                                    <h5>
+                                        <a href="#" th:text="${child.createName}">EdChu</a>
+                                    </h5>
+                                    <p class="date time" th:datetime="${#dates.format(child.createTime,'yyyy-MM-dd HH:mm:ss')}">May 30, 1997</p>
+                                </div>
+                                <div class="reply-btn">
+                                    <span class="btn-reply" th:data-reply="${child.id}" th:data-name="${child.createName}" th:data-parent="${child.parentId}">Reply</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--comment form-->
+        <div class="comment-form wow fadeIn animated">
+            <div class="widget-header-2 position-relative mb-30">
+                <h5 class="mt-5 mb-30">Leave a Reply</h5>
+            </div>
+            <form class="form-contact comment_form" method="post" id="commentForm">
+                <span id="replyTo" class="col-12 js-hidden"><span id="replyName"></span><span class="ml-15 text-muted font-small cursor-pointer" id="clearReply">清除</span></span>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <textarea class="form-control w-100" name="content" id="content" cols="30" rows="9" placeholder="Write Comment"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <input class="form-control" name="createName" id="createName" type="text" placeholder="Name" th:value="${session.user} ? ${session.user.nickname}" th:disabled="${session.user} ? true : false">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <input class="form-control" name="createEmail" id="createEmail" type="email" placeholder="Email" th:value="${session.user} ? ${session.user.email}" th:disabled="${session.user} ? true : false">
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group">
+                            <input class="form-control" name="createWebsite" id="createWebsite" type="text" placeholder="Website">
+                        </div>
+                    </div>
+                </div>
+                <div class="js-hidden">
+                    <input class="form-control" name="articleId" id="articleId" th:value="${article.id}">
+                    <input class="form-control" name="replyId" id="replyId">
+                    <input class="form-control" name="parentId" id="parentId">
+                </div>
+                <div class="form-group">
+                    <button type="button" class="btn button button-contactForm" id="submit">Post Comment</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

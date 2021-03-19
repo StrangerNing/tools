@@ -74,6 +74,15 @@ public class SsoController {
         }
     }
 
+    @GetMapping("/logout")
+    public Object logout(String redirect, HttpServletResponse response) {
+        LoginUserUtil.logout();
+        Cookie cookie = new Cookie("user", "");
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+        return new ModelAndView("redirect:" + redirect);
+    }
+
     private void redirect(RedirectAttributes redirectAttributes, RedirectView redirectView, String redirect, String login, String token) {
         redirectAttributes.addAttribute("ticket", token);
         if (StringUtils.isNotEmpty(login)) {

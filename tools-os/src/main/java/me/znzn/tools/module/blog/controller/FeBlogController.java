@@ -211,6 +211,13 @@ public class FeBlogController {
         return new RedirectView("/");
     }
 
+    @GetMapping("/logout")
+    public Object logout() {
+        LoginUserUtil.logout();
+        String SsoLogout = CommonConstant.SSO_URL + "/logout?redirect=https://edchu.cn";
+        return new ModelAndView("redirect:" + SsoLogout);
+    }
+
     @RequestMapping("/404")
     public String notFound(Model model) {
         model.addAttribute("hotTags", tagService.hotTags(10));

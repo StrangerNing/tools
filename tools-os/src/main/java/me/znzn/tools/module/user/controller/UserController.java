@@ -27,12 +27,10 @@ public class UserController {
     @Resource
     private UserService userService;
 
-    @PostMapping("/login")
-    public ResponseEntity login(@RequestBody LoginForm loginForm, HttpServletRequest request) {
-        ValidatorUtil.validate(loginForm);
-        UserInfoVO loginUser = userService.login(loginForm);
-
-        return ResultPageUtil.success(loginUser);
+    @GetMapping("/login")
+    public ResponseEntity login(String ticket, HttpServletRequest request) {
+        LoginUserUtil.login(ticket);
+        return ResultPageUtil.success(LoginUserUtil.getSessionUser());
     }
 
     @PostMapping("/register")
@@ -67,7 +65,7 @@ public class UserController {
         return ResultPageUtil.success(result);
     }
 
-    @PostMapping("/logout")
+    @GetMapping("/logout")
     public ResponseEntity logout() {
         LoginUserUtil.logout();
         return ResultPageUtil.success();

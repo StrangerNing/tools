@@ -94,6 +94,13 @@ public class UserInfoVO implements Serializable {
 
     private String nickname;
 
+    public String getAvatarUrl() {
+        if (this.avatar == null) {
+            return null;
+        }
+        return CommonConstant.FILE_REQUEST_PREFIX + this.avatar;
+    }
+
     public void setCreateUser(BaseModel model) {
         model.setCreateAccount(id);
         model.setCreateTime(new Date());
@@ -130,13 +137,6 @@ public class UserInfoVO implements Serializable {
         if (!hasOperateAuth(baseModel)) {
             throw new BusinessException("没有操作权限");
         }
-    }
-
-    public String getAvatar() {
-        if (this.avatar == null) {
-            return null;
-        }
-        return CommonConstant.FILE_REQUEST_PREFIX + this.avatar;
     }
 
 }

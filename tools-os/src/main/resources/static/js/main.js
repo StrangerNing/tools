@@ -418,7 +418,7 @@
         mobileMenu();
         typeWriter();
         WidgetSubMenu();
-        scrollProgress();
+        // scrollProgress();
         masonryGrid();
         niceSelectBox();
         moreArticles();

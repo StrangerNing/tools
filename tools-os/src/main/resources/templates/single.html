@@ -39,7 +39,7 @@
                     <div class="col-md-6">
                         <div class="entry-meta align-items-center meta-2 font-small color-muted">
                             <p class="mb-5">
-                                <a class="author-avatar" href="#"><img class="img-circle" th:src="${article.authorInfo.avatar}" alt=""></a>
+                                <a class="author-avatar" href="#"><img class="img-circle" th:src="${article.authorInfo.avatarUrl}" alt=""></a>
                                 By <a href="author.html"><span class="author-name font-weight-bold" th:text="${article.author}"></span></a>
                             </p>
                             <span class="mr-10 time" th:datetime="${#dates.format(article.createTime,'yyyy-MM-dd HH:mm:ss')}"> 30 May 1997</span>
@@ -65,9 +65,8 @@
 <!--                <div class="excerpt mb-30">-->
 <!--                    <p>Gosh jaguar ostrich quail one excited dear hello and bound and the and bland moral misheard roadrunner flapped lynx far that and jeepers giggled far and far bald that roadrunner python inside held shrewdly the manatee.</p>-->
 <!--                </div>-->
-                <div class="entry-main-content dropcap wow fadeIn animated" th:utext="${article.content}">
+                <div class="entry-main-content dropcap wow fadeIn animated" th:utext="${article.content}"></div>
 
-                </div>
                 <div class="entry-bottom mt-50 mb-30 wow fadeIn animated">
                     <div class="tags">
                         <span class="mr-5">Tags: </span>
@@ -88,130 +87,9 @@
                     </ul>
                 </div>
                 <!--More posts-->
-                <div class="single-more-articles border-radius-5" th:if="${recommends}">
-                    <div class="widget-header-2 position-relative mb-30">
-                        <h5 class="mt-5 mb-30">你可能会对以下文章感兴趣</h5>
-                        <button class="single-more-articles-close"><i class="elegant-icon icon_close"></i></button>
-                    </div>
-                    <div class="post-block-list post-module-1 post-module-5">
-                        <ul class="list-post">
-                            <li th:each="recommend, stat : ${recommends}" th:class="(${stat.index} eq ${#lists.size(recommends) - 1}) ? mb-10 : mb-30">
-                                <div class="d-flex hover-up-2 transition-normal">
-                                    <div class="post-thumb post-thumb-80 d-flex mr-15 border-radius-5 img-hover-scale overflow-hidden">
-                                        <a class="color-white" th:href="${recommend.alias}">
-                                            <img th:src="${recommend.thumbPreview}" alt="" style="object-fit: cover">
-                                        </a>
-                                    </div>
-                                    <div class="post-content media-body">
-                                        <h6 class="post-title mb-15 text-limit-2-row font-medium"><a th:href="${recommend.alias}" th:text="${recommend.title}">Such a big cool guy</a></h6>
-                                        <div class="entry-meta meta-1 float-left font-x-small text-uppercase">
-                                            <span class="post-on time" th:datetime="${#dates.format(recommend.createTime,'yyyy-MM-dd HH:mm:ss')}">30 MAY</span>
-                                            <span class="post-by has-dot">[[${recommend.views}]] views</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+                <div th:replace="components/recommends :: recommends"></div>
                 <!--Comments-->
-                <div class="comments-area" id="comments-area">
-                    <div class="widget-header-2 position-relative mb-30">
-                        <h5 class="mt-5 mb-30">Comments</h5>
-                    </div>
-                    <div class="comment-list wow fadeIn animated" th:unless="${comments.list}">
-                        <p>暂无评论</p>
-                    </div>
-                    <div class="comment-list wow fadeIn animated" th:each="comment : ${comments.list}">
-                        <div class="single-comment justify-content-between d-flex">
-                            <div class="user justify-content-between d-flex w-100">
-                                <div class="thumb">
-                                    <img th:if="${comment.avatar}" th:src="${comment.avatar}" th:data-name="${comment.createName}" alt="">
-                                    <img th:unless="${comment.avatar}" class="avatar" src="" th:data-name="${comment.createName}" alt="">
-                                </div>
-                                <div class="desc w-100">
-                                    <p class="comment" th:text="${comment.content}">
-                                        This blog is so great!
-                                    </p>
-                                    <div class="d-flex justify-content-between">
-                                        <div class="d-flex align-items-center">
-                                            <h5>
-                                                <a href="#" th:text="${comment.createName}">EdChu</a>
-                                            </h5>
-                                            <p class="date time" th:datetime="${#dates.format(comment.createTime,'yyyy-MM-dd HH:mm:ss')}">May 30, 1997</p>
-                                        </div>
-                                        <div class="reply-btn">
-                                            <span class="btn-reply" th:data-reply="${comment.id}" th:data-name="${comment.createName}" th:data-parent="${comment.id}">Reply</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="single-comment depth-2 justify-content-between d-flex mt-50" th:each="child : ${comment.childrenComments}">
-                            <div class="user justify-content-between d-flex w-100">
-                                <div class="thumb">
-                                    <img th:if="${child.avatar}" th:src="${comment.avatar}" th:data-name="${child.createName}" alt="">
-                                    <img th:unless="${child.avatar}" class="avatar" src="" th:data-name="${child.createName}" alt="">
-                                </div>
-                                <div class="desc w-100">
-                                    <p class="comment" th:text="${child.content}">
-                                        Can't agree more!
-                                    </p>
-                                    <div class="d-flex justify-content-between">
-                                        <div class="d-flex align-items-center">
-                                            <h5>
-                                                <a href="#" th:text="${child.createName}">EdChu</a>
-                                            </h5>
-                                            <p class="date time" th:datetime="${#dates.format(child.createTime,'yyyy-MM-dd HH:mm:ss')}">May 30, 1997</p>
-                                        </div>
-                                        <div class="reply-btn">
-                                            <span class="btn-reply" th:data-reply="${child.id}" th:data-name="${child.createName}" th:data-parent="${child.parentId}">Reply</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!--comment form-->
-                <div class="comment-form wow fadeIn animated">
-                    <div class="widget-header-2 position-relative mb-30">
-                        <h5 class="mt-5 mb-30">Leave a Reply</h5>
-                    </div>
-                    <form class="form-contact comment_form" method="post" id="commentForm">
-                        <span id="replyTo" class="col-12 js-hidden"><span id="replyName"></span><span class="ml-15 text-muted font-small cursor-pointer" id="clearReply">清除</span></span>
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="form-group">
-                                    <textarea class="form-control w-100" name="content" id="content" cols="30" rows="9" placeholder="Write Comment"></textarea>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <input class="form-control" name="createName" id="createName" type="text" placeholder="Name" th:value="${session.user} ? ${session.user.nickname}" th:disabled="${session.user} ? true : false">
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <input class="form-control" name="createEmail" id="createEmail" type="email" placeholder="Email" th:value="${session.user} ? ${session.user.email}" th:disabled="${session.user} ? true : false">
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="form-group">
-                                    <input class="form-control" name="createWebsite" id="createWebsite" type="text" placeholder="Website">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="js-hidden">
-                            <input class="form-control" name="articleId" id="articleId" th:value="${article.id}">
-                            <input class="form-control" name="replyId" id="replyId">
-                            <input class="form-control" name="parentId" id="parentId">
-                        </div>
-                        <div class="form-group">
-                            <button type="button" class="btn button button-contactForm" id="submit">Post Comment</button>
-                        </div>
-                    </form>
-                </div>
+                <div th:replace="components/comments :: comments"></div>
             </article>
         </div>
         <!--container-->

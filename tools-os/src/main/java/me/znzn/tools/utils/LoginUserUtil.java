@@ -91,9 +91,9 @@ public class LoginUserUtil {
             if ("user".equals(cookie.getName())) {
                 RedisTemplate redisTemplate = (RedisTemplate)SpringUtil.getBean("redisTemplate");
                 redisTemplate.delete(cookie.getValue());
-                request.getSession().removeAttribute("user");
             }
         }
+        request.getSession().removeAttribute("user");
     }
 
     public static Long getUserId() {

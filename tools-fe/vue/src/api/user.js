@@ -3,8 +3,8 @@ import request from '@/utils/request'
 export function login (data) {
   return request({
     url: '/wapi/user/login',
-    method: 'post',
-    data: data
+    method: 'get',
+    params: data
   })
 }
 
