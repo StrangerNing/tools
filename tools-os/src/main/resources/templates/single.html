@@ -7,11 +7,14 @@
     <title>[[${article.title}]] - 凑凑 - EdChu的个人博客</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="twitter:card" content="summary">
-    <meta property="og:image" th:content="${article.thumbPreview}" />
-    <meta property="og:title" th:content="${article.title}" />
-    <meta property="og:url" th:content="${#httpServletRequest.getRequestURL() +'?'+ #httpServletRequest.getQueryString() }" />
-    <meta property="og:description" th:content="'点击查看关于' + ${article.title} + '的内容'" />
+    <!--twtter分享-->
+    <meta property="twitter:url" th:content="${#httpServletRequest.getRequestURL() +'?'+ #httpServletRequest.getQueryString() }"/>
+    <meta name="twitter:title" th:content="${article.title}"/>
+    <meta name="twitter:description" th:content="'点击查看关于' + ${article.title} + '的内容'"/>
+    <meta name="twitter:site" th:content="${#httpServletRequest.getRequestURL() +'?'+ #httpServletRequest.getQueryString() }">
+    <meta name="twitter:card" content="summary_large_image"/>
+    <meta name="twitter:image" th:content="${article.thumbPreview}"/>
+
     <link rel="shortcut icon" type="image/x-icon" href="/static/imgs/theme/favicon.png">
     <!-- NewsBoard CSS  -->
     <link rel="stylesheet" href="/static/css/style.css">
@@ -55,7 +58,7 @@
                         <ul class="header-social-network d-inline-block list-inline mr-15">
                             <li class="list-inline-item text-muted"><span>Share this: </span></li>
                             <li class="list-inline-item"><a class="social-icon fb text-xs-center" target="_blank" href="#"><i class="elegant-icon social_facebook"></i></a></li>
-                            <li class="list-inline-item"><a class="social-icon tw text-xs-center" target="_blank" href="#"><i class="elegant-icon social_twitter "></i></a></li>
+                            <li class="list-inline-item"><a class="social-icon tw text-xs-center twitter-share-button" target="_blank" th:href="'https://twitter.com/share?text='+ ${article.title} + '&url=https://edchu.cn' + ${article.aliasHref}"><i class="elegant-icon social_twitter "></i></a></li>
                             <li class="list-inline-item"><a class="social-icon pt text-xs-center" target="_blank" href="#"><i class="elegant-icon social_pinterest "></i></a></li>
                         </ul>
                     </div>
