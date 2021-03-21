@@ -46,7 +46,7 @@
                     <article class="col-md-6 mb-40 wow fadeInUp  animated" th:each="article : ${articles}">
                         <div class="post-card-1 border-radius-10 hover-up">
                             <div class="post-thumb thumb-overlay img-hover-slide position-relative" th:style="'background-image: url(' + ${article.thumbPreview} + ')'">
-                                <a class="img-link" th:href="${article.alias}"></a>
+                                <a class="img-link" th:href="${article.aliasHref}"></a>
                                 <ul class="social-share">
                                     <li><a href="#"><i class="elegant-icon social_share"></i></a></li>
                                     <li><a class="fb" href="#" title="Share on Facebook" target="_blank"><i class="elegant-icon social_facebook"></i></a></li>
@@ -60,7 +60,7 @@
                                 </div>
                                 <div class="d-flex post-card-content">
                                     <h5 class="post-title mb-20 font-weight-900">
-                                        <a th:href="${article.alias}" th:text="${article.title}"></a>
+                                        <a th:href="${article.aliasHref}" th:text="${article.title}"></a>
                                     </h5>
                                     <div class="post-excerpt mb-25 font-small text-muted">
                                         <p>Graduating from a top accelerator or incubator can be as career-defining for a&nbsp;startup founder&nbsp;as an elite university diploma. The intensive programmes, which…</p>

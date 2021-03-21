@@ -60,7 +60,6 @@ public class UserServiceImpl implements UserService {
             BeanUtils.copyProperties(user, userInfo, "password");
             String token = UUID.randomUUID().toString();
             userInfo.setToken(token);
-            userInfo.setAvatar(CommonConstant.FILE_REQUEST_PREFIX + user.getAvatar());
             LoginUserUtil.login(userInfo);
             return userInfo;
         }

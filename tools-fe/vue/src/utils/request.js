@@ -60,7 +60,7 @@ service.interceptors.response.use(
     }
   },
   error => {
-    console.log('err' + error.response) // for debug
+    console.log(error.response.data.msg) // for debug
     let response = error.response.data
     if (response.status === 401) {
       MessageBox.confirm('无法找到登录信息，请重新登录', '确认登出', {
@@ -74,7 +74,7 @@ service.interceptors.response.use(
       })
     }
     Message({
-      message: error.response.data.message,
+      message: error.response.data.msg,
       type: 'error',
       duration: 5 * 1000
     })

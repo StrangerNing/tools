@@ -37,9 +37,13 @@
             $('body').toggleClass("open-search-form");
             $('.mega-menu-item').removeClass("open");
             $("html, body").animate({ scrollTop: 0 }, "slow");
+            $('#searchBtn').data('display', true)
+            $('#search').focus()
+
         });
         $('.search-close').on('click', function() {
             $('body').removeClass("open-search-form");
+            $('#searchBtn').data('display', false)
         });
     };
 

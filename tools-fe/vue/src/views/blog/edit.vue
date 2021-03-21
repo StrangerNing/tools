@@ -130,10 +130,72 @@
           <span id="article"></span>
         </div>
         <div class="page-content">
-          <el-button type="primary" @click="submit" :disabled="loading">发布</el-button>
+          <el-button type="primary" @click="openBeforePublish" :disabled="loading">发布</el-button>
         </div>
       </div>
     </el-form>
+    <el-dialog title="设置发布属性" :visible.sync="beforePublishVisible">
+      <el-form label-width="90px">
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="权限：">
+              <el-select v-model="article.permission" placeholder="请选择" size="small" clearable>
+                <el-option
+                  v-for="item in blogEnums.articlePermissionEnum"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="优先级：">
+              <el-input size="small" v-model="article.priority" clearable></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="允许评论：">
+              <el-select v-model="article.comment" placeholder="请选择" size="small" clearable>
+                <el-option
+                  v-for="item in blogEnums.commentLimitEnum"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="状态：">
+              <el-select v-model="article.status" size="small" clearable>
+                <el-option
+                  v-for="item in blogEnums.articleStatusEnum"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24" v-if="orderPublishVisible">
+            <el-form-item label="定时发布：">
+              <el-date-picker
+                size="small"
+                v-model="article.orderPublishTime"
+                type="datetime"
+                placeholder="选择日期时间">
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <div style="text-align: center">
+            <el-button type="warning" icon="el-icon-check" size="small" @click="submit">提交</el-button>
+          </div>
+        </el-row>
+      </el-form>
+    </el-dialog>
     <el-image-viewer v-if="showViewer"
                      :on-close="closeViewer"
                      :url-list="[article.thumbPreview]"></el-image-viewer>
@@ -146,6 +208,7 @@
   import {baseURL} from "../../utils/request";
   import ElImageViewer from 'element-ui/packages/image/src/image-viewer';
   import {delFileByName} from "../../api/file";
+  import blogEnums from "../constant/blogEnums";
 
   export default {
     name: "edit",
@@ -160,8 +223,15 @@
           markdown: null,
           thumb: '',
           thumbPreview: null,
-          categories: []
+          categories: [],
+          status: blogEnums.articleStatusEnum.getValueByFiledName('normal'),
+          permission: blogEnums.articlePermissionEnum.getValueByFiledName('all'),
+          priority: 10,
+          comment: blogEnums.commentLimitEnum.getValueByFiledName('enable'),
+          orderPublishTime: null
         },
+        orderPublishVisible: false,
+        blogEnums: blogEnums,
         loading: false,
         options: [],
         categoryOptions: [],
@@ -173,7 +243,8 @@
         wangEditor: null,
         showViewer: false,
         type: 1,
-        imgList: {}
+        imgList: {},
+        beforePublishVisible: false
       }
     },
     watch: {
@@ -185,6 +256,9 @@
           // this.article.markdown = this.wangEditor.txt.html()
           this.article.content = this.wangEditor.txt.html()
         }
+      },
+      'article.status': function (value) {
+        this.orderPublishVisible = value === blogEnums.articleStatusEnum.getValueByFiledName('delay');
       }
     },
     methods: {
@@ -308,6 +382,9 @@
       imgDel() {
         delete this.imgList[pos];
       },
+      openBeforePublish() {
+        this.beforePublishVisible = true
+      },
       submit() {
         this.loading = true
         if (this.article.editType === 2) {
@@ -413,6 +490,14 @@
 </script>
 
 <style scoped>
+  .el-select {
+    width: 100%;
+  }
+
+  .el-date-editor.el-input, .el-date-editor.el-input__inner {
+    width: 100%;
+  }
+
   .el-tag + .el-tag {
     margin-left: 10px;
   }

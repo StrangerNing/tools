@@ -66,7 +66,7 @@ public class Page implements Serializable {
         setTotalPage();
         setPageNumList();
         this.isFirstPage = currentPage == 1;
-        this.isLastPage = totalPage.equals(currentPage);
+        this.isLastPage = totalPage <= (currentPage);
     }
 
     public Integer getCurrentPage() {

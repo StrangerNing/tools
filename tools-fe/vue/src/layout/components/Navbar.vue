@@ -18,6 +18,11 @@
               首页
             </el-dropdown-item>
           </router-link>
+          <a href="https://edchu.cn">
+            <el-dropdown-item>
+              博客首页
+            </el-dropdown-item>
+          </a>
           <router-link to="/user/info">
             <el-dropdown-item>
               <span>编辑个人信息</span>

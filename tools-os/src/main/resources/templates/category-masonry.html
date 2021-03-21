@@ -46,7 +46,7 @@
                 <article class="grid-item col pb-50 wow fadeIn animated" th:each="article : ${articles}">
                     <div class="post-card-1 border-radius-10 hover-up">
                         <div class="post-thumb thumb-overlay img-hover-slide position-relative" th:style="'background-image: url(' + ${article.thumbPreview} + ')'">
-                            <a class="img-link" th:href="${article.alias}"></a>
+                            <a class="img-link" th:href="${article.aliasHref}"></a>
 <!--                            <span class="top-right-icon bg-success"><i class="elegant-icon icon_camera_alt"></i></span>-->
                             <ul class="social-share">
                                 <li><a href="#"><i class="elegant-icon social_share"></i></a></li>
@@ -61,7 +61,7 @@
                             </div>
                             <div class="d-flex post-card-content">
                                 <h5 class="post-title mb-20 font-weight-900">
-                                    <a th:href="${article.alias}" th:text="${article.title}"></a>
+                                    <a th:href="${article.aliasHref}" th:text="${article.title}"></a>
                                 </h5>
                                 <div class="entry-meta meta-1 float-left font-x-small text-uppercase">
                                     <span class="post-on time" th:datetime="${#dates.format(article.createTime,'yyyy-MM-dd HH:mm:ss')}"></span>

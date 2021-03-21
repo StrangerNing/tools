@@ -72,6 +72,10 @@ logging:
     path: @maven.log.path@
     name: tools.log
 
+lucene:
+  directory:
+    path: /usr/local/etc/lucene/blog
+
 #pagehelper:
 #  #标识是哪一种数据库
 #  auto-dialect: mysql

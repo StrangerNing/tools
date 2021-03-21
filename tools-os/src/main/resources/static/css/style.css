@@ -45,7 +45,7 @@ TABLE CONTENT
 	font-family: 'Crimson Text', serif;
 	font-family: 'Noto Sans JP', sans-serif;
 */
-@import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,700;1,400&family=Noto+Sans+JP:wght@400;500;700;900&display=swap');
+/*@import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,700;1,400&family=Noto+Sans+JP:wght@400;500;700;900&display=swap');*/
 :root{--color-mode:"light";--color-primary:#5869DA;--color-secondary:#2d3d8b;--color-success:#09815C;--color-danger:#e3363e;--color-warning:#e38836;--color-info:#4da7d4;--color-light:#f8f9f9;--color-grey:#f7f8f9;--color-dark:#000c2d;--color-muted:#687385;--color-white:#FFFFFF;--primary-border-color:#9b9b9b;--secondary-border-color:#f0f8ff;--mutted-border-color:#eaecee;--box-shadow-normal:0 10px 10px rgba(0,0,0,0.08);--box-shadow-hover:0 4px 60px 0 rgba(0,0,0,0.2);--button-shadow-color-normal:hsla(0,0%,42.4%,0.2);--button-shadow-color-hover:hsla(0,0%,42.4%,0.3);}
 
 /*Bootstrap color customize*/

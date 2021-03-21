@@ -51,7 +51,7 @@
                                         <div class="col-md-4">
                                             <div class="post-thumb position-relative border-radius-5">
                                                 <div class="img-hover-slide border-radius-5 position-relative" th:style="'background-image: url(' + ${article.thumbPreview} + ')'">
-                                                    <a class="img-link" th:href="${article.alias}"></a>
+                                                    <a class="img-link" th:href="${article.aliasHref}"></a>
                                                 </div>
                                                 <ul class="social-share">
                                                     <li><a href="#"><i class="elegant-icon social_share"></i></a></li>
@@ -67,7 +67,7 @@
                                                     <a th:each="category : ${article.categories}" th:href="${category.href}"><span class="post-cat text-uppercase" th:classappend="${category.color}" th:text="${category.name}"></span></a>
                                                 </div>
                                                 <h5 class="post-title font-weight-900 mb-20">
-                                                    <a th:href="${article.alias}" th:text="${article.title}"></a>
+                                                    <a th:href="${article.aliasHref}" th:text="${article.title}"></a>
 <!--                                                    <span class="post-format-icon"><i class="elegant-icon icon_star_alt"></i></span>-->
                                                 </h5>
                                                 <div class="entry-meta meta-1 float-left font-x-small text-uppercase">
@@ -102,14 +102,14 @@
                                         <li class="mb-30 wow fadeInUp animated" th:each="hot : ${hotArticles}">
                                             <div class="d-flex bg-white has-border p-25 hover-up transition-normal border-radius-5">
                                                 <div class="post-content media-body">
-                                                    <h6 class="post-title mb-15 text-limit-2-row font-medium"><a th:href="${hot.alias}" th:text="${hot.title}"></a></h6>
+                                                    <h6 class="post-title mb-15 text-limit-2-row font-medium"><a th:href="${hot.aliasHref}" th:text="${hot.title}"></a></h6>
                                                     <div class="entry-meta meta-1 float-left font-x-small text-uppercase">
                                                         <span class="post-on time" th:datetime="${#dates.format(hot.createTime,'yyyy-MM-dd HH:mm:ss')}"></span>
                                                         <span class="post-by has-dot" th:text="${hot.views} + ' views'"></span>
                                                     </div>
                                                 </div>
                                                 <div class="post-thumb post-thumb-80 d-flex ml-15 border-radius-5 img-hover-scale overflow-hidden">
-                                                    <a class="color-white" th:href="${hot.alias}">
+                                                    <a class="color-white" th:href="${hot.aliasHref}">
                                                         <img th:src="${hot.thumbPreview}" alt="">
                                                     </a>
                                                 </div>

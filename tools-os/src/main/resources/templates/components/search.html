@@ -12,16 +12,16 @@
                     <div class="row mb-20">
                         <div class="col-12 align-self-center main-search-form-cover m-auto">
                             <p class="text-center"><span class="search-text-bg">Search</span></p>
-                            <form action="#" class="search-header">
+                            <div class="search-header">
                                 <div class="input-group w-100">
-                                    <input type="text" class="form-control" placeholder="Search stories, places and people">
+                                    <input type="text" data-display="false" id="search" class="form-control" placeholder="Search stories, places and people">
                                     <div class="input-group-append">
-                                        <button class="btn btn-search bg-white" type="submit">
+                                        <button class="btn btn-search bg-white" id="searchBtn" type="button">
                                             <i class="elegant-icon icon_search"></i>
                                         </button>
                                     </div>
                                 </div>
-                            </form>
+                            </div>
                         </div>
                     </div>
                     <div class="row mt-80 text-center">
@@ -42,6 +42,22 @@
                 </div>
             </div>
         </div>
+        <script src="/static/js/vendor/jquery-1.12.4.min.js"></script>
+        <script>
+            $('#searchBtn').click(function () {
+              let search = $('#search').val()
+              if (search) {
+                window.location.href = '/search?search=' + search
+              }
+            })
+            $(document).keyup(function(event){
+              if ($('#searchBtn').data('display') === true) {
+                if (event.keyCode == 13) {
+                  $("#searchBtn").trigger("click");
+                }
+              }
+            });
+        </script>
     </div>
 </body>
 </html>

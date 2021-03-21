@@ -361,9 +361,6 @@
             <if test="comment != null">
                 comment = #{comment},
             </if>
-            <if test="views != null">
-                views = #{views},
-            </if>
             <if test="minutes != null">
                 minutes = #{minutes},
             </if>
@@ -392,10 +389,7 @@
                 version = version + 1,
             </if>
             <if test="thumb != null and '' != thumb">
-                thumb = #{thumb}
-            </if>
-            <if test="likes != null and '' != likes">
-                likes = #{likes}
+                thumb = #{thumb},
             </if>
         </set>
     </sql>

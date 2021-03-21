@@ -1,6 +1,7 @@
 package me.znzn.tools.utils;
 
 import cn.hutool.http.HtmlUtil;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author zhuzening
@@ -119,6 +120,9 @@ public class StringUtil {
     }
 
     public static Integer countHtmlWords(String html) {
+        if (StringUtils.isEmpty(html)) {
+            return 0;
+        }
         Integer count = StringUtil.countWords(HtmlUtil.cleanHtmlTag(html));
         int mins = count / 400;
         return Math.max(mins, 1);

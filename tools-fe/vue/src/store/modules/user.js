@@ -41,7 +41,7 @@ const actions = {
         commit('SET_TOKEN', data.token)
         commit('SET_NAME', data.username)
         // let avatar = data.avatar === undefined || data.avatar === null ? '@/assets/default_avatar.jpeg' : data.avatar
-        commit('SET_AVATAR', data.avatar)
+        commit('SET_AVATAR', data.avatarUrl)
         commit('SET_NICKNAME', data.nickname)
         store.dispatch('permission/generateRoutes', JSON.parse(data.roles)).then(e => router.addRoutes(e))
         setToken(data.token)
@@ -63,7 +63,7 @@ const actions = {
         }
 
         commit('SET_NAME', data.username)
-        commit('SET_AVATAR', data.avatar)
+        commit('SET_AVATAR', data.avatarUrl)
         commit('SET_NICKNAME', data.nickname)
         commit('SET_ROLES', data.roles)
         resolve(data)

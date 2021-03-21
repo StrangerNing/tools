@@ -60,7 +60,7 @@
                                 <article class="col-md-6 mb-40 wow fadeInUp  animated" th:each="article, stat : ${articles}" th:if="${stat.index < 2}">
                                     <div class="post-card-1 border-radius-10 hover-up">
                                         <div class="post-thumb thumb-overlay img-hover-slide position-relative" th:style="'background-image: url(' + ${article.thumbPreview} + ')'">
-                                            <a class="img-link" th:href="${article.alias}"></a>
+                                            <a class="img-link" th:href="${article.aliasHref}"></a>
                                             <ul class="social-share">
                                                 <li><a href="#"><i class="elegant-icon social_share"></i></a></li>
                                                 <li><a class="fb" href="#" title="Share on Facebook" target="_blank"><i class="elegant-icon social_facebook"></i></a></li>
@@ -74,7 +74,7 @@
                                             </div>
                                             <div class="d-flex post-card-content">
                                                 <h5 class="post-title mb-20 font-weight-900">
-                                                    <a th:href="${article.alias}" th:text="${article.title}"></a>
+                                                    <a th:href="${article.aliasHref}" th:text="${article.title}"></a>
                                                 </h5>
 <!--                                                <div class="post-excerpt mb-25 font-small text-muted">-->
 <!--                                                    <p>Graduating from a top accelerator or incubator can be as career-defining for a&nbsp;startup founder&nbsp;as an elite university diploma. The intensive programmes, which…</p>-->
@@ -98,7 +98,7 @@
                                     <div class="col-md-4">
                                         <div class="post-thumb position-relative border-radius-5">
                                             <div class="img-hover-slide border-radius-5 position-relative" th:style="'background-image: url(' + ${article.thumbPreview} + ')'">
-                                                <a class="img-link" th:href="${article.alias}"></a>
+                                                <a class="img-link" th:href="${article.aliasHref}"></a>
                                             </div>
                                             <ul class="social-share">
                                                 <li><a href="#"><i class="elegant-icon social_share"></i></a></li>
@@ -114,7 +114,7 @@
                                                 <a th:each="category : ${article.categories}" th:href="${category.href}"><span class="post-cat text-uppercase" th:classappend="${category.color}" th:text="${category.name}"></span></a>
                                             </div>
                                             <h5 class="post-title font-weight-900 mb-20">
-                                                <a th:href="${article.alias}" th:text="${article.title}"></a>
+                                                <a th:href="${article.aliasHref}" th:text="${article.title}"></a>
 <!--                                                <span class="post-format-icon"><i class="elegant-icon icon_star_alt"></i></span>-->
                                             </h5>
                                             <div class="entry-meta meta-1 float-left font-x-small text-uppercase">

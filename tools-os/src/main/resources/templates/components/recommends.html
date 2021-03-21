@@ -16,12 +16,12 @@
                     <li th:each="recommend, stat : ${recommends}" th:class="(${stat.index} eq ${#lists.size(recommends) - 1}) ? mb-10 : mb-30">
                         <div class="d-flex hover-up-2 transition-normal">
                             <div class="post-thumb post-thumb-80 d-flex mr-15 border-radius-5 img-hover-scale overflow-hidden">
-                                <a class="color-white" th:href="${recommend.alias}">
+                                <a class="color-white" th:href="${recommend.aliasHref}">
                                     <img th:src="${recommend.thumbPreview}" alt="" style="object-fit: cover">
                                 </a>
                             </div>
                             <div class="post-content media-body">
-                                <h6 class="post-title mb-15 text-limit-2-row font-medium"><a th:href="${recommend.alias}" th:text="${recommend.title}">Such a big cool guy</a></h6>
+                                <h6 class="post-title mb-15 text-limit-2-row font-medium"><a th:href="${recommend.aliasHref}" th:text="${recommend.title}">Such a big cool guy</a></h6>
                                 <div class="entry-meta meta-1 float-left font-x-small text-uppercase">
                                     <span class="post-on time" th:datetime="${#dates.format(recommend.createTime,'yyyy-MM-dd HH:mm:ss')}">30 MAY</span>
                                     <span class="post-by has-dot">[[${recommend.views}]] views</span>

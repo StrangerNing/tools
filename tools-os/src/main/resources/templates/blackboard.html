@@ -139,6 +139,12 @@
     <!-- End Footer -->
     <div class="dark-mark"></div>
     <!-- Vendor JS-->
+    <script src="/static/js/vendor/timeago.js"></script>
+    <script>
+      // 自动更新
+      var timeagoInstance = timeago();// 实例
+      timeagoInstance.render(document.querySelectorAll('.time'),'zh_CN');
+    </script>
     <script src="/static/js/vendor/modernizr-3.5.0.min.js"></script>
     <script src="/static/js/vendor/jquery-1.12.4.min.js"></script>
     <script src="/static/js/vendor/popper.min.js"></script>

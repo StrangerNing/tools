@@ -1,6 +1,9 @@
 package me.znzn.tools.module.blog.controller;
 
 import cn.hutool.core.collection.CollectionUtil;
+import lombok.extern.slf4j.Slf4j;
+import me.znzn.tools.common.component.Page;
+import me.znzn.tools.common.component.ResultListData;
 import me.znzn.tools.common.component.ResultPageUtil;
 import me.znzn.tools.common.constant.CommonConstant;
 import me.znzn.tools.common.exception.NotFoundException;
@@ -15,6 +18,7 @@ import me.znzn.tools.module.blog.entity.po.Tag;
 import me.znzn.tools.module.blog.entity.vo.ArticleVo;
 import me.znzn.tools.module.blog.service.CategoryService;
 import me.znzn.tools.module.blog.service.FeBlogService;
+import me.znzn.tools.module.blog.service.LuceneService;
 import me.znzn.tools.module.blog.service.TagService;
 import me.znzn.tools.module.user.entity.vo.UserInfoVO;
 import me.znzn.tools.utils.LoginUserUtil;
@@ -31,6 +35,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -38,6 +43,7 @@ import java.util.List;
  * @version 1.0
  * @since 2021/2/25
  */
+@Slf4j
 @Controller
 public class FeBlogController {
 
@@ -47,6 +53,8 @@ public class FeBlogController {
     private TagService tagService;
     @Resource
     private CategoryService categoryService;
+    @Resource
+    private LuceneService luceneService;
 
     @GetMapping("/")
     public String index(Model model) {
@@ -189,6 +197,26 @@ public class FeBlogController {
             model.addAttribute("categories", categoryService.searchCategory(new CategoryForm()));
             model.addAttribute("hotTags", tagService.hotTags(10));
         }
+    }
+
+    @GetMapping("/search")
+    public String search(Model model,
+                         @RequestParam(name = "search", required = false) String search,
+                         @RequestParam(name = "currentPage", required = false) Integer currentPage) {
+        if (StringUtils.isNotEmpty(search)) {
+            ArticleForm articleForm = new ArticleForm();
+            articleForm.setContent(search);
+            articleForm.setCurrentPage(currentPage == null ? 1 : currentPage);
+            articleForm.setLimit(10);
+            ResultListData result = luceneService.search(articleForm);
+            model.addAttribute("list", result);
+            model.addAttribute("search", search);
+            model.addAttribute("pageInfo", new Page(result.getTotalCount(), result.getCurrentPage(), 10));
+            model.addAttribute("href", "/search?search=" + search + "&currentPage=");
+            getHotArticles(model, (List<ArticleVo>) result.getList());
+        }
+        model.addAttribute("hotTags", tagService.hotTags(10));
+        return "page-search";
     }
 
     @GetMapping("/login")

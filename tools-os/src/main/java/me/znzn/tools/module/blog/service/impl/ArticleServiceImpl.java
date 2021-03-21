@@ -11,6 +11,7 @@ import me.znzn.tools.module.blog.entity.vo.ArticleVo;
 import me.znzn.tools.module.blog.entity.vo.CategoryVo;
 import me.znzn.tools.module.blog.mapper.*;
 import me.znzn.tools.module.blog.service.ArticleService;
+import me.znzn.tools.module.blog.service.LuceneService;
 import me.znzn.tools.module.user.entity.vo.UserInfoVO;
 import me.znzn.tools.utils.SpringUtil;
 import me.znzn.tools.utils.StringUtil;
@@ -51,6 +52,9 @@ public class ArticleServiceImpl implements ArticleService {
     @Resource
     private ArticleCategoryMapper articleCategoryMapper;
 
+    @Resource
+    private LuceneService luceneService;
+
     @Override
     public Boolean addArticle(ArticleVo articleVo, UserInfoVO loginUser) {
         Article article = new Article();
@@ -72,6 +76,8 @@ public class ArticleServiceImpl implements ArticleService {
         saveArticleCategory(articleVo.getCategories(), id);
 
         saveMarkdown(articleVo, id);
+
+        luceneService.addDocument(articleVo);
         return Boolean.TRUE;
     }
 
@@ -127,8 +133,15 @@ public class ArticleServiceImpl implements ArticleService {
         articleCategoryMapper.deleteByProperty(deleteCategories);
 
         saveArticleTag(articleVo.getTags(), id);
+        saveArticleCategory(articleVo.getCategories(), id);
 
         saveMarkdown(articleVo, id);
+
+        if (!ArticleStatusEnum.NORMAL.getIndex().equals(articleVo.getStatus())) {
+            luceneService.deleteDocument(articleVo);
+        } else {
+            luceneService.updateDocument(articleVo);
+        }
         return Boolean.TRUE;
     }
 
@@ -222,5 +235,8 @@ public class ArticleServiceImpl implements ArticleService {
         if (!count.equals(1)) {
             throw new BusinessException("删除失败，文章可能已被其他人修改，请刷新后重试");
         }
+        ArticleVo del = new ArticleVo();
+        del.setId(id);
+        luceneService.deleteDocument(del);
     }
 }

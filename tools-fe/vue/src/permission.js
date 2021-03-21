@@ -74,7 +74,7 @@ router.beforeEach(async (to, from, next) => {
     } else {
       console.log('前往登录', from, to)
       if (to.query && to.query.ticket) {
-        login({ticket : to.query.ticket}).then(res => {
+        await login({ticket : to.query.ticket}).then(res => {
           setToken(res.data.token)
         })
         next(to.query.redirect ? to.query.redirect : '/')
