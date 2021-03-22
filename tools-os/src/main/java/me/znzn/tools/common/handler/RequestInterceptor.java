@@ -24,6 +24,10 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         Object isLogin = request.getSession().getAttribute("isLogin");
+        String dontLogin = request.getParameter("login");
+        if (StringUtils.isNotEmpty(dontLogin)) {
+            return true;
+        }
         String ticket = request.getParameter("ticket");
         if (StringUtils.isNotEmpty(ticket)) {
             LoginUserUtil.login(ticket);
@@ -35,7 +39,7 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
         if (user == null) {
             request.getSession().setAttribute("isLogin", 1);
             String url ="";
-            url = request.getScheme() +"://" + request.getServerName()
+            url =  "https://" + request.getServerName()
                     +":" +request.getServerPort()
                     + request.getServletPath();
             if (request.getQueryString() !=null){
