@@ -40,7 +40,6 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
             request.getSession().setAttribute("isLogin", 1);
             String url ="";
             url =  "https://" + request.getServerName()
-                    +":" +request.getServerPort()
                     + request.getServletPath();
             if (request.getQueryString() !=null){
                 url +="?" + request.getQueryString();
