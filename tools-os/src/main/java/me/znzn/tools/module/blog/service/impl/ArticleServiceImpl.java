@@ -22,10 +22,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 服务接口实现
@@ -77,6 +74,7 @@ public class ArticleServiceImpl implements ArticleService {
         saveMarkdown(articleVo, id);
 
         articleVo.setId(id);
+        articleVo.setCreateTime(article.getCreateTime());
         luceneService.addDocument(articleVo);
         return Boolean.TRUE;
     }
