@@ -58,12 +58,11 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public Boolean addArticle(ArticleVo articleVo, UserInfoVO loginUser) {
         Article article = new Article();
+        articleVo.setAuthor(loginUser.getNickname());
+        articleVo.setMinutes(StringUtil.countHtmlWords(articleVo.getContent()));
         BeanUtils.copyProperties(articleVo, article);
-        loginUser.setCreateUser(article);
         setDefaultProps(article);
-        article.setAuthor(loginUser.getNickname());
-
-        article.setMinutes(StringUtil.countHtmlWords(articleVo.getContent()));
+        loginUser.setCreateUser(article);
 
         Long result = articleMapper.insertByProperty(article);
         if (!result.equals(1L)) {
@@ -77,6 +76,7 @@ public class ArticleServiceImpl implements ArticleService {
 
         saveMarkdown(articleVo, id);
 
+        articleVo.setId(id);
         luceneService.addDocument(articleVo);
         return Boolean.TRUE;
     }
