@@ -127,7 +127,7 @@
                                 <ul class="social-share">
                                     <li><a href="#"><i class="elegant-icon social_share"></i></a></li>
                                     <li class="list-inline-item"><a class="bilibili" href="https://space.bilibili.com/10641577" target="_blank" title="Bilibili"><img src="/static/imgs/icons/bilibili.svg"></a></li>
-                                    <li class="list-inline-item"><a class="tw twitter-share-button" href="https://twitter.com/intent/tweet" target="_blank"><i class="elegant-icon social_twitter"></i></a></li>
+                                    <li class="list-inline-item"><a class="tw twitter-share-button" th:href="'https://twitter.com/share?&text='+ ${last.title} + '&url=https://edchu.cn' + ${last.aliasHref} + '?login=false'" target="_blank"><i class="elegant-icon social_twitter"></i></a></li>
                                     <li class="list-inline-item"><a class="ig" href="https://www.instagram.com/edchu_cn/" target="_blank" title="Instagram"><i class="elegant-icon social_instagram"></i></a></li>
                                 </ul>
                             </div>

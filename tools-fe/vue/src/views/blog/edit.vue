@@ -25,6 +25,11 @@
           </el-form-item>
         </el-row>
         <el-row>
+          <el-form-item label="别名：">
+            <el-input v-model="article.alias"></el-input>
+          </el-form-item>
+        </el-row>
+        <el-row>
           <el-form-item label="分类：">
             <el-tag
               :key="category.name"
@@ -218,6 +223,7 @@
         article: {
           editType: 2,
           title: '',
+          alias: '',
           tags: [],
           content: '',
           markdown: null,

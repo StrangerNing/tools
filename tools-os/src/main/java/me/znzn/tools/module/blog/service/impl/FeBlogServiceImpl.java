@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Service
-public class FeBlogServiceImpl<x> implements FeBlogService {
+public class FeBlogServiceImpl implements FeBlogService {
 
     @Resource
     private ArticleMapper articleMapper;
@@ -162,7 +162,7 @@ public class FeBlogServiceImpl<x> implements FeBlogService {
     @Scheduled(fixedRate = 60000)
     public void cacheViewsPersistent() {
         redisTemplate.setValueSerializer(new GenericToStringSerializer<Long>(Long.class));
-        Long version = (Long)redisTemplate.opsForValue().increment(BlogRedisConstant.VIEW_CACHE_VERSION) - 1;
+        Long version = redisTemplate.opsForValue().increment(BlogRedisConstant.VIEW_CACHE_VERSION) - 1;
 
         Set<Long> articleIds = redisTemplate.opsForSet().members(BlogRedisConstant.VIEW_CACHE_PREFIX + version);
         redisTemplate.delete(BlogRedisConstant.VIEW_CACHE_PREFIX + version);
