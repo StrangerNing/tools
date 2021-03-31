@@ -61,3 +61,10 @@ export function uploadFile(data) {
     data: data
   })
 }
+
+export function refreshIndex() {
+  return request({
+    url: '/index/refresh',
+    method: 'get'
+  })
+}

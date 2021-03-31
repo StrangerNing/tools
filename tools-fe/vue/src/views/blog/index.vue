@@ -121,6 +121,7 @@
         <el-button size="small" type="primary" @click="edit" icon="el-icon-edit" :disabled="!currentRowId">编辑</el-button>
         <el-button size="small" type="primary" @click="preview" icon="el-icon-s-promotion" :disabled="!currentRowId">预览</el-button>
         <el-button size="small" type="danger" @click="deleteArticle" icon="el-icon-delete" :disabled="deleteButtonDisable">删除</el-button>
+        <el-button size="small" type="primary" @click="refreshIndex" icon="el-icon-refresh">刷新索引</el-button>
       </el-row>
     </div>
     <div class="page-content">
@@ -205,7 +206,7 @@
 </template>
 
 <script>
-  import {deleteArticle, list, searchCategory, searchTag} from "../../api/blog";
+  import {deleteArticle, list, refreshIndex, searchCategory, searchTag} from "../../api/blog";
   import blogEnums from "../constant/blogEnums";
   import "mavon-editor/dist/css/index.css"
 
@@ -264,6 +265,13 @@
           if (res.status === 1) {
             this.$message.success('删除成功')
             this.search()
+          }
+        })
+      },
+      refreshIndex() {
+        refreshIndex().then(res => {
+          if (res.status === 1) {
+            this.$message.success('刷新成功')
           }
         })
       },

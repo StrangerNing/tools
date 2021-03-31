@@ -56,4 +56,10 @@ public class ArticleController {
         return ResultPageUtil.success();
     }
 
+    @GetMapping("/index/refresh")
+    public ResponseEntity refreshIndex() {
+        articleService.refreshIndex();
+        return ResultPageUtil.success();
+    }
+
 }

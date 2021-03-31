@@ -241,4 +241,9 @@ public class ArticleServiceImpl implements ArticleService {
         del.setId(id);
         luceneService.deleteDocument(del);
     }
+
+    @Override
+    public void refreshIndex() {
+        luceneService.createIndex();
+    }
 }

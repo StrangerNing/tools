@@ -60,4 +60,9 @@ public interface ArticleService {
      * @param id
      */
     void deleteArticle(Long id);
+
+    /**
+     * 刷新索引
+     */
+    void refreshIndex();
 }
