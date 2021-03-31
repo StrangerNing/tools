@@ -64,7 +64,7 @@ export function uploadFile(data) {
 
 export function refreshIndex() {
   return request({
-    url: '/wapi/blog/index/refresh',
+    url: '/wapi/blog/article/index/refresh',
     method: 'get'
   })
 }
