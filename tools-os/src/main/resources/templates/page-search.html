@@ -54,12 +54,7 @@
                                                 <div class="img-hover-slide border-radius-5 position-relative" th:style="'background-image: url(' + ${article.thumbPreview} + ')'">
                                                     <a class="img-link" th:href="${article.aliasHref}"></a>
                                                 </div>
-                                                <ul class="social-share">
-                                                    <li><a href="#"><i class="elegant-icon social_share"></i></a></li>
-                                                    <li><a class="fb" href="#" title="Share on Facebook" target="_blank"><i class="elegant-icon social_facebook"></i></a></li>
-                                                    <li><a class="tw" href="#" target="_blank" title="Tweet now"><i class="elegant-icon social_twitter"></i></a></li>
-                                                    <li><a class="pt" href="#" target="_blank" title="Pin it"><i class="elegant-icon social_pinterest"></i></a></li>
-                                                </ul>
+                                                <ul th:replace="category-list :: socialShare" class="social-share"></ul>
                                             </div>
                                         </div>
                                         <div class="col-md-8 align-self-center">
@@ -76,7 +71,7 @@
                                                 </div>
                                                 <div class="entry-meta meta-1 float-left font-x-small text-uppercase">
                                                     <span class="post-on time" th:datetime="${#dates.format(article.createTime,'yyyy-MM-dd HH:mm:ss')}"></span>
-                                                    <span class="time-reading has-dot">[[${article.minutes}]] mins read</span>
+                                                    <span class="time-reading has-dot">[[${article.minutes}]] 字</span>
                                                 </div>
                                             </div>
                                         </div>

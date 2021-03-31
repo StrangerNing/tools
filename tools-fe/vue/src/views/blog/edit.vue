@@ -7,17 +7,31 @@
       </div>
       <div>
         <el-row>
-          <el-form-item label="编辑器：">
-            <el-switch
-              v-model="article.editType"
-              active-color="#13ce66"
-              inactive-color="#409eff"
-              active-text="markdown"
-              inactive-text="html"
-              :active-value="1"
-              :inactive-value="2">
-            </el-switch>
-          </el-form-item>
+          <el-col :xs="24" :sm="12" :md="8" :lg="6" v-if="article.type !== blogEnums.articleTypeEnum.getValueByFiledName('images')">
+            <el-form-item label="编辑器：">
+              <el-switch
+                v-model="article.editType"
+                active-color="#13ce66"
+                inactive-color="#409eff"
+                active-text="markdown"
+                inactive-text="html"
+                :active-value="1"
+                :inactive-value="2">
+              </el-switch>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="8" :lg="6">
+            <el-form-item label="文章样式：">
+              <el-select v-model="article.type" size="small">
+                <el-option
+                  v-for="item in blogEnums.articleTypeEnum"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
         </el-row>
         <el-row>
           <el-form-item label="标题：">
@@ -60,7 +74,7 @@
                 :value="item">
               </el-option>
             </el-select>
-            <el-button v-else class="button-new-tag" size="small" @click="showCategoryInput">+ New Tag</el-button>
+            <el-button v-else class="button-new-tag" size="small" @click="showCategoryInput">+ 添加分类</el-button>
           </el-form-item>
         </el-row>
         <el-row>
@@ -94,14 +108,14 @@
                 :value="item">
               </el-option>
             </el-select>
-            <el-button v-else class="button-new-tag" size="small" @click="showTagInput">+ New Tag</el-button>
+            <el-button v-else class="button-new-tag" size="small" @click="showTagInput">+ 添加标签</el-button>
           </el-form-item>
         </el-row>
         <el-row>
 
         </el-row>
         <el-row>
-          <el-col :span="6">
+          <el-col :span="6" v-if="article.type !== blogEnums.articleTypeEnum.getValueByFiledName('images')">
             <el-form-item label="封面：">
               <el-button-group v-if="article.thumb">
                 <el-button type="primary" size="small" @click="previewThumb">预览</el-button>
@@ -128,11 +142,25 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <div v-if="article.editType === 1">
-          <mavon-editor ref="md" v-model="article.markdown" @change="mavonEditorChange" @imgAdd="imgAdd" @imgDel="imgDel"/>
+        <div v-if="article.type !== blogEnums.articleTypeEnum.getValueByFiledName('images')">
+          <div v-if="article.editType === 1">
+            <mavon-editor ref="md" v-model="article.markdown" @change="mavonEditorChange" @imgAdd="imgAdd" @imgDel="imgDel"/>
+          </div>
+          <div v-else>
+            <span id="article"></span>
+          </div>
         </div>
         <div v-else>
-          <span id="article"></span>
+          <el-upload
+            :action="uploadUrl"
+            list-type="picture-card"
+            :on-success="handleImagesSuccess"
+            :on-preview="handleImagesPreview"
+            :on-remove="handleImagesRemove"
+            :file-list="images"
+            with-credentials>
+          <i class="el-icon-plus"></i>
+          </el-upload>
         </div>
         <div class="page-content">
           <el-button type="primary" @click="openBeforePublish" :disabled="loading">发布</el-button>
@@ -203,7 +231,8 @@
     </el-dialog>
     <el-image-viewer v-if="showViewer"
                      :on-close="closeViewer"
-                     :url-list="[article.thumbPreview]"></el-image-viewer>
+                     :initialIndex="viewerIndex"
+                     :url-list="previewList"></el-image-viewer>
   </div>
 </template>
 
@@ -221,6 +250,7 @@
     data() {
       return {
         article: {
+          type:1,
           editType: 2,
           title: '',
           alias: '',
@@ -250,7 +280,10 @@
         showViewer: false,
         type: 1,
         imgList: {},
-        beforePublishVisible: false
+        beforePublishVisible: false,
+        previewList: [],
+        viewerIndex: 0,
+        images:[]
       }
     },
     watch: {
@@ -265,6 +298,9 @@
       },
       'article.status': function (value) {
         this.orderPublishVisible = value === blogEnums.articleStatusEnum.getValueByFiledName('delay');
+      },
+      'article.type': function (value) {
+        this.article.editType = value === blogEnums.articleTypeEnum.getValueByFiledName('images') ? null : 1
       }
     },
     methods: {
@@ -393,9 +429,15 @@
       },
       submit() {
         this.loading = true
-        if (this.article.editType === 2) {
+        if (this.article.editType !== null && this.article.editType === 2) {
           this.article.content = this.wangEditor.txt.html()
           this.article.markdown = null
+        }
+        if (this.article.type === blogEnums.articleTypeEnum.getValueByFiledName('images')) {
+          if (this.images && this.images.length > 0) {
+            this.article.content = JSON.stringify(this.images.map(item => {return item.name}))
+            this.article.thumb = this.images[0].name
+          }
         }
         if (this.type === 1) {
           add(this.article).then(res => {
@@ -424,6 +466,20 @@
         }
 
       },
+      handleImagesPreview(file) {
+        this.viewerIndex = this.images.findIndex(item => item.url === file.url)
+        document.body.style.overflow = 'hidden'
+        this.showViewer = true
+        this.previewList = this.images.map(item => {return item.url})
+      },
+      handleImagesRemove(file, fileList) {
+        console.log(fileList)
+        this.images = this.images.filter(item => item.url !== file.url)
+      },
+      handleImagesSuccess(response, file, fileList) {
+        this.$message.success('上传成功')
+        this.images.push({name: response.data.name, url: file.url})
+      },
       handleThumbSuccess(response, file, fileList) {
         this.$message.success('上传成功')
         this.article.thumb = response.data.name
@@ -435,10 +491,12 @@
       closeViewer() {
         document.body.style.overflow = null
         this.showViewer = false
+        this.viewerIndex = 0
       },
       previewThumb() {
         document.body.style.overflow = 'hidden'
         this.showViewer = true
+        this.previewList = [this.article.thumbPreview]
       },
       deleteThumb() {
         delFileByName({name: this.article.thumb}).then(res => {
@@ -486,6 +544,11 @@
           this.type = 2
           if (this.article.editType === 2) {
             this.openWangEditor()
+          }
+          if (this.article.type === blogEnums.articleTypeEnum.getValueByFiledName('images')) {
+            let prefix = this.article.ossPrefix
+            let images = JSON.parse(this.article.content)
+            this.images = images.map(item => {return {url: prefix + item, name: item}})
           }
         })
       } else {

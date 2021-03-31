@@ -11,6 +11,7 @@ import me.znzn.tools.module.oss.entity.vo.FileReturnVo;
 import me.znzn.tools.module.oss.service.FileService;
 import me.znzn.tools.module.user.entity.vo.UserInfoVO;
 import me.znzn.tools.utils.LoginUserUtil;
+import me.znzn.tools.utils.MultipartFileUtil;
 import me.znzn.tools.utils.UploadFileUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.ResponseEntity;
@@ -64,48 +65,33 @@ public class UploadController {
 
     @PostMapping("/upload/avatar")
     public ResponseEntity avatar(@RequestParam("file") MultipartFile file) {
-        try {
-            String type = FileTypeUtil.getType(file.getInputStream());
-            if (!"jpg".equals(type) && !"png".equals(type)) {
-                return ResultPageUtil.error("只能上传\"jpg\"、\"png\"格式的图片");
-            }
-            FileReturnVo fileReturnVo = insertFile(file, OssFileTypeEnum.AVATAR, Long.valueOf(CommonConstant.OSS_URL_EXPIRATION));
-            return ResultPageUtil.success(fileReturnVo);
-        } catch (IOException io) {
-            log.error("获取文件错误，IO异常");
-            return ResultPageUtil.error("获取文件错误，IO异常");
+        String type = MultipartFileUtil.getExtFilename(file);
+        if (!".jpg".equals(type) && !".png".equals(type)) {
+            return ResultPageUtil.error("只能上传\"jpg\"、\"png\"格式的图片");
         }
+        FileReturnVo fileReturnVo = insertFile(file, OssFileTypeEnum.AVATAR, Long.valueOf(CommonConstant.OSS_URL_EXPIRATION));
+        return ResultPageUtil.success(fileReturnVo);
     }
 
     @PostMapping("/upload/image")
     public ResponseEntity image(@RequestParam("file") MultipartFile file) {
-        try {
-            String type = FileTypeUtil.getType(file.getInputStream());
-            if (!"jpg".equals(type) && !"png".equals(type) && !"gif".equals(type) && !"bmp".equals(type)) {
-                return ResultPageUtil.error("只能上传图片");
-            }
-            FileReturnVo fileReturnVo = insertFile(file, OssFileTypeEnum.IMAGE, Long.valueOf(CommonConstant.OSS_URL_EXPIRATION));
-            return ResultPageUtil.success(fileReturnVo);
-        } catch (IOException io) {
-            log.error("获取文件错误，IO异常");
-            return ResultPageUtil.error("获取文件错误，IO异常");
+        String type = MultipartFileUtil.getExtFilename(file);
+        if (!".jpg".equals(type) && !".png".equals(type) && !".gif".equals(type) && !".bmp".equals(type)) {
+            return ResultPageUtil.error("只能上传图片");
         }
+        FileReturnVo fileReturnVo = insertFile(file, OssFileTypeEnum.IMAGE, Long.valueOf(CommonConstant.OSS_URL_EXPIRATION));
+        return ResultPageUtil.success(fileReturnVo);
     }
 
     @PostMapping("/upload/blog")
     public ResponseEntity blog(@RequestParam("file") MultipartFile file) {
-        try {
-            String type = FileTypeUtil.getType(file.getInputStream());
-            if (!"jpg".equals(type) && !"png".equals(type) && !"gif".equals(type) && !"bmp".equals(type)
-                && !"mp4".equals(type) && !"mpg".equals(type) && !"wmv".equals(type)) {
-                return ResultPageUtil.error("只能上传图片和视频");
-            }
-            FileReturnVo fileReturnVo = insertFile(file, OssFileTypeEnum.BLOG, Long.valueOf(CommonConstant.OSS_URL_EXPIRATION));
-            return ResultPageUtil.success(fileReturnVo);
-        } catch (IOException io) {
-            log.error("获取文件错误，IO异常");
-            return ResultPageUtil.error("获取文件错误，IO异常");
+        String type = MultipartFileUtil.getExtFilename(file);
+        if (!".jpg".equals(type) && !".png".equals(type) && !".gif".equals(type) && !".bmp".equals(type)
+                && !".mp4".equals(type) && !".mpg".equals(type) && !".wmv".equals(type)) {
+            return ResultPageUtil.error("只能上传图片和视频");
         }
+        FileReturnVo fileReturnVo = insertFile(file, OssFileTypeEnum.BLOG, Long.valueOf(CommonConstant.OSS_URL_EXPIRATION));
+        return ResultPageUtil.success(fileReturnVo);
     }
 
     @PostMapping("/upload/file")

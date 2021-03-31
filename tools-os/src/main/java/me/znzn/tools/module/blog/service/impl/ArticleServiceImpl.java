@@ -2,6 +2,7 @@ package me.znzn.tools.module.blog.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.http.HtmlUtil;
+import cn.hutool.json.JSONUtil;
 import me.znzn.tools.common.constant.CommonConstant;
 import me.znzn.tools.common.exception.BusinessException;
 import me.znzn.tools.module.blog.entity.enums.*;
@@ -13,9 +14,11 @@ import me.znzn.tools.module.blog.mapper.*;
 import me.znzn.tools.module.blog.service.ArticleService;
 import me.znzn.tools.module.blog.service.LuceneService;
 import me.znzn.tools.module.user.entity.vo.UserInfoVO;
+import me.znzn.tools.utils.JsonUtils;
 import me.znzn.tools.utils.SpringUtil;
 import me.znzn.tools.utils.StringUtil;
 import me.znzn.tools.utils.UploadFileUtil;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.BeanUtils;
@@ -57,6 +60,7 @@ public class ArticleServiceImpl implements ArticleService {
         Article article = new Article();
         articleVo.setAuthor(loginUser.getNickname());
         articleVo.setMinutes(StringUtil.countHtmlWords(articleVo.getContent()));
+
         BeanUtils.copyProperties(articleVo, article);
         setDefaultProps(article);
         loginUser.setCreateUser(article);

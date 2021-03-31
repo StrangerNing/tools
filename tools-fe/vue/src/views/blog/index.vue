@@ -117,6 +117,7 @@
     </div>
     <div class="page-content">
       <el-row>
+        <el-button size="small" type="primary" @click="create" icon="el-icon-plus">新建</el-button>
         <el-button size="small" type="primary" @click="edit" icon="el-icon-edit" :disabled="!currentRowId">编辑</el-button>
         <el-button size="small" type="primary" @click="preview" icon="el-icon-s-promotion" :disabled="!currentRowId">预览</el-button>
         <el-button size="small" type="danger" @click="deleteArticle" icon="el-icon-delete" :disabled="deleteButtonDisable">删除</el-button>
@@ -239,6 +240,9 @@
         this.params.currentPage = 1
         this.search()
       },
+      create() {
+        this.$router.push({name: 'addArticle'})
+      },
       edit() {
         this.$router.push({name: 'editArticle', query: {id: this.currentRowId}})
       },
@@ -249,6 +253,10 @@
       },
       insertHtml() {
         console.log(this.$refs.preview)
+        if (this.currentRow.type === blogEnums.articleTypeEnum.getValueByFiledName('images')) {
+          this.$refs['preview'].innerHTML = '<p>图片模式不支持预览</p>'
+          return
+        }
         this.$refs['preview'].innerHTML = this.currentRow.content
       },
       deleteArticle() {

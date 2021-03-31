@@ -1,5 +1,6 @@
 package me.znzn.tools.common.conf;
 
+import com.google.common.collect.Lists;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -46,7 +47,7 @@ public class CorsConfig {
         config.addAllowedOrigin("http://localhost:81");
         // 如果要限制 HEADER 或 METHOD 请自行更改
         config.addAllowedHeader("*");
-        config.addAllowedMethod("*");
+        config.setAllowedMethods(Lists.newArrayList("PUT","POST","GET","DELETE","OPTIONS"));
         source.registerCorsConfiguration("/**", config);
         FilterRegistrationBean bean = new FilterRegistrationBean(new CorsFilter(source));
         // 这个顺序很重要哦，为避免麻烦请设置在最前

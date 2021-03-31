@@ -241,7 +241,7 @@ button.no-play{border:none;background:none;padding:0;font-weight:500;line-height
 .sidebar-inner{padding:30px;display:table;height:100%;}
 .dark-mark{opacity:0;visibility:hidden;position:fixed;top:0;left:0;z-index:1003;width:100%;height:100%;background-color:rgba(0,0,0,0.55);-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;-webkit-transition:visibility 0s linear .3s,opacity .3s ease,-webkit-transform .3s ease;    /* transition: visibility 0s linear .3s,opacity .3s ease,-webkit-transform .3s ease; */	/* transition: visibility 0s linear .3s,transform .3s ease,opacity .3s ease; */
 transition:visibility 0s linear .3s,transform .3s ease,opacity .3s ease,-webkit-transform .3s ease;}
-.canvas-opened .dark-mark{opacity:1;visibility:visible;-webkit-transition:opacity .3s ease,-webkit-transform .3s ease;transition:opacity .3s ease,-webkit-transform .3s ease;transition:transform .3s ease,opacity .3s ease;transition:transform .3s ease,opacity .3s ease,-webkit-transform .3s ease;}
+.canvas-opened .dark-mark,.dark-mark-display {opacity:1;visibility:visible;-webkit-transition:opacity .3s ease,-webkit-transform .3s ease;transition:opacity .3s ease,-webkit-transform .3s ease;transition:transform .3s ease,opacity .3s ease;transition:transform .3s ease,opacity .3s ease,-webkit-transform .3s ease;}
 
 /*Search form*/
 body.open-search-form{overflow:hidden;}
@@ -249,7 +249,7 @@ header .search-icon .ti-close,
 .open-search-form header .search-icon .ti-search{display:none;}
 .open-search-form header .search-icon .ti-close{display:inline;}
 .main-search-form{transform:scaleY(0);height:0px;width:100%;}
-.open-search-form .main-search-form{overflow:hidden;transition:transform 0.2s ease-in-out;height:100vh;transform:scaleY(1);transform-origin:top;position:absolute;background:#fff;z-index:2;}
+.open-search-form .main-search-form{overflow:hidden;transition:transform 0.2s ease-in-out;height:100vh;transform:scaleY(1);transform-origin:top;position:absolute;background:#fff;z-index:5;}
 .search-text-bg{font-size:80px;text-transform:uppercase;opacity:0.1;}
 .main-search-form-cover{max-width:800px;}
 .search-header{border-bottom-width:3px;border-bottom-style:solid;border-bottom-color:var(--color-muted);font-style:italic;}
@@ -623,3 +623,6 @@ pre{border:1px solid #eee;font-size:1em;line-height:1.8;margin:15px 0;max-width:
 	}
 }
 
+#content img {
+	cursor: pointer;
+}

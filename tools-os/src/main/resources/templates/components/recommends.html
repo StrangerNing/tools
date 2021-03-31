@@ -6,7 +6,7 @@
 </head>
 <body>
     <div th:fragment="recommends">
-        <div class="single-more-articles border-radius-5" th:if="${recommends}">
+        <div class="single-more-articles border-radius-5" th:if="${recommends} and ${#lists.size(recommends)} > 0">
             <div class="widget-header-2 position-relative mb-30">
                 <h5 class="mt-5 mb-30">你可能会对以下文章感兴趣</h5>
                 <button class="single-more-articles-close"><i class="elegant-icon icon_close"></i></button>

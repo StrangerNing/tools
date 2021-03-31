@@ -1,6 +1,7 @@
 package me.znzn.tools.module.blog.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import me.znzn.tools.common.component.Page;
 import me.znzn.tools.common.component.ResultListData;
@@ -9,6 +10,8 @@ import me.znzn.tools.common.exception.BusinessException;
 import me.znzn.tools.common.exception.NotFoundException;
 import me.znzn.tools.module.blog.entity.constant.BlogRedisConstant;
 import me.znzn.tools.module.blog.entity.enums.ArticleStatusEnum;
+import me.znzn.tools.module.blog.entity.enums.ArticleTypeEnum;
+import me.znzn.tools.module.blog.entity.enums.CommentLimitEnum;
 import me.znzn.tools.module.blog.entity.form.ArticleForm;
 import me.znzn.tools.module.blog.entity.po.Article;
 import me.znzn.tools.module.blog.entity.po.ArticleComment;
@@ -79,6 +82,10 @@ public class FeBlogServiceImpl implements FeBlogService {
         if (null == article || !ArticleStatusEnum.NORMAL.getIndex().equals(article.getStatus())) {
             throw new NotFoundException("没有找到文章");
         }
+        if (ArticleTypeEnum.IMAGES.getIndex().equals(article.getType())) {
+            List<String> images = JSONUtil.toList(article.getContent(), String.class);
+            article.setImages(images);
+        }
         UserInfoVO author = userMapper.selectByUserId(article.getCreateAccount());
         article.setAuthorInfo(author);
         return article;
@@ -137,6 +144,11 @@ public class FeBlogServiceImpl implements FeBlogService {
         }
         if (articleComment.getParentId() == null) {
             articleComment.setParentId(0L);
+        }
+
+        ArticleVo article = articleMapper.selectArticleById(articleComment.getArticleId());
+        if (CommentLimitEnum.DISABLE.getIndex().equals(article.getComment())) {
+            throw new BusinessException("当前文章不允许评论");
         }
 
         articleCommentMapper.insertByProperty(articleComment);

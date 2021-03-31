@@ -7,11 +7,26 @@
     <title>[[${article.title}]] - 凑凑 - EdChu的个人博客</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--twtter分享-->
+    <meta name="twitter:card" content="summary_large_image"/>
+    <meta name="twitter:title" th:content="${article.title}"/>
+    <meta name="twitter:description" th:content="'点击查看关于' + ${article.title} + '的内容'"/>
+    <meta name="twitter:site" content="@edchu">
+    <meta name="twitter:creator" content="@edchu" />
+    <meta name="twitter:image" th:content="${article.thumbPreview}"/>
+    <!-- facebook分享-->
+    <meta property="og:type"               content="article"/>
+    <meta property="og:title"              th:content="${article.title}"/>
+    <meta property="og:description"        th:content="'点击查看关于' + ${article.title} + '的内容'"/>
+    <meta property="og:image"              th:content="${article.thumbPreview}"/>
     <link rel="shortcut icon" type="image/x-icon" href="/static/imgs/theme/favicon.png">
     <!-- NewsBoard CSS  -->
     <link rel="stylesheet" href="/static/css/style.css">
     <link rel="stylesheet" href="/static/css/widgets.css">
     <link rel="stylesheet" href="/static/css/responsive.css">
+    <link rel="stylesheet" href="/static/css/github.min.css">
+    <link rel="stylesheet" href="/static/css/toastr.min.css">
 </head>
 
 <body>
@@ -49,7 +64,7 @@
 <!--                <div class="excerpt mb-30">-->
 <!--                    <p>Gosh jaguar ostrich quail one excited dear hello and bound and the and bland moral misheard roadrunner flapped lynx far that and jeepers giggled far and far bald that roadrunner python inside held shrewdly the manatee.</p>-->
 <!--                </div>-->
-                <div class="entry-main-content dropcap wow fadeIn animated" th:utext="${article.content}"></div>
+                <div id="content" class="markdown-body entry-main-content dropcap wow fadeIn animated" th:utext="${article.content}"></div>
 
                 <div class="entry-bottom mt-50 mb-30 wow fadeIn animated">
                     <div class="tags">
@@ -63,11 +78,7 @@
                         <span class="hit-count mr-15"><i class="elegant-icon icon_like mr-5"></i>[[${article.likes}]] likes</span>
                         <span class="hit-count"><i class="elegant-icon icon_genius mr-5"></i>[[${article.views}]] views</span>
                     </div>
-                    <ul class="header-social-network d-inline-block list-inline float-md-right mt-md-0 mt-4">
-                        <li class="list-inline-item text-muted"><span>Share this: </span></li>
-                        <li class="list-inline-item"><a class="social-icon fb text-xs-center" target="_blank" href="#"><i class="elegant-icon social_facebook"></i></a></li>
-                        <li class="list-inline-item"><a class="social-icon tw text-xs-center" target="_blank" th:href="'https://twitter.com/share?&text='+ ${article.title} + '&url=https://edchu.cn' + ${article.aliasHref} + '?login=false'"><i class="elegant-icon social_twitter "></i></a></li>
-                        <li class="list-inline-item"><a class="social-icon pt text-xs-center" target="_blank" href="#"><i class="elegant-icon social_pinterest "></i></a></li>
+                    <ul th:insert="single :: shareThis" class="header-social-network d-inline-block list-inline float-md-right mt-md-0 mt-4">
                     </ul>
                 </div>
                 <!--More posts-->
@@ -123,6 +134,7 @@
     <script type="text/javascript">
       toastr.options.positionClass = 'toast-top-right';
     </script>
+    <script src="/static/js/article-img.js"></script>
 </body>
 
 </html>

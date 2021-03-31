@@ -186,6 +186,6 @@ public class LuceneServiceImpl implements LuceneService {
         } catch (ParseException p) {
             log.error("查询失败，解析关键字异常", p);
         }
-        return null;
+        return new ResultListData<>(null, 0, 0);
     }
 }

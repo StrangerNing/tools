@@ -9,9 +9,11 @@
     // Scroll progress
     var scrollProgress = function() {
         var docHeight = $(document).height(),
-            windowHeight = $(window).height(),
-            scrollPercent;
+          windowHeight = $(window).height(),
+          scrollPercent;
         $(window).on('scroll', function() {
+            docHeight = $(document).height()
+            windowHeight = $(window).height()
             scrollPercent = $(window).scrollTop() / (docHeight - windowHeight) * 100;
             $('.scroll-progress').width(scrollPercent + '%');
         });
@@ -19,7 +21,7 @@
 
     // Off canvas sidebar
     var OffCanvas = function() {
-        $('#off-canvas-toggle').on('click', function() {
+        $('#off-canvas-toggle').on('click', function(e) {
             $('body').toggleClass("canvas-opened");
         });
 
@@ -288,7 +290,10 @@
     //Custom scrollbar
     var customScrollbar = function() {
         var $ = document.querySelector.bind(document);
-        var ps = new PerfectScrollbar('.custom-scrollbar');
+        let option={
+            wheelPropagation: false
+        }
+        var ps = new PerfectScrollbar('.custom-scrollbar', option);
     };
 
     //Mega menu
@@ -422,7 +427,7 @@
         mobileMenu();
         typeWriter();
         WidgetSubMenu();
-        // scrollProgress();
+        scrollProgress();
         masonryGrid();
         niceSelectBox();
         moreArticles();

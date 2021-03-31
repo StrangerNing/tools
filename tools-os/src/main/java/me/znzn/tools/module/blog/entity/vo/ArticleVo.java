@@ -45,6 +45,14 @@ public class ArticleVo extends Article implements Serializable {
 
     private UserInfoVO authorInfo;
 
+    private String ossPrefix;
+
+    private List<String> images;
+
+    public String getOssPrefix() {
+        return CommonConstant.FILE_REQUEST_PREFIX;
+    }
+
     public String getThumbPreview() {
         return CommonConstant.FILE_REQUEST_PREFIX + this.getThumb();
     }

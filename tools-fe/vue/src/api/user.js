@@ -34,7 +34,7 @@ export function updateInfo(data) {
 export function logout () {
   return request({
     url: '/wapi/user/logout',
-    method: 'post'
+    method: 'get'
   })
 }
 

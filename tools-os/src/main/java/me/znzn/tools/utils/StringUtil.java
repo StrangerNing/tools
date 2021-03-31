@@ -124,7 +124,6 @@ public class StringUtil {
             return 0;
         }
         Integer count = StringUtil.countWords(HtmlUtil.cleanHtmlTag(html));
-        int mins = count / 400;
-        return Math.max(mins, 1);
+        return count;
     }
 }

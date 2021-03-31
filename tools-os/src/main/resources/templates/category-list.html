@@ -42,6 +42,9 @@
         </div>
         <div class="pb-50">
             <div class="container">
+                <div th:if="${articles} and ${#lists.size(articles)} < 1">
+                    <span>暂无文章</span>
+                </div>
                 <div class="row">
                     <div class="article-area col-lg-8">
                         <div class="post-module-3">
@@ -53,7 +56,7 @@
                                                 <div class="img-hover-slide border-radius-5 position-relative" th:style="'background-image: url(' + ${article.thumbPreview} + ')'">
                                                     <a class="img-link" th:href="${article.aliasHref}"></a>
                                                 </div>
-                                                <ul class="social-share">
+                                                <ul th:fragment="socialShare" class="social-share">
                                                     <li><a href="#"><i class="elegant-icon social_share"></i></a></li>
                                                     <li class="list-inline-item"><a class="bilibili" href="https://space.bilibili.com/10641577" target="_blank" title="Bilibili"><img src="/static/imgs/icons/bilibili.svg"></a></li>
                                                     <li class="list-inline-item"><a class="tw" th:href="'https://twitter.com/share?&text='+ ${article.title} + '&url=https://edchu.cn' + ${article.aliasHref} + '?login=false'" target="_blank" title="Tweet now"><i class="elegant-icon social_twitter"></i></a></li>
@@ -72,8 +75,8 @@
                                                 </h5>
                                                 <div class="entry-meta meta-1 float-left font-x-small text-uppercase">
                                                     <span class="post-on time" th:datetime="${#dates.format(article.createTime,'yyyy-MM-dd HH:mm:ss')}"></span>
-                                                    <span class="time-reading has-dot">[[${article.minutes}]] mins read</span>
-                                                    <span class="post-by has-dot" th:text="${article.views} + ' views'"></span>
+                                                    <span class="time-reading has-dot">[[${article.minutes}]] 字</span>
+                                                    <span class="post-by has-dot" th:text="${article.views} + ' 阅读'"></span>
                                                 </div>
                                             </div>
                                         </div>

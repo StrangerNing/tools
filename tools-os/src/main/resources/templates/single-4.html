@@ -7,11 +7,25 @@
     <title>Stories -Single post with right sidebar</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--twtter分享-->
+    <meta name="twitter:card" content="summary_large_image"/>
+    <meta name="twitter:title" th:content="${article.title}"/>
+    <meta name="twitter:description" th:content="'点击查看关于' + ${article.title} + '的内容'"/>
+    <meta name="twitter:site" content="@edchu">
+    <meta name="twitter:creator" content="@edchu" />
+    <meta name="twitter:image" th:content="${article.thumbPreview}"/>
+    <!-- facebook分享-->
+    <meta property="og:type"               content="article"/>
+    <meta property="og:title"              th:content="${article.title}"/>
+    <meta property="og:description"        th:content="'点击查看关于' + ${article.title} + '的内容'"/>
+    <meta property="og:image"              th:content="${article.thumbPreview}"/>
     <link rel="shortcut icon" type="image/x-icon" href="/static/imgs/theme/favicon.png">
     <!-- NewsBoard CSS  -->
     <link rel="stylesheet" href="/static/css/style.css">
     <link rel="stylesheet" href="/static/css/widgets.css">
     <link rel="stylesheet" href="/static/css/responsive.css">
+    <link rel="stylesheet" href="/static/css/github.min.css">
+    <link rel="stylesheet" href="/static/css/toastr.min.css">
 </head>
 
 <body>
@@ -45,15 +59,11 @@
                                                 By <a href="author.html"><span class="author-name font-weight-bold" th:text="${article.author}">Edchu</span></a>
                                             </p>
                                             <span class="mr-10 time" th:datetime="${#dates.format(article.createTime,'yyyy-MM-dd HH:mm:ss')}"> 30 May 1997</span>
-                                            <span class="time-reading has-dot">[[${article.minutes}]] mins read</span>
+                                            <span class="time-reading has-dot">[[${article.minutes}]] 字</span>
                                         </div>
                                     </div>
                                     <div class="col-md-6 text-right d-none d-md-inline">
-                                        <ul class="header-social-network d-inline-block list-inline mr-15">
-                                            <li class="list-inline-item text-muted"><span>Share this: </span></li>
-                                            <li class="list-inline-item"><a class="social-icon fb text-xs-center" target="_blank" href="#"><i class="elegant-icon social_facebook"></i></a></li>
-                                            <li class="list-inline-item"><a class="social-icon tw text-xs-center" target="_blank" th:href="'https://twitter.com/share?&text='+ ${article.title} + '&url=https://edchu.cn' + ${article.aliasHref} + '?login=false'"><i class="elegant-icon social_twitter "></i></a></li>
-                                            <li class="list-inline-item"><a class="social-icon pt text-xs-center" target="_blank" href="#"><i class="elegant-icon social_pinterest "></i></a></li>
+                                        <ul th:insert="single :: shareThis" class="header-social-network d-inline-block list-inline mr-15">
                                         </ul>
                                     </div>
                                 </div>
@@ -65,7 +75,7 @@
                             <!--figure-->
                             <article class="entry-wraper mb-50">
 
-                                <div class="entry-main-content dropcap wow fadeIn animated" th:utext="${article.content}"></div>
+                                <div id="content" class="markdown-body entry-main-content dropcap wow fadeIn animated" th:utext="${article.content}"></div>
 
                                 <div class="entry-bottom mt-50 mb-30 wow fadeIn animated">
                                     <div class="tags">
@@ -79,11 +89,7 @@
                                         <span class="hit-count mr-15"><i class="elegant-icon icon_like mr-5"></i>[[${article.likes}]] likes</span>
                                         <span class="hit-count"><i class="elegant-icon icon_genius mr-5"></i>[[${article.views}]] views</span>
                                     </div>
-                                    <ul class="header-social-network d-inline-block list-inline float-md-right mt-md-0 mt-4">
-                                        <li class="list-inline-item text-muted"><span>Share this: </span></li>
-                                        <li class="list-inline-item"><a class="social-icon fb text-xs-center" target="_blank" href="#"><i class="elegant-icon social_facebook"></i></a></li>
-                                        <li class="list-inline-item"><a class="social-icon tw text-xs-center" target="_blank" href="#"><i class="elegant-icon social_twitter "></i></a></li>
-                                        <li class="list-inline-item"><a class="social-icon pt text-xs-center" target="_blank" href="#"><i class="elegant-icon social_pinterest "></i></a></li>
+                                    <ul th:insert="single :: shareThis" class="header-social-network d-inline-block list-inline float-md-right mt-md-0 mt-4">
                                     </ul>
                                 </div>
                                 <!--More posts-->
@@ -303,6 +309,7 @@
     <script type="text/javascript">
       toastr.options.positionClass = 'toast-top-right';
     </script>
+    <script src="/static/js/article-img.js"></script>
 </body>
 
 </html>

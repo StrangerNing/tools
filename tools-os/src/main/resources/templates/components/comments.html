@@ -69,7 +69,10 @@
             <div class="widget-header-2 position-relative mb-30">
                 <h5 class="mt-5 mb-30">Leave a Reply</h5>
             </div>
-            <form class="form-contact comment_form" method="post" id="commentForm">
+            <div th:if="${article.comment} eq 0">
+                <span>当前文章不允许评论</span>
+            </div>
+            <form th:unless="${article.comment} eq 0" class="form-contact comment_form" method="post" id="commentForm">
                 <span id="replyTo" class="col-12 js-hidden"><span id="replyName"></span><span class="ml-15 text-muted font-small cursor-pointer" id="clearReply">清除</span></span>
                 <div class="row">
                     <div class="col-12">

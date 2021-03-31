@@ -41,18 +41,16 @@
             </div>
         </div>
         <div class="container">
+            <div th:if="${articles} and ${#lists.size(articles)} < 1">
+                <span>暂无文章</span>
+            </div>
             <div class="loop-list loop-list-style-1">
                 <div class="row">
                     <article class="col-md-6 mb-40 wow fadeInUp  animated" th:each="article : ${articles}">
                         <div class="post-card-1 border-radius-10 hover-up">
                             <div class="post-thumb thumb-overlay img-hover-slide position-relative" th:style="'background-image: url(' + ${article.thumbPreview} + ')'">
                                 <a class="img-link" th:href="${article.aliasHref}"></a>
-                                <ul class="social-share">
-                                    <li><a href="#"><i class="elegant-icon social_share"></i></a></li>
-                                    <li><a class="fb" href="#" title="Share on Facebook" target="_blank"><i class="elegant-icon social_facebook"></i></a></li>
-                                    <li><a class="tw" th:href="'https://twitter.com/share?&text='+ ${article.title} + '&url=https://edchu.cn' + ${article.aliasHref} + '?login=false'" target="_blank" title="Tweet now"><i class="elegant-icon social_twitter"></i></a></li>
-                                    <li><a class="pt" href="#" target="_blank" title="Pin it"><i class="elegant-icon social_pinterest"></i></a></li>
-                                </ul>
+                                <ul th:replace="category-list :: socialShare" class="social-share"></ul>
                             </div>
                             <div class="post-content p-30">
                                 <div class="entry-meta meta-0 font-small mb-10">
@@ -67,8 +65,8 @@
                                     </div>
                                     <div class="entry-meta meta-1 float-left font-x-small text-uppercase">
                                         <span class="post-on time" th:datetime="${#dates.format(article.createTime,'yyyy-MM-dd HH:mm:ss')}"></span>
-                                        <span class="time-reading has-dot">[[${article.minutes}]] mins read</span>
-                                        <span class="post-by has-dot" th:text="${article.views} + ' views'"></span>
+                                        <span class="time-reading has-dot">[[${article.minutes}]] 字</span>
+                                        <span class="post-by has-dot" th:text="${article.views} + ' 阅读'"></span>
                                     </div>
                                 </div>
                             </div>

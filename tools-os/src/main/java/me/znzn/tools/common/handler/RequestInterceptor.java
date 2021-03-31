@@ -23,29 +23,29 @@ public class RequestInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        Object isLogin = request.getSession().getAttribute("isLogin");
-        String dontLogin = request.getParameter("login");
-        if (StringUtils.isNotEmpty(dontLogin)) {
-            return true;
-        }
+//        Object isLogin = request.getSession().getAttribute("isLogin");
+//        String dontLogin = request.getParameter("login");
+//        if (StringUtils.isNotEmpty(dontLogin)) {
+//            return true;
+//        }
         String ticket = request.getParameter("ticket");
         if (StringUtils.isNotEmpty(ticket)) {
             LoginUserUtil.login(ticket);
         }
-        if (isLogin != null) {
-            return true;
-        }
-        Map user = LoginUserUtil.getLoginUserMap();
-        if (user == null) {
-            request.getSession().setAttribute("isLogin", 1);
-            String url ="";
-            url =  "https://" + request.getServerName()
-                    + request.getServletPath();
-            if (request.getQueryString() !=null){
-                url +="?" + request.getQueryString();
-            }
-            response.sendRedirect(CommonConstant.SSO_URL + "?forceLogin=false&redirect="+url);
-        }
+//        if (isLogin != null) {
+//            return true;
+//        }
+//        Map user = LoginUserUtil.getLoginUserMap();
+//        if (user == null) {
+//            request.getSession().setAttribute("isLogin", 1);
+//            String url ="";
+//            url =  "https://" + request.getServerName()
+//                    + request.getServletPath();
+//            if (request.getQueryString() !=null){
+//                url +="?" + request.getQueryString();
+//            }
+//            response.sendRedirect(CommonConstant.SSO_URL + "?forceLogin=false&redirect="+url);
+//        }
         return true;
     }
 
