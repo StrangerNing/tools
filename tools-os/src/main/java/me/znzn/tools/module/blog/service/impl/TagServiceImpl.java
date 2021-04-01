@@ -1,6 +1,7 @@
 package me.znzn.tools.module.blog.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
+import com.fasterxml.jackson.databind.ser.std.ByteArraySerializer;
 import me.znzn.tools.common.exception.NotFoundException;
 import me.znzn.tools.module.blog.entity.constant.BlogRedisConstant;
 import me.znzn.tools.module.blog.mapper.TagMapper;
@@ -8,6 +9,8 @@ import me.znzn.tools.module.blog.entity.po.Tag;
 import me.znzn.tools.module.blog.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.GenericToStringSerializer;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -37,6 +40,7 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public List<Tag> hotTags(Integer size) {
+        redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
         List<Tag> list = redisTemplate.opsForList().range(BlogRedisConstant.TAGS_KEY, 0, size == null ? -1: size);
         if (CollectionUtil.isNotEmpty(list)) {
             return list;

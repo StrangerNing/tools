@@ -13,7 +13,7 @@ import java.io.Serializable;
  */
 @Data
 public class Tag implements Serializable {
-    private static final long serialVersionUID = 215529752560269690L;
+    private static final long serialVersionUID = 4603943882286581184L;
 
     private Long id;
 
