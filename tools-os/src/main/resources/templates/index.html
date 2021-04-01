@@ -43,7 +43,7 @@
                                     </h1>
                                     <div class="entry-meta meta-1 font-small text-white mt-10 pr-5 pl-5">
                                         <span class="post-on time" th:datetime="${#dates.format(sticky.createTime,'yyyy-MM-dd HH:mm:ss')}"></span>
-                                        <span class="time-reading has-dot">[[${sticky.minutes}]] mins read</span>
+                                        <span class="time-reading has-dot">[[${sticky.minutes}]] 字</span>
                                         <span class="hit-count has-dot"><i class="elegant-icon icon_genius mr-5"></i><span th:text="${sticky.views}"></span></span>
                                     </div>
                                 </div>
@@ -63,9 +63,9 @@
                                 </div>
                                 <div class="post-content media-body text-white">
                                     <h5 class="post-title mb-15 text-limit-2-row" th:text="${sticky.title}"></h5>
-                                    <div class="entry-meta meta-1 float-left font-x-small text-uppercase">
+                                    <div class="entry-meta meta-1 float-left font-x-small text-nowrap text-uppercase">
                                         <span class="post-on text-white time" th:datetime="${#dates.format(sticky.createTime,'yyyy-MM-dd HH:mm:ss')}"></span>
-                                        <span class="post-by has-dot text-white"><i class="elegant-icon icon_genius mr-5"></i><span th:text="${sticky.views}"></span></span>
+                                        <span class="post-by has-dot text-white"><i class="elegant-icon icon_genius mr-5"></i><span>[[${sticky.views}]]</span></span>
                                     </div>
                                 </div>
                             </div>
@@ -111,7 +111,7 @@
                                             <div class="entry-meta meta-1 font-small text-white mt-10 pr-5 pl-5">
                                                 <span class="post-on time" th:datetime="${#dates.format(last.createTime,'yyyy-MM-dd HH:mm:ss')}"></span>
                                                 <span class="time-reading has-dot">[[${last.minutes}]] 字</span>
-                                                <span class="post-by has-dot" th:text="${last.views} + ' 阅读'"></span>
+                                                <span class="post-by has-dot">[[${last.views}]] 阅读</span>
                                             </div>
                                         </div>
                                     </div>

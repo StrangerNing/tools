@@ -58,9 +58,9 @@
                                                 </div>
                                                 <ul th:fragment="socialShare" class="social-share">
                                                     <li><a href="#"><i class="elegant-icon social_share"></i></a></li>
-                                                    <li class="list-inline-item"><a class="bilibili" href="https://space.bilibili.com/10641577" target="_blank" title="Bilibili"><img src="/static/imgs/icons/bilibili.svg"></a></li>
-                                                    <li class="list-inline-item"><a class="tw" th:href="'https://twitter.com/share?&text='+ ${article.title} + '&url=https://edchu.cn' + ${article.aliasHref} + '?login=false'" target="_blank" title="Tweet now"><i class="elegant-icon social_twitter"></i></a></li>
-                                                    <li class="list-inline-item"><a class="ig" href="https://www.instagram.com/edchu_cn/" target="_blank" title="Instagram"><i class="elegant-icon social_instagram"></i></a></li>
+                                                    <li class="list-inline-item"><a class="fb" th:href="'https://www.facebook.com/sharer/sharer.php?u=https://edchu.cn' + ${article.aliasHref}" target="_blank" title="Facebook"><i class="elegant-icon social_facebook"></i></a></li>
+                                                    <li class="list-inline-item"><a class="tw" th:href="'https://twitter.com/share?&text='+ ${article.title} + '&url=https://edchu.cn' + ${article.aliasHref}" target="_blank" title="Tweet now"><i class="elegant-icon social_twitter"></i></a></li>
+                                                    <li class="list-inline-item"><a class="weibo" th:href="'http://service.weibo.com/share/share.php?text='+ ${article.title} + '&url=https://edchu.cn' + ${article.aliasHref}" target="_blank" title="Weibo"><img src="/static/imgs/icons/weibo.svg"></a></li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -73,10 +73,10 @@
                                                     <a th:href="${article.aliasHref}" th:text="${article.title}"></a>
 <!--                                                    <span class="post-format-icon"><i class="elegant-icon icon_star_alt"></i></span>-->
                                                 </h5>
-                                                <div class="entry-meta meta-1 float-left font-x-small text-uppercase">
+                                                <div class="entry-meta meta-1 float-left font-x-small text-nowrap">
                                                     <span class="post-on time" th:datetime="${#dates.format(article.createTime,'yyyy-MM-dd HH:mm:ss')}"></span>
                                                     <span class="time-reading has-dot">[[${article.minutes}]] 字</span>
-                                                    <span class="post-by has-dot" th:text="${article.views} + ' 阅读'"></span>
+                                                    <span class="post-by has-dot">[[${article.views}]] 阅读</span>
                                                 </div>
                                             </div>
                                         </div>

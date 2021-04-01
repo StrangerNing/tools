@@ -2,9 +2,12 @@ package me.znzn.tools.module.blog.controller;
 
 
 import me.znzn.tools.common.component.ResultPageUtil;
+import me.znzn.tools.module.blog.entity.enums.ArticleStatusEnum;
 import me.znzn.tools.module.blog.entity.form.ArticleForm;
+import me.znzn.tools.module.blog.entity.po.ArticleComment;
 import me.znzn.tools.module.blog.entity.vo.ArticleVo;
 import me.znzn.tools.module.blog.service.ArticleService;
+import me.znzn.tools.module.blog.service.FeBlogService;
 import me.znzn.tools.module.user.entity.vo.UserInfoVO;
 import me.znzn.tools.utils.LoginUserUtil;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +29,8 @@ public class ArticleController {
 
     @Resource
     private ArticleService articleService;
+    @Resource
+    private FeBlogService feBlogService;
 
     @PostMapping("/add")
     public ResponseEntity add(@RequestBody ArticleVo articleVo) {
@@ -59,6 +64,19 @@ public class ArticleController {
     @GetMapping("/index/refresh")
     public ResponseEntity refreshIndex() {
         articleService.refreshIndex();
+        return ResultPageUtil.success();
+    }
+
+    @GetMapping("/more")
+    public ResponseEntity blogList(ArticleForm articleForm) {
+        articleForm.setStatus(ArticleStatusEnum.NORMAL.getIndex());
+        return ResultPageUtil.successWithPage(feBlogService.getArticleList(articleForm), feBlogService.countArticleList(articleForm).getTotalCount(), articleForm.getCurrentPage());
+    }
+
+    @PostMapping("/comment/add")
+    public ResponseEntity addComment(@RequestBody ArticleComment articleComment) {
+        UserInfoVO userInfoVO = LoginUserUtil.getSessionUserWithoutThrow();
+        feBlogService.addArticleComment(articleComment, userInfoVO);
         return ResultPageUtil.success();
     }
 

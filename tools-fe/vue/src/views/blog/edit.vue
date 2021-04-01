@@ -7,7 +7,7 @@
       </div>
       <div>
         <el-row>
-          <el-col :xs="24" :sm="12" :md="8" :lg="6" v-if="article.type !== blogEnums.articleTypeEnum.getValueByFiledName('images')">
+          <el-col :xs="24" :sm="12" :md="8" :lg="6">
             <el-form-item label="编辑器：">
               <el-switch
                 v-model="article.editType"
@@ -115,7 +115,7 @@
 
         </el-row>
         <el-row>
-          <el-col :span="6" v-if="article.type !== blogEnums.articleTypeEnum.getValueByFiledName('images')">
+          <el-col :span="6">
             <el-form-item label="封面：">
               <el-button-group v-if="article.thumb">
                 <el-button type="primary" size="small" @click="previewThumb">预览</el-button>
@@ -142,25 +142,11 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <div v-if="article.type !== blogEnums.articleTypeEnum.getValueByFiledName('images')">
-          <div v-if="article.editType === 1">
-            <mavon-editor ref="md" v-model="article.markdown" @change="mavonEditorChange" @imgAdd="imgAdd" @imgDel="imgDel"/>
-          </div>
-          <div v-else>
-            <span id="article"></span>
-          </div>
+        <div v-if="article.editType === 1">
+          <mavon-editor ref="md" v-model="article.markdown" @change="mavonEditorChange" @imgAdd="imgAdd" @imgDel="imgDel"/>
         </div>
         <div v-else>
-          <el-upload
-            :action="uploadUrl"
-            list-type="picture-card"
-            :on-success="handleImagesSuccess"
-            :on-preview="handleImagesPreview"
-            :on-remove="handleImagesRemove"
-            :file-list="images"
-            with-credentials>
-          <i class="el-icon-plus"></i>
-          </el-upload>
+          <span id="article"></span>
         </div>
         <div class="page-content">
           <el-button type="primary" @click="openBeforePublish" :disabled="loading">发布</el-button>
@@ -465,20 +451,6 @@
           })
         }
 
-      },
-      handleImagesPreview(file) {
-        this.viewerIndex = this.images.findIndex(item => item.url === file.url)
-        document.body.style.overflow = 'hidden'
-        this.showViewer = true
-        this.previewList = this.images.map(item => {return item.url})
-      },
-      handleImagesRemove(file, fileList) {
-        console.log(fileList)
-        this.images = this.images.filter(item => item.url !== file.url)
-      },
-      handleImagesSuccess(response, file, fileList) {
-        this.$message.success('上传成功')
-        this.images.push({name: response.data.name, url: file.url})
       },
       handleThumbSuccess(response, file, fileList) {
         this.$message.success('上传成功')

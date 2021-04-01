@@ -4,7 +4,6 @@ import cn.hutool.core.collection.CollectionUtil;
 import lombok.extern.slf4j.Slf4j;
 import me.znzn.tools.common.component.Page;
 import me.znzn.tools.common.component.ResultListData;
-import me.znzn.tools.common.component.ResultPageUtil;
 import me.znzn.tools.common.constant.CommonConstant;
 import me.znzn.tools.common.exception.NotFoundException;
 import me.znzn.tools.module.blog.entity.enums.ArticleStatusEnum;
@@ -12,7 +11,6 @@ import me.znzn.tools.module.blog.entity.enums.ArticleTypeEnum;
 import me.znzn.tools.module.blog.entity.enums.PageTypeEnum;
 import me.znzn.tools.module.blog.entity.form.ArticleForm;
 import me.znzn.tools.module.blog.entity.form.CategoryForm;
-import me.znzn.tools.module.blog.entity.po.ArticleComment;
 import me.znzn.tools.module.blog.entity.po.Category;
 import me.znzn.tools.module.blog.entity.po.Tag;
 import me.znzn.tools.module.blog.entity.vo.ArticleVo;
@@ -23,19 +21,18 @@ import me.znzn.tools.module.blog.service.TagService;
 import me.znzn.tools.module.user.entity.vo.UserInfoVO;
 import me.znzn.tools.utils.LoginUserUtil;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.annotation.Resource;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -58,39 +55,29 @@ public class FeBlogController {
 
     @GetMapping("/")
     public String index(Model model) {
-        ArticleForm querySticky = new ArticleForm();
-        querySticky.setIsSticky(true);
-        querySticky.setStatus(ArticleStatusEnum.NORMAL.getIndex());
-        querySticky.setOrderBy("article.priority DESC, article.id DESC");
-        List<ArticleVo> stickyArticles = feBlogService.getArticleList(querySticky);
-        model.addAttribute("stickies", stickyArticles);
+        try {
+            ArticleForm querySticky = new ArticleForm();
+            querySticky.setIsSticky(true);
+            querySticky.setStatus(ArticleStatusEnum.NORMAL.getIndex());
+            querySticky.setOrderBy("article.priority DESC, article.create_time DESC");
+            List<ArticleVo> stickyArticles = feBlogService.getArticleList(querySticky);
+            model.addAttribute("stickies", stickyArticles);
 
-        ArticleForm queryLatest = new ArticleForm();
-        queryLatest.setCurrentPage(1);
-        queryLatest.setLimit(6);
-        queryLatest.setIsSticky(false);
-        queryLatest.setStatus(ArticleStatusEnum.NORMAL.getIndex());
-        queryLatest.setOrderBy("article.priority DESC, article.id DESC");
-        model.addAttribute("lasts", feBlogService.getArticleList(queryLatest));
-        model.addAttribute("lastsCount", feBlogService.countArticleList(queryLatest).getTotalCount());
-        model.addAttribute("hotTags", tagService.hotTags(10));
-        model.addAttribute("categories", categoryService.searchCategory(new CategoryForm()));
+            ArticleForm queryLatest = new ArticleForm();
+            queryLatest.setCurrentPage(1);
+            queryLatest.setLimit(6);
+            queryLatest.setIsSticky(false);
+            queryLatest.setStatus(ArticleStatusEnum.NORMAL.getIndex());
+            queryLatest.setOrderBy("article.priority DESC, article.create_time DESC");
+            model.addAttribute("lasts", feBlogService.getArticleList(queryLatest));
+            model.addAttribute("lastsCount", feBlogService.countArticleList(queryLatest).getTotalCount());
+        } catch (Exception e) {
+            log.error("系统异常,", e);
+        } finally {
+            getPagePlugins(model);
+            model.addAttribute("categories", categoryService.searchCategory(new CategoryForm()));
+        }
         return "index";
-    }
-
-    @GetMapping("/wapi/list")
-    @ResponseBody
-    public ResponseEntity blogList(ArticleForm articleForm) {
-        articleForm.setStatus(ArticleStatusEnum.NORMAL.getIndex());
-        return ResultPageUtil.successWithPage(feBlogService.getArticleList(articleForm), feBlogService.countArticleList(articleForm).getTotalCount(), articleForm.getCurrentPage());
-    }
-
-    @PostMapping("/wapi/comment/add")
-    @ResponseBody
-    public ResponseEntity addComment(@RequestBody ArticleComment articleComment) {
-        UserInfoVO userInfoVO = LoginUserUtil.getSessionUserWithoutThrow();
-        feBlogService.addArticleComment(articleComment, userInfoVO);
-        return ResultPageUtil.success();
     }
 
     @GetMapping(value = {"/category/{category}","/category/{category}/{currentPage}"})
@@ -115,7 +102,7 @@ public class FeBlogController {
             return "error/404";
         } finally {
             model.addAttribute("categories", categoryService.searchCategory(new CategoryForm()));
-            model.addAttribute("hotTags", tagService.hotTags(10));
+            getPagePlugins(model);
         }
 
     }
@@ -138,43 +125,63 @@ public class FeBlogController {
         } catch (NotFoundException ntf) {
             return "error/404";
         } finally {
-            model.addAttribute("hotTags", tagService.hotTags(10));
+            getPagePlugins(model);
         }
     }
 
     @GetMapping(value = {"/archive","/archive/{currentPage}"})
     public String archive(Model model, @PathVariable(required = false) Integer currentPage) {
-        List<ArticleVo> articles = getArticles(model, new ArticleForm(), currentPage, PageTypeEnum.LIST.getLimit());
-        getHotArticles(model, articles);
-        model.addAttribute("name", "归档");
-        model.addAttribute("href", "/archive/");
-        model.addAttribute("hotTags", tagService.hotTags(10));
+        try {
+            List<ArticleVo> articles = getArticles(model, new ArticleForm(), currentPage, PageTypeEnum.LIST.getLimit());
+            getHotArticles(model, articles);
+            model.addAttribute("name", "归档");
+            model.addAttribute("href", "/archive/");
+        } catch (Exception e) {
+            log.error("系统异常,", e);
+        } finally {
+            getPagePlugins(model);
+        }
         return PageTypeEnum.LIST.getName();
     }
 
     @GetMapping(value = {"/blackboard"})
     public String blackboard(Model model) {
-        model.addAttribute("comments", feBlogService.getComments(0L));
-        model.addAttribute("categories", categoryService.searchCategory(new CategoryForm()));
-        model.addAttribute("hotTags", tagService.hotTags(10));
+        try {
+            model.addAttribute("comments", feBlogService.getComments(0L));
+            model.addAttribute("categories", categoryService.searchCategory(new CategoryForm()));
+        } catch (Exception e) {
+            log.error("系统错误,", e);
+        } finally {
+            getPagePlugins(model);
+        }
         return "blackboard";
     }
 
     @GetMapping(value = {"/coucou","/coucou/{currentPage}"})
     public String coucou(Model model, @PathVariable(required = false) Integer currentPage) {
-        model.addAttribute("hotTags", tagService.hotTags(10));
-        ArticleForm articleForm = new ArticleForm();
-        articleForm.setCategory("凑凑");
-        getArticles(model, articleForm, currentPage, 8);
-        model.addAttribute("href", "/coucou/");
-        model.addAttribute("latestComments", feBlogService.getLatestComments(articleForm));
+        try {
+            ArticleForm articleForm = new ArticleForm();
+            articleForm.setCategory("凑凑");
+            getArticles(model, articleForm, currentPage, 8);
+            model.addAttribute("href", "/coucou/");
+            model.addAttribute("latestComments", feBlogService.getLatestComments(articleForm));
+        } catch (Exception e) {
+            log.error("系统异常,", e);
+        } finally {
+            getPagePlugins(model);
+        }
         return "page-coucou";
     }
 
     @GetMapping("/aboutme")
     public String aboutMe(Model model) {
-        model.addAttribute("categories", categoryService.searchCategory(new CategoryForm()));
-        model.addAttribute("hotTags", tagService.hotTags(10));
+        try {
+            model.addAttribute("categories", categoryService.searchCategory(new CategoryForm()));
+        } catch (Exception e) {
+            log.error("系统异常,", e);
+        } finally {
+            getPagePlugins(model);
+        }
         return "page-about";
     }
 
@@ -195,7 +202,7 @@ public class FeBlogController {
             return "error/404";
         } finally {
             model.addAttribute("categories", categoryService.searchCategory(new CategoryForm()));
-            model.addAttribute("hotTags", tagService.hotTags(10));
+            getPagePlugins(model);
         }
     }
 
@@ -215,7 +222,7 @@ public class FeBlogController {
             model.addAttribute("href", "/search?search=" + search + "&currentPage=");
             getHotArticles(model, (List<ArticleVo>) result.getList());
         }
-        model.addAttribute("hotTags", tagService.hotTags(10));
+        getPagePlugins(model);
         return "page-search";
     }
 
@@ -256,7 +263,7 @@ public class FeBlogController {
         articleForm.setCurrentPage(currentPage == null ? 1 : currentPage);
         articleForm.setLimit(limit);
         articleForm.setStatus(ArticleStatusEnum.NORMAL.getIndex());
-        articleForm.setOrderBy("article.priority DESC, article.id DESC");
+        articleForm.setOrderBy("article.priority DESC, article.create_time DESC");
         List<ArticleVo> articles = feBlogService.getArticleList(articleForm);
         model.addAttribute("articles", articles);
         model.addAttribute("pageInfo", feBlogService.countArticleList(articleForm));
@@ -273,5 +280,9 @@ public class FeBlogController {
             List<ArticleVo> hotArticles = feBlogService.getArticleList(hot);
             model.addAttribute("hotArticles", hotArticles);
         }
+    }
+
+    private void getPagePlugins(Model model) {
+        model.addAttribute("hotTags", tagService.hotTags(null));
     }
 }

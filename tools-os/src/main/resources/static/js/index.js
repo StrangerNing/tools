@@ -34,7 +34,7 @@ $('#featureMoreBtn').click(function () {
     currentPage: currentPage,
     limit: limit
   }
-  let url = '/wapi/list'
+  let url = '/wapi/blog/article/more'
   getNextPage(params, url, 'get').then(res => {
     if (res.data.list) {
       let articleList = res.data.list

@@ -61,7 +61,7 @@
                                 <h5 class="post-title mb-20 font-weight-900">
                                     <a th:href="${article.aliasHref}" th:text="${article.title}"></a>
                                 </h5>
-                                <div class="entry-meta meta-1 float-left font-x-small text-uppercase">
+                                <div class="entry-meta meta-1 float-left font-x-small text-nowrap text-uppercase">
                                     <span class="post-on time" th:datetime="${#dates.format(article.createTime,'yyyy-MM-dd HH:mm:ss')}"></span>
                                     <span class="time-reading has-dot">[[${article.minutes}]]字</span>
                                     <span class="post-by has-dot" th:text="${article.views} + ' 阅读'"></span>

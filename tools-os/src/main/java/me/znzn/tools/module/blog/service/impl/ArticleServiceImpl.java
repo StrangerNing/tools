@@ -13,6 +13,7 @@ import me.znzn.tools.module.blog.entity.vo.CategoryVo;
 import me.znzn.tools.module.blog.mapper.*;
 import me.znzn.tools.module.blog.service.ArticleService;
 import me.znzn.tools.module.blog.service.LuceneService;
+import me.znzn.tools.module.blog.service.TagService;
 import me.znzn.tools.module.user.entity.vo.UserInfoVO;
 import me.znzn.tools.utils.JsonUtils;
 import me.znzn.tools.utils.SpringUtil;
@@ -39,6 +40,9 @@ import java.util.*;
 public class ArticleServiceImpl implements ArticleService {
     @Resource
     private ArticleMapper articleMapper;
+
+    @Resource
+    private TagService tagService;
 
     @Resource
     private TagMapper tagMapper;
@@ -80,6 +84,7 @@ public class ArticleServiceImpl implements ArticleService {
         articleVo.setId(id);
         articleVo.setCreateTime(article.getCreateTime());
         luceneService.addDocument(articleVo);
+        tagService.clearTagCache();
         return Boolean.TRUE;
     }
 
@@ -144,6 +149,7 @@ public class ArticleServiceImpl implements ArticleService {
         } else {
             luceneService.updateDocument(articleVo);
         }
+        tagService.clearTagCache();
         return Boolean.TRUE;
     }
 

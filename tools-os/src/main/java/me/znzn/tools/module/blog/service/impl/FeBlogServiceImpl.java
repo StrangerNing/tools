@@ -82,10 +82,6 @@ public class FeBlogServiceImpl implements FeBlogService {
         if (null == article || !ArticleStatusEnum.NORMAL.getIndex().equals(article.getStatus())) {
             throw new NotFoundException("没有找到文章");
         }
-        if (ArticleTypeEnum.IMAGES.getIndex().equals(article.getType())) {
-            List<String> images = JSONUtil.toList(article.getContent(), String.class);
-            article.setImages(images);
-        }
         UserInfoVO author = userMapper.selectByUserId(article.getCreateAccount());
         article.setAuthorInfo(author);
         return article;

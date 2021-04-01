@@ -27,6 +27,11 @@ public interface TagService {
     List<Tag> hotTags(Integer size);
 
     /**
+     * 重置热门标签缓存
+     */
+    void clearTagCache();
+
+    /**
      * 获取一个标签
      * @param tag
      * @return

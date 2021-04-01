@@ -193,8 +193,10 @@ figure .social-share:hover li:last-child,
 .header-social-network .list-inline-item a.tw{background:#55acee;}
 .post-thumb .social-share li a.ig,
 .header-social-network .list-inline-item a.ig{background:#bd081c;}
-.post-thumb .social-share li a.ig,
+.post-thumb .social-share li a.bilibili,
 .header-social-network .list-inline-item a.bilibili{background:#ef6eaf;}
+.post-thumb .social-share li a.weibo,
+.header-social-network .list-inline-item a.weibo{background:#ED3C1F;}
 .thumb-overlay .post-thumb .social-share{right:35px;}
 
 /*More articles*/

@@ -2,14 +2,17 @@ package me.znzn.tools.module.blog.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import me.znzn.tools.common.exception.NotFoundException;
+import me.znzn.tools.module.blog.entity.constant.BlogRedisConstant;
 import me.znzn.tools.module.blog.mapper.TagMapper;
 import me.znzn.tools.module.blog.entity.po.Tag;
 import me.znzn.tools.module.blog.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 服务接口实现
@@ -22,6 +25,8 @@ import java.util.List;
 public class TagServiceImpl implements TagService {
     @Resource
     private TagMapper tagMapper;
+    @Resource
+    private RedisTemplate redisTemplate;
 
 
     @Override
@@ -32,7 +37,18 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public List<Tag> hotTags(Integer size) {
-        return tagMapper.hotTags(size);
+        List<Tag> list = redisTemplate.opsForList().range(BlogRedisConstant.TAGS_KEY, 0, size == null ? -1: size);
+        if (CollectionUtil.isNotEmpty(list)) {
+            return list;
+        }
+        list = tagMapper.hotTags(size);
+        redisTemplate.opsForList().rightPushAll(BlogRedisConstant.TAGS_KEY, list);
+        return list;
+    }
+
+    @Override
+    public void clearTagCache() {
+        redisTemplate.delete(BlogRedisConstant.TAGS_KEY);
     }
 
     @Override

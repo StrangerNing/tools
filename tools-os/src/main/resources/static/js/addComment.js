@@ -1,5 +1,5 @@
 $('#submit').click(function () {
-  let url = '/wapi/comment/add'
+  let url = '/wapi/blog/article/comment/add'
   let form = $('#commentForm').serializeArray()
   let data = {}
   $.each(form, function(index, field) {

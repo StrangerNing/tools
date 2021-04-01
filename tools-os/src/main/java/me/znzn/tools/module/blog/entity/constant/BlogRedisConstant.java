@@ -12,4 +12,6 @@ public class BlogRedisConstant {
     public static String VIEW_SOURCE_PREFIX = "article_view_source_";
 
     public static String VIEW_CACHE_VERSION = "article_view_version";
+
+    public static String TAGS_KEY = "tags";
 }

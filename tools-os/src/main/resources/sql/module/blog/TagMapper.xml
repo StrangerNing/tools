@@ -189,7 +189,9 @@
         LEFT JOIN t_blog_tag tag ON tag.id = at.tag_id
         GROUP BY at.tag_id
         ORDER BY COUNT(*) DESC, tag_id DESC
-        LIMIT #{size}
+        <if test="size != null">
+            LIMIT #{size}
+        </if>
     </select>
 
     <select id="selectArticleTagsByArticleId" resultType="me.znzn.tools.module.blog.entity.po.Tag">
