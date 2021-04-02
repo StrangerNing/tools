@@ -32,7 +32,7 @@ public class ApiController {
     }
 
     @PostMapping("/async/ig")
-    public ResponseEntity asyncIg(@RequestBody Map<String, String> file) {
+    public ResponseEntity asyncIg(@RequestBody Map file) {
         apiService.asyncIg(file);
         return ResultPageUtil.success();
     }

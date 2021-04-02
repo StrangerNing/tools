@@ -29,5 +29,5 @@ public interface ApiService {
      * 同步ig
      * @param file
      */
-    void asyncIg(Map<String, String> file);
+    void asyncIg(Map file);
 }
