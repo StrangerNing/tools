@@ -30,7 +30,12 @@ public enum OssFileTypeEnum {
     /**
      * 其他
      */
-    OTHERS("others/", 5);
+    OTHERS("others/", 5),
+
+    /**
+     * instagram
+     */
+    INSTAGRAM("ig/", 6);
 
     private String name;
 

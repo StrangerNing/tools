@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html class="no-js" lang="zh-CN" xmlns:th="http://www.w3.org/1999/xhtml">
 
 <head>
     <meta charset="utf-8">
@@ -33,14 +33,19 @@
                 <div class="col-lg-6 col-md-12 d-lg-block d-none pr-50"><img src="/static/imgs/theme/page-not-found.png" alt=""></div>
                 <div class="col-lg-6 col-md-12 pl-50 text-md-center text-lg-left">
                     <h1 class="mb-30 font-weight-900 page-404">404</h1>
-                    <form action="/search" method="get" class="search-form d-lg-flex open-search mb-30">
-<!--                        <i class="icon-search"></i>-->
-                        <input class="form-control" name="search" id="name" type="text" placeholder="搜索...">
-                        <div class="input-group-append">
-                            <button class="btn btn-search bg-grey ml-1" id="searchBtn" type="submit">
-                                <i class="elegant-icon icon_search"></i>
-                            </button>
-                        </div>
+<!--                    <form action="/search" method="get" class="input-group search-form d-lg-flex open-search mb-30">-->
+<!--                        <input class="form-control" name="search" id="name" type="text" placeholder="搜索...">-->
+<!--                        <div class="input-group-append">-->
+<!--                            <button class="btn btn-search bg-grey ml-1" id="searchBtn" type="submit">-->
+<!--                                <i class="elegant-icon icon_search"></i>-->
+<!--                            </button>-->
+<!--                        </div>-->
+<!--                    </form>-->
+                    <form action="/search" method="get" class="input-group search-form mb-30 d-lg-flex">
+                        <input name="search" type="text" class="form-control bg-white font-small" placeholder="搜索">
+                        <button class="btn bg-primary text-white" type="submit">
+                            <i class="elegant-icon icon_search"></i>
+                        </button>
                     </form>
                     <p>OOPS! 你访问的链接有误或者该页面已被移除了。</p>
                     <p>你可以返回 <a href="/">主页</a> 或者 <a href="/contact">联系我</a>。</p>

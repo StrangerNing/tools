@@ -69,6 +69,7 @@ public class ApiServiceImpl implements ApiService {
         String filename = file.get("filename");
 
         String key = file.get("ak");
+        String type = file.get("type");
         ApiKey apiKey = validateAk(key);
         Long userId = apiKey.getCreateId();
         User user = userMapper.selectByPrimaryKey(userId);
@@ -83,7 +84,8 @@ public class ApiServiceImpl implements ApiService {
         InputStream inputStream = new ByteArrayInputStream(data);
 
         String fileName = UploadFileUtil.uploadOSS(inputStream, suffix, userInfoVO, OssFileTypeEnum.OTHERS);
-        fileService.insertFile(fileName, OssFileTypeEnum.OTHERS, userInfoVO);
+        OssFileTypeEnum ossFileTypeEnum = StringUtils.isEmpty(type) ? OssFileTypeEnum.OTHERS : OssFileTypeEnum.valueOf(type);
+        fileService.insertFile(fileName, ossFileTypeEnum, userInfoVO);
         return CommonConstant.FILE_REQUEST_PREFIX + fileName;
     }
 

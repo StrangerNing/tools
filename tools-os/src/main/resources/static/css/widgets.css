@@ -54,6 +54,10 @@ input.form-control::placeholder{color:#9b9b9b}
 button.exit-reading-mode .long-arrow{width:50px;}
 button.box-shadow{box-shadow:0px 0px 10px 0px rgba(0,0,0,0.1);}
 
+/*searchForm*/
+.search-form input.form-control{padding:16px 25px;line-height:24px;border-radius:30px 0 0 30px;max-width:80%;font-size:0.875rem;}
+.search-form .btn{font-size:14px;border-radius:0 30px 30px 0;padding:0 25px;}
+
 /*instagram*/
 .widget_instagram .insta-feed{padding-top:5px;margin:-2px;display:flex;flex-wrap:wrap;}
 .widget_instagram .insta-feed li{width:29.33%;margin:5px;}
