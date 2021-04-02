@@ -1,6 +1,7 @@
 package me.znzn.tools.module.api.service.impl;
 
 import cn.hutool.core.codec.Base64;
+import lombok.extern.slf4j.Slf4j;
 import me.znzn.tools.common.component.BaseModel;
 import me.znzn.tools.common.constant.CommonConstant;
 import me.znzn.tools.common.enums.OssFileTypeEnum;
@@ -39,6 +40,7 @@ import java.util.stream.Collectors;
  * @version 1.0
  * @since 2020/4/21
  */
+@Slf4j
 @Service
 public class ApiServiceImpl implements ApiService {
 
@@ -116,6 +118,7 @@ public class ApiServiceImpl implements ApiService {
         List<FileReturnVo> images = fileMapper.selectByPropertyReturnVO(query);
         Set<String> shortCodes = images.stream().map(BaseModel::getRemark).collect(Collectors.toSet());
 
+        int update = 0;
         //插入新增的图片
         for (Map<String, String> image : fileList) {
             String base64 = image.get("file");
@@ -124,7 +127,7 @@ public class ApiServiceImpl implements ApiService {
             if (!shortCodes.remove(shortcode)) {
                 continue;
             }
-
+            update++;
             byte[] data = Base64.decode(base64);
             if (StringUtils.isEmpty(filename)) {
                 throw new BusinessException("需要文件名");
@@ -144,6 +147,7 @@ public class ApiServiceImpl implements ApiService {
             del.setRemark(item);
             fileService.delFiles(del, userInfoVO);
         });
+        log.info("同步ig，更新{}张，删除{}张", update, shortCodes.size());
     }
 
     private ApiKey validateAk(String key) {
