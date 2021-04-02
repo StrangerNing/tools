@@ -48,6 +48,16 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
+    public void insertFile(String name, String remark, OssFileTypeEnum type, UserInfoVO user) {
+        File file = new File();
+        file.setName(name);
+        file.setType(type.getIndex());
+        file.setRemark(remark);
+        user.setCreateUser(file);
+        fileMapper.insertByProperty(file);
+    }
+
+    @Override
     public ResultPage getFileList(FileForm file) {
         File f = new File();
         BeanUtils.copyProperties(file, f);

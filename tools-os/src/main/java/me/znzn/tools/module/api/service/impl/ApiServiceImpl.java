@@ -83,10 +83,37 @@ public class ApiServiceImpl implements ApiService {
         String suffix = filename.substring(filename.lastIndexOf("."));
         InputStream inputStream = new ByteArrayInputStream(data);
 
-        String fileName = UploadFileUtil.uploadOSS(inputStream, suffix, userInfoVO, OssFileTypeEnum.OTHERS);
         OssFileTypeEnum ossFileTypeEnum = StringUtils.isEmpty(type) ? OssFileTypeEnum.OTHERS : OssFileTypeEnum.valueOf(type);
+        String fileName = UploadFileUtil.uploadOSS(inputStream, suffix, userInfoVO, ossFileTypeEnum);
         fileService.insertFile(fileName, ossFileTypeEnum, userInfoVO);
         return CommonConstant.FILE_REQUEST_PREFIX + fileName;
+    }
+
+    @Override
+    public void asyncIg(Map file) {
+        List<Map<String, String>> fileList = (List)file.get("fileList");
+        String ak = (String)file.get("ak");
+        ApiKey apiKey = validateAk(ak);
+        Long userId = apiKey.getCreateId();
+        User user = userMapper.selectByPrimaryKey(userId);
+        UserInfoVO userInfoVO = new UserInfoVO();
+        BeanUtils.copyProperties(user, userInfoVO);
+
+        for (Map<String, String> image : fileList) {
+            String base64 = image.get("file");
+            String filename = image.get("filename");
+            String shortcode = image.get("shortcode");
+
+            byte[] data = Base64.decode(base64);
+            if (StringUtils.isEmpty(filename)) {
+                throw new BusinessException("需要文件名");
+            }
+            String suffix = filename.substring(filename.lastIndexOf("."));
+            InputStream inputStream = new ByteArrayInputStream(data);
+
+            String fileName = UploadFileUtil.uploadOSS(inputStream, suffix, userInfoVO, OssFileTypeEnum.INSTAGRAM);
+            fileService.insertFile(fileName, shortcode, OssFileTypeEnum.INSTAGRAM, userInfoVO);
+        }
     }
 
     private ApiKey validateAk(String key) {

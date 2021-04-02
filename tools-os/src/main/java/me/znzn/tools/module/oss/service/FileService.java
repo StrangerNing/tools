@@ -27,6 +27,15 @@ public interface FileService {
     void insertFile(String name, OssFileTypeEnum type, UserInfoVO user);
 
     /**
+     * 插入文件记录
+     * @param name
+     * @param remark
+     * @param type
+     * @param userInfoVO
+     */
+    void insertFile(String name, String remark, OssFileTypeEnum type, UserInfoVO userInfoVO);
+
+    /**
      * 获取文件列表
      * @param file 文件
      * @return List

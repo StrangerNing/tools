@@ -24,4 +24,10 @@ public interface ApiService {
      * @return
      */
     String uploadFile(Map<String, String> file);
+
+    /**
+     * 同步ig
+     * @param file
+     */
+    void asyncIg(Map<String, String> file);
 }

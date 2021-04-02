@@ -30,4 +30,10 @@ public class ApiController {
     public ResponseEntity upload(@RequestBody Map<String, String> file) {
         return ResultPageUtil.success(apiService.uploadFile(file));
     }
+
+    @PostMapping("/async/ig")
+    public ResponseEntity asyncIg(@RequestBody Map<String, String> file) {
+        apiService.asyncIg(file);
+        return ResultPageUtil.success();
+    }
 }
