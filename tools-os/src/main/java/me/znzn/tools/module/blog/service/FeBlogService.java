@@ -6,6 +6,8 @@ import me.znzn.tools.module.blog.entity.form.ArticleForm;
 import me.znzn.tools.module.blog.entity.po.ArticleComment;
 import me.znzn.tools.module.blog.entity.vo.ArticleCommentVo;
 import me.znzn.tools.module.blog.entity.vo.ArticleVo;
+import me.znzn.tools.module.oss.entity.po.File;
+import me.znzn.tools.module.oss.entity.vo.FileReturnVo;
 import me.znzn.tools.module.user.entity.vo.UserInfoVO;
 import org.springframework.http.ResponseEntity;
 
@@ -80,4 +82,10 @@ public interface FeBlogService {
     void cacheViewsPersistent();
 
     void like(Long id, String sourceKey);
+
+    /**
+     * 获取ig图片
+     * @return
+     */
+    List<FileReturnVo> getIgImages();
 }

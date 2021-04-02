@@ -64,6 +64,13 @@ public interface FileService {
     void delFile(String name, UserInfoVO user);
 
     /**
+     * 删除文件
+     * @param file
+     * @param user
+     */
+    void delFiles(File file, UserInfoVO user);
+
+    /**
      * 获取文件地址
      * @param id 文件id
      * @param user 登录用户

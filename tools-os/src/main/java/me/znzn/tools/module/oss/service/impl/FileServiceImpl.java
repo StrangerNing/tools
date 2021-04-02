@@ -1,5 +1,6 @@
 package me.znzn.tools.module.oss.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import me.znzn.tools.common.component.ResultPage;
 import me.znzn.tools.common.constant.CommonConstant;
 import me.znzn.tools.common.enums.OssFileTypeEnum;
@@ -94,6 +95,18 @@ public class FileServiceImpl implements FileService {
             user.hasOperateAuthThrowException(fileReturnVo);
             fileMapper.deleteByPrimaryKey(fileReturnVo.getId());
             UploadFileUtil.delFile(name);
+        }
+    }
+
+    @Override
+    public void delFiles(File file, UserInfoVO user) {
+        List<File> files = fileMapper.selectByProperty(file);
+        if (CollectionUtil.isNotEmpty(files)) {
+            files.forEach(item -> {
+                user.hasOperateAuthThrowException(item);
+                fileMapper.deleteByPrimaryKey(item.getId());
+                UploadFileUtil.delFile(item.getName());
+            });
         }
     }
 

@@ -1,11 +1,16 @@
 package me.znzn.tools.module.api.service.impl;
 
 import cn.hutool.core.codec.Base64;
+import me.znzn.tools.common.component.BaseModel;
 import me.znzn.tools.common.constant.CommonConstant;
 import me.znzn.tools.common.enums.OssFileTypeEnum;
 import me.znzn.tools.common.exception.BusinessException;
 import me.znzn.tools.module.api.entity.GenerateShortUrlVO;
 import me.znzn.tools.module.api.service.ApiService;
+import me.znzn.tools.module.blog.entity.constant.BlogRedisConstant;
+import me.znzn.tools.module.oss.entity.po.File;
+import me.znzn.tools.module.oss.entity.vo.FileReturnVo;
+import me.znzn.tools.module.oss.mapper.FileMapper;
 import me.znzn.tools.module.oss.service.FileService;
 import me.znzn.tools.module.url.entity.po.ShortUrl;
 import me.znzn.tools.module.url.service.ShortUrlService;
@@ -18,6 +23,7 @@ import me.znzn.tools.module.user.mapper.UserMapper;
 import me.znzn.tools.utils.UploadFileUtil;
 import me.znzn.tools.utils.ValidatorUtil;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -25,9 +31,8 @@ import org.springframework.util.StringUtils;
 import javax.annotation.Resource;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author zhuzening
@@ -48,6 +53,13 @@ public class ApiServiceImpl implements ApiService {
 
     @Resource
     private FileService fileService;
+
+    @Resource
+    private FileMapper fileMapper;
+
+    @Resource
+    private RedisTemplate redisTemplate;
+
 
     @Override
     public String getShortUrl(GenerateShortUrlVO shortUrlVO) {
@@ -99,10 +111,19 @@ public class ApiServiceImpl implements ApiService {
         UserInfoVO userInfoVO = new UserInfoVO();
         BeanUtils.copyProperties(user, userInfoVO);
 
+        File query = new File();
+        query.setType(OssFileTypeEnum.INSTAGRAM.getIndex());
+        List<FileReturnVo> images = fileMapper.selectByPropertyReturnVO(query);
+        Set<String> shortCodes = images.stream().map(BaseModel::getRemark).collect(Collectors.toSet());
+
+        //插入新增的图片
         for (Map<String, String> image : fileList) {
             String base64 = image.get("file");
             String filename = image.get("filename");
             String shortcode = image.get("shortcode");
+            if (!shortCodes.remove(shortcode)) {
+                continue;
+            }
 
             byte[] data = Base64.decode(base64);
             if (StringUtils.isEmpty(filename)) {
@@ -112,8 +133,17 @@ public class ApiServiceImpl implements ApiService {
             InputStream inputStream = new ByteArrayInputStream(data);
 
             String fileName = UploadFileUtil.uploadOSS(inputStream, suffix, userInfoVO, OssFileTypeEnum.INSTAGRAM);
+
+            redisTemplate.delete(BlogRedisConstant.INS_KEY);
             fileService.insertFile(fileName, shortcode, OssFileTypeEnum.INSTAGRAM, userInfoVO);
         }
+        //删除旧的图片
+        shortCodes.forEach(item -> {
+            File del = new File();
+            del.setType(OssFileTypeEnum.INSTAGRAM.getIndex());
+            del.setRemark(item);
+            fileService.delFiles(del, userInfoVO);
+        });
     }
 
     private ApiKey validateAk(String key) {

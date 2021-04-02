@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import me.znzn.tools.common.component.Page;
 import me.znzn.tools.common.component.ResultListData;
 import me.znzn.tools.common.constant.CommonConstant;
+import me.znzn.tools.common.enums.OssFileTypeEnum;
 import me.znzn.tools.common.exception.BusinessException;
 import me.znzn.tools.common.exception.NotFoundException;
 import me.znzn.tools.module.blog.entity.constant.BlogRedisConstant;
@@ -21,10 +22,14 @@ import me.znzn.tools.module.blog.entity.vo.ArticleVo;
 import me.znzn.tools.module.blog.mapper.ArticleCommentMapper;
 import me.znzn.tools.module.blog.mapper.ArticleMapper;
 import me.znzn.tools.module.blog.service.FeBlogService;
+import me.znzn.tools.module.oss.entity.po.File;
+import me.znzn.tools.module.oss.entity.vo.FileReturnVo;
+import me.znzn.tools.module.oss.mapper.FileMapper;
 import me.znzn.tools.module.user.entity.vo.UserInfoVO;
 import me.znzn.tools.module.user.mapper.UserMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.GenericToStringSerializer;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -50,6 +55,8 @@ public class FeBlogServiceImpl implements FeBlogService {
     private UserMapper userMapper;
     @Resource
     private ArticleCommentMapper articleCommentMapper;
+    @Resource
+    private FileMapper fileMapper;
     @Resource
     private RedisTemplate redisTemplate;
 
@@ -194,5 +201,19 @@ public class FeBlogServiceImpl implements FeBlogService {
     @Override
     public void like(Long id, String sourceKey) {
 
+    }
+
+    @Override
+    public List<FileReturnVo> getIgImages() {
+        redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+        List<FileReturnVo> imagesCache = redisTemplate.opsForList().range(BlogRedisConstant.INS_KEY, 0, -1);
+        if (CollectionUtil.isNotEmpty(imagesCache)) {
+            return imagesCache;
+        }
+        File query = new File();
+        query.setType(OssFileTypeEnum.INSTAGRAM.getIndex());
+        List<FileReturnVo> images = fileMapper.selectByPropertyReturnVO(query);
+        redisTemplate.opsForList().rightPushAll(BlogRedisConstant.INS_KEY, images);
+        return images;
     }
 }

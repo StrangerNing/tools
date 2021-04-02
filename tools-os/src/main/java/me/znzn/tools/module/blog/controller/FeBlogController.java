@@ -284,5 +284,6 @@ public class FeBlogController {
 
     private void getPagePlugins(Model model) {
         model.addAttribute("hotTags", tagService.hotTags(null));
+        model.addAttribute("ig", feBlogService.getIgImages());
     }
 }
