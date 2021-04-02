@@ -1,6 +1,7 @@
 package me.znzn.tools.module.api.service.impl;
 
 import cn.hutool.core.codec.Base64;
+import cn.hutool.core.collection.CollectionUtil;
 import lombok.extern.slf4j.Slf4j;
 import me.znzn.tools.common.component.BaseModel;
 import me.znzn.tools.common.constant.CommonConstant;
@@ -119,12 +120,16 @@ public class ApiServiceImpl implements ApiService {
         Set<String> shortCodes = images.stream().map(BaseModel::getRemark).collect(Collectors.toSet());
 
         int update = 0;
+        if (CollectionUtil.isEmpty(fileList)) {
+            log.info("同步ig，接收到0张图片");
+            return;
+        }
         //插入新增的图片
         for (Map<String, String> image : fileList) {
             String base64 = image.get("file");
             String filename = image.get("filename");
             String shortcode = image.get("shortcode");
-            if (!shortCodes.remove(shortcode)) {
+            if (shortCodes.remove(shortcode)) {
                 continue;
             }
             update++;
@@ -147,7 +152,7 @@ public class ApiServiceImpl implements ApiService {
             del.setRemark(item);
             fileService.delFiles(del, userInfoVO);
         });
-        log.info("同步ig，更新{}张，删除{}张", update, shortCodes.size());
+        log.info("同步ig，接收到{}张，更新{}张，删除{}张", fileList.size(), update, shortCodes.size());
     }
 
     private ApiKey validateAk(String key) {
