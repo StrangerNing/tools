@@ -50,7 +50,7 @@
                         <div class="post-card-1 border-radius-10 hover-up">
                             <div class="post-thumb thumb-overlay img-hover-slide position-relative" th:style="'background-image: url(' + ${article.thumbPreview} + ')'">
                                 <a class="img-link" th:href="${article.aliasHref}"></a>
-<!--                                <span class="top-right-icon bg-success"><i class="elegant-icon icon_camera_alt"></i></span>-->
+                                <span class="top-right-icon bg-success" th:if="${article.type} eq 5"><i class="elegant-icon icon_camera_alt"></i></span>
                                 <ul th:replace="category-list :: socialShare" class="social-share"></ul>
                             </div>
                             <div class="post-content p-30">
@@ -63,7 +63,7 @@
                                     </h5>
                                     <div class="entry-meta meta-1 float-left font-x-small text-nowrap text-uppercase">
                                         <span class="post-on time" th:datetime="${#dates.format(article.createTime,'yyyy-MM-dd HH:mm:ss')}"></span>
-                                        <span class="time-reading has-dot">[[${article.minutes}]] 字</span>
+                                        <span class="time-reading has-dot" th:unless="${article.type} eq 5">[[${article.minutes}]] 字</span>
                                         <span class="post-by has-dot" th:text="${article.views} + ' 阅读'"></span>
                                     </div>
                                 </div>

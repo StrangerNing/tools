@@ -110,7 +110,7 @@
                                             </h3>
                                             <div class="entry-meta meta-1 font-small text-white mt-10 pr-5 pl-5">
                                                 <span class="post-on time" th:datetime="${#dates.format(last.createTime,'yyyy-MM-dd HH:mm:ss')}"></span>
-                                                <span class="time-reading has-dot">[[${last.minutes}]] 字</span>
+                                                <span class="time-reading has-dot" th:unless="${last.type} eq 5">[[${last.minutes}]] 字</span>
                                                 <span class="post-by has-dot">[[${last.views}]] 阅读</span>
                                             </div>
                                         </div>
@@ -123,7 +123,7 @@
                         <div class="post-card-1 border-radius-10 hover-up">
                             <div class="post-thumb thumb-overlay img-hover-slide position-relative" th:style="'background-image: url(' + ${last.thumbPreview} + ')'">
                                 <a class="img-link" th:href="${last.aliasHref}"></a>
-<!--                                <span class="top-right-icon bg-success"><i class="elegant-icon icon_camera_alt"></i></span>-->
+                                <span class="top-right-icon bg-success" th:if="${last.type} eq 5"><i class="elegant-icon icon_camera_alt"></i></span>
                                 <ul class="social-share">
                                     <li><a href="#"><i class="elegant-icon social_share"></i></a></li>
                                     <li class="list-inline-item"><a class="fb" th:href="'https://www.facebook.com/sharer/sharer.php?u=https://edchu.cn' + ${last.aliasHref}" target="_blank" title="facebook"><i class="elegant-icon social_facebook"></i></a></li>
@@ -141,7 +141,7 @@
                                     </h5>
                                     <div class="entry-meta meta-1 float-left font-x-small">
                                         <span class="post-on time" th:datetime="${#dates.format(last.createTime,'yyyy-MM-dd HH:mm:ss')}"></span>
-                                        <span class="time-reading has-dot">[[${last.minutes}]] 字</span>
+                                        <span class="time-reading has-dot" th:unless="${last.type} eq 5">[[${last.minutes}]] 字</span>
                                         <span class="post-by has-dot" th:text="${last.views} + ' 阅读'"></span>
                                     </div>
                                 </div>

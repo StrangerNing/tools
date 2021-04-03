@@ -28,9 +28,11 @@ import me.znzn.tools.module.oss.mapper.FileMapper;
 import me.znzn.tools.module.user.entity.vo.UserInfoVO;
 import me.znzn.tools.module.user.mapper.UserMapper;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.lucene.index.IndexReader;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.GenericToStringSerializer;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -160,8 +162,8 @@ public class FeBlogServiceImpl implements FeBlogService {
     @Async
     @Override
     public void addViews(Long id, String sourceKey) {
-        redisTemplate.setValueSerializer(new GenericToStringSerializer<Long>(Long.class));
-        Long version = (Long)redisTemplate.opsForValue().get(BlogRedisConstant.VIEW_CACHE_VERSION);
+        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<Object>(Object.class));
+        Integer version = (Integer) redisTemplate.opsForValue().get(BlogRedisConstant.VIEW_CACHE_VERSION);
 
         if (!redisTemplate.opsForValue().setIfAbsent(BlogRedisConstant.VIEW_SOURCE_PREFIX+id+"_"+sourceKey, 1, Long.valueOf(CommonConstant.VALID_ARTICLE_VIEW_INTERVAL), TimeUnit.MILLISECONDS)) {
             log.info("{}已阅读过文章{}", sourceKey, id);
@@ -176,24 +178,24 @@ public class FeBlogServiceImpl implements FeBlogService {
     @Override
     @Scheduled(fixedRate = 60000)
     public void cacheViewsPersistent() {
-        redisTemplate.setValueSerializer(new GenericToStringSerializer<Long>(Long.class));
+        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<Object>(Object.class));
         Long version = redisTemplate.opsForValue().increment(BlogRedisConstant.VIEW_CACHE_VERSION) - 1;
 
-        Set<Long> articleIds = redisTemplate.opsForSet().members(BlogRedisConstant.VIEW_CACHE_PREFIX + version);
+        Set<Integer> articleIds = redisTemplate.opsForSet().members(BlogRedisConstant.VIEW_CACHE_PREFIX + version);
         redisTemplate.delete(BlogRedisConstant.VIEW_CACHE_PREFIX + version);
         if (CollectionUtil.isEmpty(articleIds)) {
             return;
         }
         List<Article> articles = new ArrayList<>(articleIds.size());
         List<String> keys = new ArrayList<>();
-        articleIds.forEach(articleId -> {
-            Long views = (Long)redisTemplate.opsForValue().get(BlogRedisConstant.VIEW_CACHE_PREFIX + version + "_" + articleId);
+        for (Integer articleId : articleIds) {
+            Integer views = (Integer)redisTemplate.opsForValue().get(BlogRedisConstant.VIEW_CACHE_PREFIX + version + "_" + articleId);
             keys.add(BlogRedisConstant.VIEW_CACHE_PREFIX + version + "_" + articleId);
             Article article = new Article();
-            article.setId(articleId);
-            article.setViews(views.intValue());
+            article.setId(articleId.longValue());
+            article.setViews(views);
             articles.add(article);
-        });
+        }
         articleMapper.updateArticleViews(articles);
         redisTemplate.delete(keys);
     }
@@ -205,7 +207,7 @@ public class FeBlogServiceImpl implements FeBlogService {
 
     @Override
     public List<FileReturnVo> getIgImages() {
-        redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<Object>(Object.class));
         List<FileReturnVo> imagesCache = redisTemplate.opsForList().range(BlogRedisConstant.INS_KEY, 0, -1);
         if (CollectionUtil.isNotEmpty(imagesCache)) {
             return imagesCache;

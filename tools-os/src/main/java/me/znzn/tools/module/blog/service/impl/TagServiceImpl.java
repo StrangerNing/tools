@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.GenericToStringSerializer;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -40,7 +41,7 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public List<Tag> hotTags(Integer size) {
-        redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<Object>(Object.class));
         List<Tag> list = redisTemplate.opsForList().range(BlogRedisConstant.TAGS_KEY, 0, size == null ? -1: size);
         if (CollectionUtil.isNotEmpty(list)) {
             return list;
