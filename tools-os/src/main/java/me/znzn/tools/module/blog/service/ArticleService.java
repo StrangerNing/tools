@@ -20,9 +20,9 @@ public interface ArticleService {
      * 新增文章
      * @param articleVo 文章
      * @param loginUser 登录用户
-     * @return Boolean
+     * @return Long
      */
-    Boolean addArticle(ArticleVo articleVo, UserInfoVO loginUser);
+    Long addArticle(ArticleVo articleVo, UserInfoVO loginUser);
 
     /**
      * 编辑文章

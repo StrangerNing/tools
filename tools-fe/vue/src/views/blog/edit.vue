@@ -1,10 +1,6 @@
 <template>
   <div class="page-container">
     <el-form label-width="90px" label-position="right">
-      <div class="page-text">
-        <span v-if="type === 1">新建文章</span>
-        <span v-else>编辑文章</span>
-      </div>
       <div>
         <el-row>
           <el-col :xs="24" :sm="12" :md="8" :lg="6">
@@ -112,9 +108,6 @@
           </el-form-item>
         </el-row>
         <el-row>
-
-        </el-row>
-        <el-row>
           <el-col :span="6">
             <el-form-item label="封面：">
               <el-button-group v-if="article.thumb">
@@ -150,6 +143,7 @@
         </div>
         <div class="page-content">
           <el-button type="primary" @click="openBeforePublish" :disabled="loading">发布</el-button>
+          <span v-if="autoSaveTime" style="float: right">最近自动保存于{{parseTime(autoSaveTime)}}</span>
         </div>
       </div>
     </el-form>
@@ -210,10 +204,63 @@
         </el-row>
         <el-row>
           <div style="text-align: center">
-            <el-button type="warning" icon="el-icon-check" size="small" @click="submit">提交</el-button>
+            <el-button type="warning" icon="el-icon-check" size="small" @click="submit(false)">提交</el-button>
           </div>
         </el-row>
       </el-form>
+    </el-dialog>
+    <el-dialog title="有以下草稿，是否继续编辑" :visible.sync="draftVisible">
+      <el-table :data="drafts" border width="100%" @current-change="choose" class="page-table">
+        <el-table-column label="选择" width="70px">
+          <template slot-scope="scope">
+            <el-radio v-model="currentRowId" :label="scope.row.id"><i></i></el-radio>
+          </template>
+        </el-table-column>
+        <el-table-column prop="title" label="标题" min-width="200px" show-overflow-tooltip/>
+        <el-table-column label="分类" min-width="200px">
+          <template slot-scope="scope">
+            <span v-for="category in scope.row.categories">
+              <span :class="category.color">{{category.name + ' '}}</span>
+            </span>
+          </template>
+        </el-table-column>
+        <el-table-column label="标签" min-width="300px" show-overflow-tooltip>
+          <template slot-scope="scope">
+            <span v-for="tag in scope.row.tags" style="white-space: nowrap;">{{tag.tag}}&nbsp</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="状态" min-width="80px">
+          <template slot-scope="scope">
+            <el-tag effect="dark" v-if="scope.row.status === 0" type="danger">{{blogEnums.articleStatusEnum.getLabelByValue(scope.row.status)}}</el-tag>
+            <el-tag effect="dark" v-if="scope.row.status === 1" type="success">{{blogEnums.articleStatusEnum.getLabelByValue(scope.row.status)}}</el-tag>
+            <el-tag effect="dark" v-if="scope.row.status === 2" type="primary">{{blogEnums.articleStatusEnum.getLabelByValue(scope.row.status)}}</el-tag>
+            <el-tag effect="dark" v-if="scope.row.status === 3" type="warning">{{blogEnums.articleStatusEnum.getLabelByValue(scope.row.status)}}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="权限" min-width="80px">
+          <template slot-scope="scope">
+            {{blogEnums.articlePermissionEnum.getLabelByValue(scope.row.permission)}}
+          </template>
+        </el-table-column>
+        <el-table-column label="优先级" prop="priority" min-width="80px">
+        </el-table-column>
+        <el-table-column label="允许评论" min-width="80px">
+          <template slot-scope="scope">
+            {{blogEnums.commentLimitEnum.getLabelByValue(scope.row.comment)}}
+          </template>
+        </el-table-column>
+        <el-table-column label="编写类型" min-width="90px">
+          <template slot-scope="scope">
+            {{blogEnums.editTypeEnum.getLabelByValue(scope.row.editType)}}
+          </template>
+        </el-table-column>
+        <el-table-column prop="createTime" label="新建时间" min-width="160px"/>
+        <el-table-column prop="modifyTime" label="修改时间" min-width="160px"/>
+      </el-table>
+      <el-row style="margin-top: 20px;text-align: right">
+        <el-button size="small" type="primary" @click="closeDraft">关闭</el-button>
+        <el-button size="small" type="primary" @click="editDraft">确认</el-button>
+      </el-row>
     </el-dialog>
     <el-image-viewer v-if="showViewer"
                      :on-close="closeViewer"
@@ -224,17 +271,19 @@
 
 <script>
   import remoteLoad from "../../utils/remoteLoad";
-  import {add, edit, getArticle, searchCategory, searchTag, uploadFile} from "../../api/blog";
+  import {add, edit, getArticle, list, searchCategory, searchTag, uploadFile} from "../../api/blog";
   import {baseURL} from "../../utils/request";
   import ElImageViewer from 'element-ui/packages/image/src/image-viewer';
   import {delFileByName} from "../../api/file";
-  import blogEnums from "../constant/blogEnums";
+  import blogEnums from "../blog/blogEnums";
+  import {parseTime} from '../../utils/index'
 
   export default {
     name: "edit",
     components: {ElImageViewer},
     data() {
       return {
+        parseTime: parseTime,
         article: {
           type:1,
           editType: 2,
@@ -267,9 +316,14 @@
         type: 1,
         imgList: {},
         beforePublishVisible: false,
+        draftVisible: false,
         previewList: [],
         viewerIndex: 0,
-        images:[]
+        images:[],
+        drafts: [],
+        currentRow: {},
+        currentRowId: null,
+        autoSaveTime: null
       }
     },
     watch: {
@@ -412,39 +466,54 @@
       },
       openBeforePublish() {
         this.beforePublishVisible = true
+        this.article.status = blogEnums.articleStatusEnum.getValueByFiledName('normal')
       },
-      submit() {
+      submit(autoSave) {
         this.loading = true
         if (this.article.editType !== null && this.article.editType === 2) {
           this.article.content = this.wangEditor.txt.html()
           this.article.markdown = null
         }
-        if (this.article.type === blogEnums.articleTypeEnum.getValueByFiledName('images')) {
-          if (this.images && this.images.length > 0) {
-            this.article.content = JSON.stringify(this.images.map(item => {return item.name}))
-            this.article.thumb = this.images[0].name
+        if (!this.article.content) {
+          if (this.article.status !== blogEnums.articleStatusEnum.getValueByFiledName('draft')) {
+            this.$message.error('文章内容为空')
           }
+          return
         }
         if (this.type === 1) {
           add(this.article).then(res => {
-            if (res.status === 1) {
-              this.$message.success('发布成功！')
-              this.$router.push({name: 'articleList'})
-            } else {
-              this.$message.error('发布失败！')
+            if (autoSave) {
+              this.type = 2
+              this.article.id = res.data
+              this.article.version = 0
+              this.autoSaveTime = Date.now()
               this.loading = false
+            } else {
+              if (res.status === 1) {
+                this.$message.success('发布成功！')
+                this.$router.push({name: 'articleList'})
+              } else {
+                this.$message.error('发布失败！')
+                this.loading = false
+              }
             }
           }).catch(e => {
             this.loading = false
           })
         } else {
           edit(this.article).then(res => {
-            if (res.status === 1) {
-              this.$message.success('修改成功！')
-              this.$router.push({name: 'articleList'})
-            } else {
-              this.$message.error('修改失败！')
+            if (autoSave) {
+              this.article.version = this.article.version + 1
+              this.autoSaveTime = Date.now()
               this.loading = false
+            } else {
+              if (res.status === 1) {
+                this.$message.success('修改成功！')
+                this.$router.push({name: 'articleList'})
+              } else {
+                this.$message.error('修改失败！')
+                this.loading = false
+              }
             }
           }).catch(e => {
             this.loading = false
@@ -502,6 +571,29 @@
         reader.onload = function () {
           that.article.markdown = reader.result
         }
+      },
+      choose (item) {
+        if (item === null) {
+          this.currentRow = null
+          this.currentRowId = null
+          return
+        }
+        this.currentRow = item
+        this.currentRowId = item.id
+      },
+      closeDraft() {
+        this.draftVisible = false
+      },
+      editDraft() {
+        let id = this.currentRowId
+        getArticle(id).then(res => {
+          this.article = res.data
+          this.type = 2
+          if (this.article.editType === 2) {
+            this.openWangEditor()
+          }
+          this.draftVisible = false
+        })
       }
     },
     mounted() {
@@ -517,15 +609,28 @@
           if (this.article.editType === 2) {
             this.openWangEditor()
           }
-          if (this.article.type === blogEnums.articleTypeEnum.getValueByFiledName('images')) {
-            let prefix = this.article.ossPrefix
-            let images = JSON.parse(this.article.content)
-            this.images = images.map(item => {return {url: prefix + item, name: item}})
-          }
         })
       } else {
         this.openWangEditor()
       }
+
+      let queryDrafts = {status: blogEnums.articleStatusEnum.getValueByFiledName('draft')}
+      list(queryDrafts).then(res => {
+        this.drafts = res.data.list
+        if (this.drafts.length > 0) {
+          this.draftVisible = true
+        }
+      })
+      let that = this
+      var interval = setInterval(function () {
+        if (!that.beforePublishVisible) {
+          that.article.status = blogEnums.articleStatusEnum.getValueByFiledName('draft')
+          that.submit(true)
+        }
+      }, 10000)
+      this.$once('hook:beforeDestroy', () => {
+        clearInterval(interval);
+      })
     },
   }
 </script>

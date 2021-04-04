@@ -132,6 +132,8 @@ public class LuceneServiceImpl implements LuceneService {
             IndexWriterConfig cfg = new IndexWriterConfig(analyzer);
             IndexWriter indexWriter = new IndexWriter(directory, cfg);
             indexWriter.deleteDocuments(new Term("id", String.valueOf(articleVo.getId())));
+            indexWriter.commit();
+            indexWriter.close();
         } catch (IOException io) {
             log.error("删除文章索引失败，IO异常", io);
         }

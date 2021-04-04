@@ -139,4 +139,11 @@ public class UserInfoVO implements Serializable {
         }
     }
 
+    public void setOperateAccount(BaseModel baseModel) {
+        if (isAdmin()) {
+            return;
+        }
+        baseModel.setCreateAccount(id);
+    }
+
 }

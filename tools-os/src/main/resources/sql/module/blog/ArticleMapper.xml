@@ -385,7 +385,7 @@
             <if test="remark != null and '' != remark">
                 remark = #{remark},
             </if>
-            <if test="version != null and '' != version">
+            <if test="version != null">
                 version = version + 1,
             </if>
             <if test="thumb != null and '' != thumb">

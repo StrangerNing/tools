@@ -207,7 +207,7 @@
 
 <script>
   import {deleteArticle, list, refreshIndex, searchCategory, searchTag} from "../../api/blog";
-  import blogEnums from "../constant/blogEnums";
+  import blogEnums from "../blog/blogEnums";
   import "mavon-editor/dist/css/index.css"
 
   export default {

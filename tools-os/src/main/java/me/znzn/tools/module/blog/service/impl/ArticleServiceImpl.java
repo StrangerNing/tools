@@ -60,7 +60,7 @@ public class ArticleServiceImpl implements ArticleService {
     private LuceneService luceneService;
 
     @Override
-    public Boolean addArticle(ArticleVo articleVo, UserInfoVO loginUser) {
+    public Long addArticle(ArticleVo articleVo, UserInfoVO loginUser) {
         Article article = new Article();
         articleVo.setAuthor(loginUser.getNickname());
         articleVo.setMinutes(StringUtil.countHtmlWords(articleVo.getContent()));
@@ -85,7 +85,7 @@ public class ArticleServiceImpl implements ArticleService {
         articleVo.setCreateTime(article.getCreateTime());
         luceneService.addDocument(articleVo);
         tagService.clearTagCache();
-        return Boolean.TRUE;
+        return id;
     }
 
     private void setDefaultProps(Article article) {
@@ -212,11 +212,13 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public List<ArticleVo> articleList(ArticleForm articleForm, UserInfoVO loginUser) {
+        loginUser.setOperateAccount(articleForm);
         return articleMapper.selectArticleList(articleForm);
     }
 
     @Override
     public Integer countArticle(ArticleForm articleForm, UserInfoVO loginUser) {
+        loginUser.setOperateAccount(articleForm);
         return articleMapper.countArticle(articleForm);
     }
 
