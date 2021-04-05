@@ -45,7 +45,7 @@
     <main class="bg-grey pb-30">
         <div class="container single-content">
             <div class="entry-header entry-header-style-1 mb-50 pt-50">
-                <h1 class="entry-title mb-50 font-weight-900" th:text="${article.title}">
+                <h1 id="title" class="entry-title mb-50 font-weight-900" th:data-id="${article.id}" th:text="${article.title}">
                     A boy who just wanna be a lifetime salted fish.
                 </h1>
                 <div class="row">
@@ -55,8 +55,8 @@
                                 <a class="author-avatar" href="#"><img class="img-circle" th:src="${article.authorInfo.avatarUrl}" alt=""></a>
                                 By <a href="author.html"><span class="author-name font-weight-bold" th:text="${article.author}"></span></a>
                             </p>
-                            <span class="mr-10 time" th:datetime="${#dates.format(article.createTime,'yyyy-MM-dd HH:mm:ss')}"> 30 May 1997</span>
-                            <span class="time-reading has-dot">[[${article.minutes}]] 字</span>
+                            <span id="createTime" class="mr-10 time" th:datetime="${#dates.format(article.createTime,'yyyy-MM-dd HH:mm:ss')}"> 30 May 1997</span>
+                            <span id="minutes" class="time-reading has-dot">[[${article.minutes}]] 字</span>
                         </div>
                     </div>
                     <div class="col-md-6 text-right d-none d-md-inline">
@@ -71,7 +71,7 @@
             </div>
             <!--end single header-->
             <figure class="image mb-30 m-auto text-center border-radius-10">
-                <img class="border-radius-10" th:src="${article.thumbPreview}" alt="post-title" />
+                <img id="thumb" class="border-radius-10" th:src="${article.thumbPreview}" alt="post-title" />
             </figure>
             <!--figure-->
             <article class="entry-wraper mb-50">
@@ -113,12 +113,6 @@
     <div class="dark-mark"></div>
     <div id="big-image"></div>
     <!-- Vendor JS-->
-    <script src="/static/js/vendor/timeago.js"></script>
-    <script>
-      // 自动更新
-      var timeagoInstance = timeago();// 实例
-      timeagoInstance.render(document.querySelectorAll('.time'),'zh_CN');
-    </script>
     <script src="/static/js/vendor/modernizr-3.5.0.min.js"></script>
     <script src="/static/js/vendor/jquery-1.12.4.min.js"></script>
     <script src="/static/js/vendor/popper.min.js"></script>
@@ -137,6 +131,12 @@
     <script src="/static/js/vendor/jquery.theia.sticky.js"></script>
     <!-- NewsBoard JS -->
     <script src="/static/js/main.js"></script>
+    <script src="/static/js/vendor/timeago.js"></script>
+    <script>
+      // 自动更新
+      var timeagoInstance = timeago();// 实例
+      timeagoInstance.render(document.querySelectorAll('.time'),'zh_CN');
+    </script>
     <script src="/static/js/highlight.min.js"></script>
     <script src="/static/js/addComment.js"></script>
     <script src="/static/js/vendor/getAjax.js"></script>
@@ -145,6 +145,7 @@
       toastr.options.positionClass = 'toast-top-right';
     </script>
     <script src="/static/js/article-img.js"></script>
+    <script src="/static/js/article-view.js"></script>
 </body>
 
 </html>

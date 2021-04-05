@@ -48,8 +48,8 @@
                             <div class="widget-header-2 position-relative mb-30">
                                 <h5 class="mt-5 mb-30">Tagcloud</h5>
                             </div>
-                            <div class="tagcloud mt-50">
-                                <a class="tag-cloud-link" th:each="hotTag,stat : ${hotTags}" th:if="${stat.index < 10}" th:href="'/tag/' + ${hotTag.tag}" th:text="${hotTag.tag}"></a>
+                            <div class="tagcloud">
+                                <a class="tag-cloud-link" th:each="hotTag,stat : ${hotTags}" th:if="${stat.index < 8}" th:href="'/tag/' + ${hotTag.tag}" th:text="${hotTag.tag}"></a>
                             </div>
                         </div>
                     </div>

@@ -45,14 +45,16 @@
     <main class="bg-grey pb-30">
         <div class="entry-header entry-header-style-2 pb-80 pt-80 mb-50 text-white" th:style="'background-image: url(' + ${article.thumbPreview}+ ')'">
             <div class="container entry-header-content">
-                <h1 class="entry-title mb-50 font-weight-900" th:text="${article.title}">
+                <h1 id="title" class="entry-title mb-50 font-weight-900" th:data-id="${article.id}" th:text="${article.title}">
                     A boy who just wanna be a lifetime salted fish.
                 </h1>
                 <div class="entry-meta align-items-center meta-2 font-small color-white">
-                    <p class="mb-5 text-white">
+                    <p class="mb-5 text-white text-nowrap">
                         <a class="author-avatar" href="#"><img class="img-circle" th:src="${article.authorInfo.avatarUrl}" alt="">
                         </a>
-                        By <a href="author.html"><span class="author-name font-weight-bold text-white" th:text="${article.author}">Edchu</span></a>
+                        By <a href="author.html"><span class="author-name font-weight-bold text-white mr-10" th:text="${article.author}">Edchu</span></a>
+                        <span id="createTime" class="mr-10 time has-dot" th:datetime="${#dates.format(article.createTime,'yyyy-MM-dd HH:mm:ss')}"> 30 May 1997</span>
+                        <span id="minutes" class="time-reading has-dot">[[${article.minutes}]] 字</span>
                     </p>
                 </div>
             </div>
@@ -60,6 +62,7 @@
         <div class="container single-content">
             <!--end single header-->
             <!--figure-->
+            <img id="thumb" th:src="${article.thumbPreview}" class="js-hidden">
             <article class="entry-wraper mb-50">
 <!--                <div class="excerpt mb-30">-->
 <!--                    <p>Gosh jaguar ostrich quail one excited dear hello and bound and the and bland moral misheard roadrunner flapped lynx far that and jeepers giggled far and far bald that roadrunner python inside held shrewdly the manatee.</p>-->
@@ -103,12 +106,6 @@
     <!-- End Footer -->
     <div class="dark-mark"></div>
     <!-- Vendor JS-->
-    <script src="/static/js/vendor/timeago.js"></script>
-    <script>
-      // 自动更新
-      var timeagoInstance = timeago();// 实例
-      timeagoInstance.render(document.querySelectorAll('.time'),'zh_CN');
-    </script>
     <script src="/static/js/vendor/modernizr-3.5.0.min.js"></script>
     <script src="/static/js/vendor/jquery-1.12.4.min.js"></script>
     <script src="/static/js/vendor/popper.min.js"></script>
@@ -131,10 +128,17 @@
     <script src="/static/js/addComment.js"></script>
     <script src="/static/js/vendor/getAjax.js"></script>
     <script src="/static/js/vendor/toastr.min.js"></script>
+    <script src="/static/js/vendor/timeago.js"></script>
+    <script>
+      // 自动更新
+      var timeagoInstance = timeago();// 实例
+      timeagoInstance.render(document.querySelectorAll('.time'),'zh_CN');
+    </script>
     <script type="text/javascript">
       toastr.options.positionClass = 'toast-top-right';
     </script>
     <script src="/static/js/article-img.js"></script>
+    <script src="/static/js/article-view.js"></script>
 </body>
 
 </html>
