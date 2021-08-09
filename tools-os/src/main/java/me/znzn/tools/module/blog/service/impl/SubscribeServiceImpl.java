@@ -88,7 +88,6 @@ public class SubscribeServiceImpl implements SubscribeService {
 
         Subscribe query = new Subscribe();
         query.setMail(mail);
-        
         return subscribeMapper.selectByProperty(query);
     }
 
