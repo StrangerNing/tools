@@ -14,10 +14,12 @@ import me.znzn.tools.module.blog.entity.po.Article;
 import me.znzn.tools.module.blog.entity.po.Category;
 import me.znzn.tools.module.blog.entity.po.Tag;
 import me.znzn.tools.module.user.entity.vo.UserInfoVO;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.document.*;
 import org.springframework.util.StreamUtils;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -59,6 +61,22 @@ public class ArticleVo extends Article implements Serializable {
 
     public String getAliasHref() {
         return CommonConstant.ARTICLE_URL_PREFIX + super.getAlias();
+    }
+
+    public List<String> getPartContent() {
+        int i = 1;
+        List<String> contentList = new ArrayList<>();
+        while (i < 4) {
+            int sIndex = StringUtils.ordinalIndexOf(getContent(), "<p>", i++);
+            int eIndex = StringUtils.ordinalIndexOf(getContent(), "</p>", i++);
+            if (sIndex > 0 && eIndex > 0) {
+                contentList.add(getContent().substring(sIndex, eIndex));
+            } else {
+                break;
+            }
+        }
+
+        return contentList;
     }
 
     public Document buildDocument() {

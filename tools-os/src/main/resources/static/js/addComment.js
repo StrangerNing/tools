@@ -32,7 +32,7 @@ $('.btn-reply').click(function () {
     }
   }
   $('#replyId').val(replyId)
-  $('#replyName').empty().append('回复：' + replyName)
+  $('#replyName').empty().append('回复：' + escape(replyName))
   $('#replyTo').css('display', 'inline')
 })
 

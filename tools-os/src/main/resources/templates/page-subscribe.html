@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zh-CN" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>确认订阅 - 凑凑 - EdChu的个人博客</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/x-icon" href="/static/imgs/theme/favicon.png">
+    <!-- NewsBoard CSS  -->
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/widgets.css">
+    <link rel="stylesheet" href="/static/css/responsive.css">
+</head>
+
+<body>
+<div class="scroll-progress primary-bg"></div>
+<!-- Start Preloader -->
+<!--     <div class="preloader text-center">
+    <div class="circle"></div>
+</div> -->
+<!--Offcanvas sidebar-->
+<div th:replace="./components/aside :: aside"></div>
+<!-- Start Header -->
+<div th:replace="./components/header :: header"></div>
+<!--Start search form-->
+<div th:replace="./components/search :: search"></div>
+<!-- Start Main content -->
+<main class="bg-grey pt-50 pb-50">
+    <div class="container" id="container" th:data-message="${message}">
+        <div class="entry-wraper" th:if="${message}">
+            <div class="row pt-10">
+                <div class="col-lg-6 col-md-12 d-lg-block d-none pr-50"><img src="/static/imgs/theme/cancel.png" alt=""></div>
+                <div class="col-lg-6 pt-50 col-md-12 pl-50 text-md-center text-lg-left">
+                    <h2 class="mb-30 font-weight-900">很抱歉……</h2>
+                    <p>[[${message}]]</p>
+                </div>
+            </div>
+        </div>
+        <div class="row pt-10" th:unless="${message}">
+            <div class="col-lg-6 col-md-12 d-lg-block d-none pr-50"><img src="/static/imgs/theme/check.png" alt=""></div>
+            <div class="col-lg-6 col-md-12 pt-50 pl-50 text-md-center text-lg-left">
+                <h2 class="mb-30 font-weight-900">感谢您的订阅！</h2>
+                <p>你的电子邮箱已成功验证。</p>
+                <p>接下来，在本站有新的文章时将会主动向你推送。</p>
+                <p class="mt-md-5"><span id="time">5</span>秒后，将会返回 <a href="/">主页</a></p>
+                <div class="progress">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" id="countdown" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<!-- End Main content -->
+<!-- Footer Start-->
+<div th:replace="./components/foot :: foot"></div>
+<!-- End Footer -->
+<div class="dark-mark"></div>
+<!-- Vendor JS-->
+<script src="/static/js/vendor/modernizr-3.5.0.min.js"></script>
+<script src="/static/js/vendor/jquery-1.12.4.min.js"></script>
+<script src="/static/js/vendor/popper.min.js"></script>
+<script src="/static/js/vendor/bootstrap.min.js"></script>
+<script src="/static/js/vendor/jquery.slicknav.js"></script>
+<script src="/static/js/vendor/slick.min.js"></script>
+<script src="/static/js/vendor/wow.min.js"></script>
+<script src="/static/js/vendor/jquery.ticker.js"></script>
+<script src="/static/js/vendor/jquery.vticker-min.js"></script>
+<script src="/static/js/vendor/jquery.scrollUp.min.js"></script>
+<script src="/static/js/vendor/jquery.nice-select.min.js"></script>
+<script src="/static/js/vendor/jquery.magnific-popup.js"></script>
+<script src="/static/js/vendor/jquery.sticky.js"></script>
+<script src="/static/js/vendor/perfect-scrollbar.js"></script>
+<script src="/static/js/vendor/waypoints.min.js"></script>
+<script src="/static/js/vendor/jquery.theia.sticky.js"></script>
+<!-- NewsBoard JS -->
+<script src="/static/js/main.js"></script>
+<script src="/static/js/vendor/timeago.js"></script>
+<script>
+  // 自动更新
+  var timeagoInstance = timeago();// 实例
+  timeagoInstance.render(document.querySelectorAll('.time'),'zh_CN');
+</script>
+<script>
+  var i=5;
+  let message = $('#container').data('message')
+  console.log(message)
+  if (!message) {
+    $(function(){
+      setTimeout(function(){
+        window.location.href='/';
+      },5000);//5秒后返回首页
+      after();
+    });
+    //自动刷新页面上的时间
+    function after(){
+      if (i > -1) {
+        let progress = (5-i)/5 * 100
+        console.log(progress)
+        $("#time").empty().append(i);
+        $('#countdown').css("width", progress + "%")
+        i=i-1;
+        setTimeout(function(){
+          after();
+        },1000);
+      }
+    }
+  }
+</script>
+</body>
+
+</html>

@@ -441,6 +441,38 @@
         }
     }
 
+    var subscribe = function () {
+        $('#subscribe-btn').click(function () {
+            var myModal = new bootstrap.Modal(document.getElementById('subscribe-modal'), {
+                keyboard: false
+            })
+            let mail = $('#subscribe-input').val()
+            let subscribeMsg = $('#subscribe-msg')
+            if (mail === undefined || mail === null || mail === '') {
+                subscribeMsg.html('<p>请输入你的邮箱地址</p>')
+            } else {
+                var regexEmail = /\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/;
+                if (regexEmail.test(mail)) {
+                    subscribeMsg.html('<p>请稍后...</p>')
+                    let url = '/wapi/blog/subscribe/newsletter/check'
+                    let data = {mail: mail}
+                    submitSubscribe(JSON.stringify(data), url, 'post').then(res => {
+                        subscribeMsg.html('<p>确认订阅的邮件已经发送到您的邮箱，请稍后前往您的邮箱进行确认～</p>')
+                    }).catch(e => {
+                        subscribeMsg.html('<p>发生了不可描述的错误，请重试X﹏X</p>')
+                    })
+                } else {
+                    subscribeMsg.html('<p>请输入一个正确格式的邮箱地址</p>')
+                }
+
+            }
+
+            myModal.toggle()
+        })
+    }
+
+    const submitSubscribe = async (data, url, method)=> await getAjax(data, url, method)
+
     /* WOW active */
     new WOW().init();
 
@@ -464,6 +496,7 @@
         moreArticles();
         VSticker();
         renderHistory();
+        subscribe();
     });
 
 })(jQuery);

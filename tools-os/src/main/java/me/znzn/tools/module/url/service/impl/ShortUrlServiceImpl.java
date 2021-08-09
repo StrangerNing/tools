@@ -12,6 +12,7 @@ import me.znzn.tools.module.user.entity.enums.StatusEnum;
 import me.znzn.tools.module.user.entity.vo.UserInfoVO;
 import me.znzn.tools.utils.LongNumUtil;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -54,6 +55,7 @@ public class ShortUrlServiceImpl implements ShortUrlService {
     @Override
     public ShortUrl getOriginUrl(String shortUrl) {
         Long id = LongNumUtil.decode(shortUrl);
+        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<ShortUrl>(ShortUrl.class));
         ShortUrl url = (ShortUrl)redisTemplate.opsForValue().get(UrlRedisConstant.SHORT_URL_KEY + id);
         if (url == null) {
             ShortUrl dbUrl = shortUrlMapper.selectByPrimaryKey(id);

@@ -447,6 +447,26 @@ li > p {
 .author-bio .author-social-icons li a i{font-size:14px;}
 .author .author-bio{margin:0;padding:50px;border:0;background:#f4f5f9;border-radius:5px;}
 
+/*Friends box*/
+.bt-1{border-top:1px solid;}
+.border-color-1{border-color:rgb(225,225,225);}
+.friends-bio{margin-bottom:10px;text-align:left;display:flex;border-bottom:1px solid rgb(225,225,225);padding-bottom:40px;}
+.friends-bio .friends-image img{border-radius:50%;width:40px;height:40px;}
+.friends-bio .friends-image{flex-grow:0;flex-shrink:0;overflow:hidden;width:40px;height:40px;margin-right:15px;}
+.friends-bio .friends-info{flex-grow:1;}
+.friends-bio .friends-info .friends-name{line-height: 40px; height: 40px}
+.friends-bio h3{font-size:22px;margin-bottom:10px;}
+.friends-bio h5{font-size:12px;text-transform:uppercase;margin-bottom:0;font-weight:500;color:var(--color-black);}
+.friends-bio .friends-description{margin-top:15px;margin-bottom:15px;}
+.friends-bio .friends-bio-link{display:inline-block;font-weight:normal;text-decoration:none;margin-right:20px;text-transform:capitalize;font-style:italic;border-bottom:1px solid rgb(225,225,225);color:#666;}
+.friends-bio .friends-social{display:inline-block;}
+.friends-bio .friends-social-icons{margin:0;padding:0;list-style:none;}
+.friends-bio .friends-social-icons li{display:inline-block;}
+.friends-bio .friends-social-icons li:first-child a{margin-left:0;}
+.friends-bio .friends-social-icons li a{text-align:center;font-size:16px;margin-left:-1px;padding-top:0;display:block;margin-left:20px;}
+.friends-bio .friends-social-icons li a i{font-size:14px;}
+.friends .author-bio{margin:0;padding:50px;border:0;background:#f4f5f9;border-radius:5px;}
+
 /*comment*/
 .comments-area{background:transparent;margin-top:50px;}
 .comments-area h4{margin-bottom:35px;color:#2a2a2a;font-size:18px;}
@@ -458,7 +478,8 @@ li > p {
 .comments-area .thumb{margin-right:20px;}
 .comments-area .thumb img{width:70px;border-radius:50%;}
 .comments-area .date{font-size:14px;color:#999999;margin-bottom:0;margin-left:20px;}
-.comments-area .comment{margin-bottom:10px;color:#777777;font-size:15px;}
+.comments-area .comment{margin-bottom:10px;color:#2a2a2a;font-size:15px;}
+.comments-area .name{color:#777777;}
 .comments-area .btn-reply{background-color:transparent;color:#888888;font-size:14px;display:block;font-weight:400;border-bottom:1px solid rgb(225,225,225);font-style:italic;cursor: pointer}
 .comment-form{padding-top:45px;margin-top:50px;margin-bottom:20px;}
 .comment-form .form-group{margin-bottom:30px;}

@@ -54,7 +54,7 @@ public class LoginUserUtil {
     public static UserInfoVO getSessionUserWithoutThrow() {
         Map user = getLoginUserMap();
         if (user == null) {
-            return null;
+            return new UserInfoVO();
         }
         return BeanUtil.mapToBean(user, UserInfoVO.class, true, CopyOptions.create());
     }

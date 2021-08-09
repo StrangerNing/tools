@@ -1,7 +1,7 @@
 package me.znzn.tools.module.blog.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import me.znzn.tools.common.component.Page;
 import me.znzn.tools.common.component.ResultListData;
@@ -11,16 +11,18 @@ import me.znzn.tools.common.exception.BusinessException;
 import me.znzn.tools.common.exception.NotFoundException;
 import me.znzn.tools.module.blog.entity.constant.BlogRedisConstant;
 import me.znzn.tools.module.blog.entity.enums.ArticleStatusEnum;
-import me.znzn.tools.module.blog.entity.enums.ArticleTypeEnum;
 import me.znzn.tools.module.blog.entity.enums.CommentLimitEnum;
+import me.znzn.tools.module.blog.entity.enums.FriendsLinkStatusEnum;
 import me.znzn.tools.module.blog.entity.form.ArticleForm;
 import me.znzn.tools.module.blog.entity.po.Article;
 import me.znzn.tools.module.blog.entity.po.ArticleComment;
+import me.znzn.tools.module.blog.entity.po.Friends;
 import me.znzn.tools.module.blog.entity.po.Tag;
 import me.znzn.tools.module.blog.entity.vo.ArticleCommentVo;
 import me.znzn.tools.module.blog.entity.vo.ArticleVo;
 import me.znzn.tools.module.blog.mapper.ArticleCommentMapper;
 import me.znzn.tools.module.blog.mapper.ArticleMapper;
+import me.znzn.tools.module.blog.mapper.FriendsMapper;
 import me.znzn.tools.module.blog.service.FeBlogService;
 import me.znzn.tools.module.oss.entity.po.File;
 import me.znzn.tools.module.oss.entity.vo.FileReturnVo;
@@ -28,10 +30,7 @@ import me.znzn.tools.module.oss.mapper.FileMapper;
 import me.znzn.tools.module.user.entity.vo.UserInfoVO;
 import me.znzn.tools.module.user.mapper.UserMapper;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.lucene.index.IndexReader;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.GenericToStringSerializer;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -59,6 +58,8 @@ public class FeBlogServiceImpl implements FeBlogService {
     private ArticleCommentMapper articleCommentMapper;
     @Resource
     private FileMapper fileMapper;
+    @Resource
+    private FriendsMapper friendsMapper;
     @Resource
     private RedisTemplate redisTemplate;
 
@@ -132,10 +133,6 @@ public class FeBlogServiceImpl implements FeBlogService {
             loginUser.setCreateUser(articleComment);
             articleComment.setCreateName(loginUser.getNickname());
             articleComment.setCreateEmail(loginUser.getEmail());
-        } else {
-            Date now = new Date();
-            articleComment.setCreateTime(now);
-            articleComment.setModifyTime(now);
         }
 
         if (StringUtils.isEmpty(articleComment.getCreateName())) {
@@ -151,9 +148,11 @@ public class FeBlogServiceImpl implements FeBlogService {
             articleComment.setParentId(0L);
         }
 
-        ArticleVo article = articleMapper.selectArticleById(articleComment.getArticleId());
-        if (CommentLimitEnum.DISABLE.getIndex().equals(article.getComment())) {
-            throw new BusinessException("当前文章不允许评论");
+        if (articleComment.getArticleId() != 0) {
+            ArticleVo article = articleMapper.selectArticleById(articleComment.getArticleId());
+            if (CommentLimitEnum.DISABLE.getIndex().equals(article.getComment())) {
+                throw new BusinessException("当前文章不允许评论");
+            }
         }
 
         articleCommentMapper.insertByProperty(articleComment);
@@ -217,5 +216,51 @@ public class FeBlogServiceImpl implements FeBlogService {
         List<FileReturnVo> images = fileMapper.selectByPropertyReturnVO(query);
         redisTemplate.opsForList().rightPushAll(BlogRedisConstant.INS_KEY, images);
         return images;
+    }
+
+    @Override
+    public void applyFriendsLink(Friends friends, UserInfoVO loginUser, String requestId) {
+        if (StringUtils.isEmpty(friends.getNickname())) {
+            throw new BusinessException("请输入昵称");
+        }
+        if (StringUtils.isEmpty(friends.getWebsite())) {
+            throw new BusinessException("请输入网站地址");
+        }
+        if (StringUtils.isEmpty(friends.getIcon())) {
+            throw new BusinessException("请输入图标地址");
+        }
+        if (StringUtils.isEmpty(friends.getName())) {
+            throw new BusinessException("请输入网站名称");
+        }
+        if (null != loginUser) {
+            loginUser.setCreateUser(friends);
+        }
+        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<Object>(Object.class));
+
+        if (!redisTemplate.opsForValue().setIfAbsent(BlogRedisConstant.APPLY_FRIENDS_LINK + requestId, 1, Long.valueOf(CommonConstant.VALID_APPLY_FRIENDS_INTERVAL), TimeUnit.MILLISECONDS)) {
+            log.info("{}已申请过友链，友链信息{}", requestId, JSON.toJSONString(friends));
+            throw new BusinessException("您已申请过友链，请勿重复或申请多个友链");
+        }
+        Friends query = new Friends();
+        query.setWebsite(friends.getWebsite());
+        query.setStatus(FriendsLinkStatusEnum.APPROVE.getIndex());
+        List<Friends> queryList = friendsMapper.selectByProperty(query);
+        if (CollectionUtil.isNotEmpty(queryList)) {
+            throw new BusinessException("该网址已经存在有效的友链了");
+        }
+        query.setStatus(FriendsLinkStatusEnum.WAIT.getIndex());
+        List<Friends> queryWaitList = friendsMapper.selectByProperty(query);
+        if (CollectionUtil.isNotEmpty(queryWaitList)) {
+            throw new BusinessException("该网站已经存在待审核的友链了");
+        }
+        log.info("{} 申请友链 {}", requestId, JSON.toJSONString(friends));
+        friends.setStatus(FriendsLinkStatusEnum.WAIT.getIndex());
+        friends.setVersion(0);
+        friendsMapper.insertByProperty(friends);
+    }
+
+    @Override
+    public List<Friends> getFriendsList(Friends friends) {
+        return friendsMapper.selectByProperty(friends);
     }
 }

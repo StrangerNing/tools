@@ -54,6 +54,11 @@ spring:
     suffix: .html
     cache: false
 
+mail:
+  setting-path:
+    notify: @maven.mail.path.notify@
+    subscribe: @maven.mail.path.subscribe@
+
 logging:
   level:
     me:

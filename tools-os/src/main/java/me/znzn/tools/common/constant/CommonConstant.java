@@ -74,7 +74,17 @@ public class CommonConstant {
      */
     public static String VALID_ARTICLE_VIEW_INTERVAL = "10800000";
 
+    /**
+     * 有效的友链申请间隔
+     */
+    public static String VALID_APPLY_FRIENDS_INTERVAL = "21600000";
+
     public static String SSO_URL = "";
 
     public static String BLOG_LOGIN_URL = "";
+
+    /**
+     * 阿里云邮件回信地址，用","或者";"分隔
+     */
+    public static String MAIL_REPLY_TO = "";
 }

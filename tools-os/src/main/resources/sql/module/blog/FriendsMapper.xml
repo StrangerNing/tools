@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.znzn.tools.module.blog.mapper.FriendsMapper">
+
+    <!-- Friends结果集 -->
+    <resultMap id="FriendsMap" type="me.znzn.tools.module.blog.entity.po.Friends" >
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="nickname" property="nickname" jdbcType="VARCHAR"/>
+        <result column="email" property="email" jdbcType="VARCHAR"/>
+        <result column="website" property="website" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="icon" property="icon" jdbcType="VARCHAR"/>
+        <result column="introduction" property="introduction" jdbcType="VARCHAR"/>
+        <result column="message" property="message" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="create_account" property="createAccount" jdbcType="BIGINT"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="modify_account" property="modifyAccount" jdbcType="BIGINT"/>
+        <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="version" property="version" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!-- 表名 -->
+    <sql id="table_name">t_blog_friends</sql>
+
+    <!-- 所有字段 -->
+    <sql id="all_columns">
+        id, nickname, email, website, name, icon, introduction, message, status, create_account, create_time, modify_account, modify_time, remark, version
+    </sql>
+
+    <!-- 不带主键的所有字段 -->
+    <sql id="all_columns_not_with_id">
+        nickname, email, website, name, icon, introduction, message, status, create_account, create_time, modify_account, modify_time, remark, version
+    </sql>
+
+    <!-- 查询条件带where -->
+    <sql id="all_query_condition_with_where">
+        <trim prefix="WHERE" prefixOverrides="AND|OR">
+            <if test="id != null">
+                AND id = #{id}
+            </if>
+            <if test="nickname != null and '' != nickname">
+                AND nickname = #{nickname}
+            </if>
+            <if test="email != null and '' != email">
+                AND email = #{email}
+            </if>
+            <if test="website != null and '' != website">
+                AND website = #{website}
+            </if>
+            <if test="name != null and '' != name">
+                AND name = #{name}
+            </if>
+            <if test="icon != null and '' != icon">
+                AND icon = #{icon}
+            </if>
+            <if test="introduction != null and '' != introduction">
+                AND introduction = #{introduction}
+            </if>
+            <if test="message != null and '' != message">
+                AND message = #{message}
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+            <if test="createAccount != null">
+                AND create_account = #{createAccount}
+            </if>
+            <if test="createTime != null">
+                AND create_time = #{createTime}
+            </if>
+            <if test="modifyAccount != null">
+                AND modify_account = #{modifyAccount}
+            </if>
+            <if test="modifyTime != null">
+                AND modify_time = #{modifyTime}
+            </if>
+            <if test="remark != null and '' != remark">
+                AND remark = #{remark}
+            </if>
+            <if test="version != null">
+                AND version = #{version}
+            </if>
+        </trim>
+    </sql>
+
+    <!-- 删除条件带where -->
+    <sql id="all_delete_condition_with_where">
+        <trim prefix="WHERE" prefixOverrides="AND|OR">
+            <if test="nickname != null and '' != nickname">
+                AND nickname = #{nickname}
+            </if>
+            <if test="email != null and '' != email">
+                AND email = #{email}
+            </if>
+            <if test="website != null and '' != website">
+                AND website = #{website}
+            </if>
+            <if test="name != null and '' != name">
+                AND name = #{name}
+            </if>
+            <if test="icon != null and '' != icon">
+                AND icon = #{icon}
+            </if>
+            <if test="introduction != null and '' != introduction">
+                AND introduction = #{introduction}
+            </if>
+            <if test="message != null and '' != message">
+                AND message = #{message}
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+            <if test="createAccount != null">
+                AND create_account = #{createAccount}
+            </if>
+            <if test="createTime != null">
+                AND create_time = #{createTime}
+            </if>
+            <if test="modifyAccount != null">
+                AND modify_account = #{modifyAccount}
+            </if>
+            <if test="modifyTime != null">
+                AND modify_time = #{modifyTime}
+            </if>
+            <if test="remark != null and '' != remark">
+                AND remark = #{remark}
+            </if>
+            <if test="version != null">
+                AND version = #{version}
+            </if>
+        </trim>
+    </sql>
+
+    <!-- 更新条件带set -->
+    <sql id="all_set_condition_with_set">
+        <set>
+            <if test="nickname != null and '' != nickname">
+                nickname = #{nickname},
+            </if>
+            <if test="email != null and '' != email">
+                email = #{email},
+            </if>
+            <if test="website != null and '' != website">
+                website = #{website},
+            </if>
+            <if test="name != null and '' != name">
+                name = #{name},
+            </if>
+            <if test="icon != null and '' != icon">
+                icon = #{icon},
+            </if>
+            <if test="introduction != null and '' != introduction">
+                introduction = #{introduction},
+            </if>
+            <if test="message != null and '' != message">
+                message = #{message},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="createAccount != null">
+                create_account = #{createAccount},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="modifyAccount != null">
+                modify_account = #{modifyAccount},
+            </if>
+            <if test="modifyTime != null">
+                modify_time = #{modifyTime},
+            </if>
+            <if test="remark != null and '' != remark">
+                remark = #{remark},
+            </if>
+            <if test="version != null">
+                version = version + 1
+            </if>
+        </set>
+    </sql>
+
+    <!-- 批量更新条件带set -->
+    <sql id="all_batch_set_condition_with_set">
+        <set>
+            <if test="item.nickname != null and '' != item.nickname">
+                nickname = #{item.nickname},
+            </if>
+            <if test="item.email != null and '' != item.email">
+                email = #{item.email},
+            </if>
+            <if test="item.website != null and '' != item.website">
+                website = #{item.website},
+            </if>
+            <if test="item.name != null and '' != item.name">
+                name = #{item.name},
+            </if>
+            <if test="item.icon != null and '' != item.icon">
+                icon = #{item.icon},
+            </if>
+            <if test="item.introduction != null and '' != item.introduction">
+                introduction = #{item.introduction},
+            </if>
+            <if test="item.message != null and '' != item.message">
+                message = #{item.message},
+            </if>
+            <if test="item.status != null">
+                status = #{item.status},
+            </if>
+            <if test="item.createAccount != null">
+                create_account = #{item.createAccount},
+            </if>
+            <if test="item.createTime != null">
+                create_time = #{item.createTime},
+            </if>
+            <if test="item.modifyAccount != null">
+                modify_account = #{item.modifyAccount},
+            </if>
+            <if test="item.modifyTime != null">
+                modify_time = #{item.modifyTime},
+            </if>
+            <if test="item.remark != null and '' != item.remark">
+                remark = #{item.remark},
+            </if>
+            <if test="item.version != null">
+                version = #{item.version}
+            </if>
+        </set>
+    </sql>
+
+    <!--根据对象属性插入-->
+    <insert id="insertByProperty" useGeneratedKeys="true" keyProperty="id" keyColumn="id" parameterType="me.znzn.tools.module.blog.entity.po.Friends">
+        INSERT INTO <include refid="table_name"/>
+        (
+            <include refid="all_columns_not_with_id"/>
+        )
+        VALUES (
+            #{nickname}, #{email}, #{website}, #{name}, #{icon}, #{introduction}, #{message}, #{status}, #{createAccount}, #{createTime}, #{modifyAccount}, #{modifyTime}, #{remark}, #{version}
+        )
+    </insert>
+
+    <!--根据对象属性插入-->
+    <insert id="insertBatchByProperty" useGeneratedKeys="true" keyProperty="id" keyColumn="id" parameterType="java.util.List">
+        INSERT INTO <include refid="table_name"/>
+        (
+            <include refid="all_columns_not_with_id"/>
+        )
+        VALUES
+        <foreach collection="list" item="item" separator="," index = "index">
+        (
+            #{item.nickname}, #{item.email}, #{item.website}, #{item.name}, #{item.icon}, #{item.introduction}, #{item.message}, #{item.status}, #{item.createAccount}, #{item.createTime}, #{item.modifyAccount}, #{item.modifyTime}, #{item.remark}, #{item.version}
+        )
+        </foreach>
+    </insert>
+
+    <!--根据主键更新-->
+    <update id="updateByPrimaryKey" parameterType="me.znzn.tools.module.blog.entity.po.Friends">
+        UPDATE <include refid="table_name"/>
+            <include refid="all_set_condition_with_set"/>
+        WHERE
+            id = #{id} AND version = #{version}
+    </update>
+
+    <!--根据主键批量更新-->
+    <update id="updateBatchByPrimaryKey" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" separator=";">
+            UPDATE <include refid="table_name"/>
+                <include refid="all_batch_set_condition_with_set"/>
+            WHERE
+                id = #{item.id}
+        </foreach>
+    </update>
+
+    <!--根据主键删除-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        DELETE FROM
+            <include refid="table_name"/>
+        WHERE
+            id = #{id}
+    </delete>
+
+    <!--根据主键列表批量删除-->
+    <delete id="deleteBatchByPrimaryKey" parameterType="java.util.List">
+        DELETE FROM
+            <include refid="table_name"/>
+        WHERE
+            id
+        IN
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!--根据属性删除-->
+    <delete id="deleteByProperty" parameterType="me.znzn.tools.module.blog.entity.po.Friends">
+        DELETE FROM <include refid="table_name"/>
+        <include refid="all_delete_condition_with_where"/>
+    </delete>
+
+    <!-- 根据主键查询 -->
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="FriendsMap">
+        SELECT
+            <include refid="all_columns"/>
+        FROM
+            <include refid="table_name"/>
+        WHERE
+            id = #{id}
+    </select>
+
+    <!-- 根据对象属性查询 -->
+    <select id="selectByProperty" parameterType="me.znzn.tools.module.blog.entity.po.Friends" resultMap="FriendsMap">
+        SELECT
+            <include refid="all_columns"/>
+        FROM
+            <include refid="table_name"/>
+        <include refid="all_query_condition_with_where"/>
+        ORDER BY ${orderBy}
+        <if test="startIndex != null">
+            <if test="limit != null">
+                LIMIT #{startIndex} , #{limit}
+            </if>
+        </if>
+    </select>
+
+    <!-- 根据对象属性查询统计 -->
+    <select id="countByProperty" parameterType="me.znzn.tools.module.blog.entity.po.Friends" resultType="java.lang.Integer">
+        SELECT
+            COUNT(*)
+        FROM
+            <include refid="table_name"/>
+        <include refid="all_query_condition_with_where"/>
+    </select>
+
+</mapper>

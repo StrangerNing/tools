@@ -4,6 +4,7 @@ import me.znzn.tools.common.component.Page;
 import me.znzn.tools.common.component.ResultListData;
 import me.znzn.tools.module.blog.entity.form.ArticleForm;
 import me.znzn.tools.module.blog.entity.po.ArticleComment;
+import me.znzn.tools.module.blog.entity.po.Friends;
 import me.znzn.tools.module.blog.entity.vo.ArticleCommentVo;
 import me.znzn.tools.module.blog.entity.vo.ArticleVo;
 import me.znzn.tools.module.oss.entity.po.File;
@@ -88,4 +89,19 @@ public interface FeBlogService {
      * @return
      */
     List<FileReturnVo> getIgImages();
+
+    /**
+     * 申请友情链接
+     * @param friends
+     * @param loginUser
+     * @param requestId
+     */
+    void  applyFriendsLink(Friends friends, UserInfoVO loginUser, String requestId);
+
+    /**
+     * 获取友情链接
+     * @param friends
+     * @return
+     */
+    List<Friends> getFriendsList(Friends friends);
 }

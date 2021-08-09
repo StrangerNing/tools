@@ -5,16 +5,19 @@ import me.znzn.tools.common.component.ResultPageUtil;
 import me.znzn.tools.module.blog.entity.enums.ArticleStatusEnum;
 import me.znzn.tools.module.blog.entity.form.ArticleForm;
 import me.znzn.tools.module.blog.entity.po.ArticleComment;
+import me.znzn.tools.module.blog.entity.po.Friends;
 import me.znzn.tools.module.blog.entity.vo.ArticleVo;
 import me.znzn.tools.module.blog.service.ArticleService;
 import me.znzn.tools.module.blog.service.FeBlogService;
 import me.znzn.tools.module.user.entity.vo.UserInfoVO;
 import me.znzn.tools.utils.LoginUserUtil;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 管理
@@ -79,5 +82,6 @@ public class ArticleController {
         feBlogService.addArticleComment(articleComment, userInfoVO);
         return ResultPageUtil.success();
     }
+
 
 }

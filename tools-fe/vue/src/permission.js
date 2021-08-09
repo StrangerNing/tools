@@ -12,7 +12,7 @@ import {setToken} from "./utils/auth";
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
-const whiteList = ['/keyboard', '/404'] // no redirect whitelist
+const whiteList = ['/music', '/404'] // no redirect whitelist
 
 router.beforeEach(async (to, from, next) => {
   // start progress bar

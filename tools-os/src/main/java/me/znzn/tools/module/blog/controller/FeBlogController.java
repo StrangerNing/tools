@@ -5,19 +5,19 @@ import lombok.extern.slf4j.Slf4j;
 import me.znzn.tools.common.component.Page;
 import me.znzn.tools.common.component.ResultListData;
 import me.znzn.tools.common.constant.CommonConstant;
+import me.znzn.tools.common.exception.BusinessException;
 import me.znzn.tools.common.exception.NotFoundException;
 import me.znzn.tools.module.blog.entity.enums.ArticleStatusEnum;
 import me.znzn.tools.module.blog.entity.enums.ArticleTypeEnum;
+import me.znzn.tools.module.blog.entity.enums.FriendsLinkStatusEnum;
 import me.znzn.tools.module.blog.entity.enums.PageTypeEnum;
 import me.znzn.tools.module.blog.entity.form.ArticleForm;
 import me.znzn.tools.module.blog.entity.form.CategoryForm;
 import me.znzn.tools.module.blog.entity.po.Category;
+import me.znzn.tools.module.blog.entity.po.Friends;
 import me.znzn.tools.module.blog.entity.po.Tag;
 import me.znzn.tools.module.blog.entity.vo.ArticleVo;
-import me.znzn.tools.module.blog.service.CategoryService;
-import me.znzn.tools.module.blog.service.FeBlogService;
-import me.znzn.tools.module.blog.service.LuceneService;
-import me.znzn.tools.module.blog.service.TagService;
+import me.znzn.tools.module.blog.service.*;
 import me.znzn.tools.module.user.entity.vo.UserInfoVO;
 import me.znzn.tools.utils.LoginUserUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -52,6 +52,8 @@ public class FeBlogController {
     private CategoryService categoryService;
     @Resource
     private LuceneService luceneService;
+    @Resource
+    private SubscribeService subscribeService;
 
     @GetMapping("/")
     public String index(Model model) {
@@ -191,7 +193,7 @@ public class FeBlogController {
             ArticleVo article = feBlogService.getOneArticle(alias);
             model.addAttribute("article", article);
             UserInfoVO userInfoVO = LoginUserUtil.getSessionUserWithoutThrow();
-            feBlogService.addViews(article.getId(), userInfoVO == null ? request.getSession().getId() : String.valueOf(userInfoVO.getId()));
+            feBlogService.addViews(article.getId(), userInfoVO.getId() == null ? request.getSession().getId() : String.valueOf(userInfoVO.getId()));
 
             model.addAttribute("comments", feBlogService.getComments(article.getId()));
             model.addAttribute("recommends", feBlogService.getRecommendArticle(article.getId()));
@@ -234,7 +236,7 @@ public class FeBlogController {
             LoginUserUtil.login(ticket);
         }
         UserInfoVO userInfoVO = LoginUserUtil.getSessionUserWithoutThrow();
-        if (userInfoVO == null) {
+        if (userInfoVO.getId() == null) {
             String url = CommonConstant.BLOG_LOGIN_URL;
             redirectAttributes.addAttribute("redirect", redirect);
             redirectAttributes.addAttribute("login", url);
@@ -249,8 +251,64 @@ public class FeBlogController {
     @GetMapping("/logout")
     public Object logout() {
         LoginUserUtil.logout();
-        String SsoLogout = CommonConstant.SSO_URL + "/logout?redirect=https://edchu.cn";
-        return new ModelAndView("redirect:" + SsoLogout);
+        String ssoLogout = CommonConstant.SSO_URL + "/logout?redirect=https://edchu.cn";
+        return new ModelAndView("redirect:" + ssoLogout);
+    }
+
+    @GetMapping("/friends")
+    public String friends(Model model) {
+        try {
+            Friends query = new Friends();
+            query.setStatus(FriendsLinkStatusEnum.APPROVE.getIndex());
+            query.setOrderBy("modify_time DESC");
+            model.addAttribute("friends", feBlogService.getFriendsList(query));
+            model.addAttribute("categories", categoryService.searchCategory(new CategoryForm()));
+        } catch (Exception e) {
+            log.error("系统异常,", e);
+        } finally {
+            getPagePlugins(model);
+        }
+        return "page-friends";
+    }
+
+    @GetMapping("/contact")
+    public String contact(Model model) {
+        try {
+            model.addAttribute("categories", categoryService.searchCategory(new CategoryForm()));
+        } catch (Exception e) {
+            log.error("系统异常,", e);
+        } finally {
+            getPagePlugins(model);
+        }
+        return "page-contact";
+    }
+
+    @GetMapping("/subscribe")
+    public String subscribe(Model model, @RequestParam String eid) {
+        try {
+            subscribeService.enableSubscribe(eid);
+        } catch (BusinessException be) {
+            model.addAttribute("message", be.getTextMessage());
+        } catch (Exception e) {
+            log.error("系统异常", e);
+        } finally {
+            getPagePlugins(model);
+        }
+        return "page-subscribe";
+    }
+
+    @GetMapping("/unsubscribe")
+    public String unsubscribe(Model model, @RequestParam String eid) {
+        try {
+            model.addAttribute("subscribeList", subscribeService.getSubscribeList(eid));
+        } catch (BusinessException be) {
+            model.addAttribute("message", be.getTextMessage());
+        } catch (Exception e) {
+            log.error("系统异常", e);
+        } finally {
+            getPagePlugins(model);
+        }
+        return "page-unsubscribe";
     }
 
     @RequestMapping("/404")

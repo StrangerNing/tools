@@ -68,3 +68,27 @@ export function refreshIndex() {
     method: 'get'
   })
 }
+
+export function getFriendsLink(data) {
+  return request({
+    url: '/wapi/blog/friends/list',
+    method: 'get',
+    params: data
+  })
+}
+
+export function addFriendsLink(data) {
+  return request({
+    url: '/wapi/blog/friends/add',
+    method: 'post',
+    data:data
+  })
+}
+
+export function updateFriendsLink(data) {
+  return request({
+    url: '/wapi/blog/friends/update',
+    method: 'post',
+    data: data
+  })
+}

@@ -53,9 +53,7 @@ export const constantRoutes = [
       component: () => import('@/views/dashboard/index'),
       meta: { title: '看板', icon: 'dashboard' }
     }]
-  },
-
-
+  }
 ]
 
 export const asyncRoutes = [
@@ -168,6 +166,16 @@ export const asyncRoutes = [
           title: '新建文章',
           icon: 'create-course',
           roles: ['editor', 'admin']
+        }
+      },
+      {
+        path: 'friends',
+        name: 'friendsLink',
+        component: () => import('@/views/blog/friends'),
+        meta: {
+          title: '友链管理',
+          icon: 'friend-link',
+          roles: ['user', 'admin']
         }
       }]
   },

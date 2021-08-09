@@ -36,10 +36,10 @@
                                 <h5 class="mt-5 mb-30">Quick link</h5>
                             </div>
                             <ul class="font-small">
-                                <li class="cat-item cat-item-2"><a href="/aboutme">About me</a></li>
-                                <li class="cat-item cat-item-7"><a href="#">Hire me</a></li>
-                                <li class="cat-item cat-item-7"><a href="#">Contact</a></li>
-                                <li class="cat-item cat-item-7"><a href="#">Admin</a></li>
+                                <li class="cat-item cat-item-2"><a href="/blackboard">关于我</a></li>
+                                <li class="cat-item cat-item-7"><a href="/contact">联系我</a></li>
+                                <li class="cat-item cat-item-7"><a href="/friends">友情链接</a></li>
+                                <li class="cat-item cat-item-7"><a href="https://admin.edchu.cn">Admin</a></li>
                             </ul>
                         </div>
                     </div>
@@ -62,9 +62,27 @@
                                 <p class="font-large">订阅我，</p>
                                 <p class="font-medium">你就可以在你的收件箱里第一时间看到最新文章啦！</p>
                                 <form class="input-group form-subcriber mt-30 d-flex">
-                                    <input type="email" class="form-control bg-white font-small" placeholder="输入你的邮箱地址">
-                                    <button class="btn bg-primary text-white" type="button">订&nbsp阅</button>
+                                    <input id="subscribe-input" type="email" class="form-control bg-white font-small" placeholder="输入你的邮箱地址">
+                                    <button class="btn bg-primary text-white" id="subscribe-btn" type="button" >订&nbsp阅</button>
                                 </form>
+                            </div>
+                        </div>
+                        <div class="modal fade" id="subscribe-modal" tabindex="-1" role="dialog" aria-labelledby="confirmSubmit" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="confirmSubmit">感谢你的订阅！</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div id="subscribe-msg" class="modal-body">
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn bg-primary text-white" data-dismiss="modal">确定</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

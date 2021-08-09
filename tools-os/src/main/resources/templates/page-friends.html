@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zh-CN" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Friends - 凑凑 - EdChu的个人博客</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/x-icon" href="/static/imgs/theme/favicon.png">
+    <!-- NewsBoard CSS  -->
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/widgets.css">
+    <link rel="stylesheet" href="/static/css/responsive.css">
+    <link rel="stylesheet" href="/static/css/toastr.min.css">
+</head>
+
+<body>
+<div class="scroll-progress primary-bg"></div>
+<!-- Start Preloader -->
+<!--     <div class="preloader text-center">
+    <div class="circle"></div>
+</div> -->
+<!--Offcanvas sidebar-->
+<div th:replace="components/aside :: aside"></div>
+<!-- Start Header -->
+<div th:replace="components/header :: header"></div>
+<!--Start search form-->
+<div th:replace="components/search :: search"></div>
+<!-- Start Main content -->
+<main class="bg-grey pb-30">
+    <div class="container single-content">
+        <div class="entry-header entry-header-style-1 mb-50 pt-50 text-center">
+            <h1 class="entry-title mb-20 font-weight-900 ">
+                Friends
+            </h1>
+            <p class="text-muted"><span class="typewrite d-inline" data-period="2000" data-type='[ "欢迎来到EdChu的个人博客.", "如果想要互换友链， ", "请在下方发送申请，我会第一时间处理噢. " ]'></span></p>
+        </div>
+        <!--end single header-->
+        <!--figure-->
+        <div class="grid row mb-30">
+            <div class="grid-sizer"></div>
+            <article class="grid-item col pr-5 wow" th:each="friend : ${friends}">
+                <div class="friends-bio p-30 mt-10 border-radius-10 bg-white wow fadeIn animated">
+                    <div class="friends-info">
+                        <h4 class="font-weight-bold mb-20">
+                        <div class="vcard author d-inline friends-name">
+                            <img th:src="${friend.icon}" alt="" class="friends-image d-inline-block">
+                            <a th:href="${friend.website}" target="_blank" th:title="'Posted by ' + ${friend.nickname}" rel="friends">
+                                [[${friend.name}]]
+                            </a>
+                        </div>
+                        </h4>
+                        <h5 class="text-muted">网站简介</h5>
+                        <div class="friends-description text-muted">[[${friend.introduction}]]</div>
+                        <a th:href="${friend.website}"  target="_blank" class="friends-bio-link mb-md-0 mb-3">前往网站</a>
+                    </div>
+                </div>
+            </article>
+        </div>
+        <article>
+            <h3 class="mt-30">申请友链</h3>
+            <hr class="wp-block-separator is-style-wide">
+            <form class="form-contact comment_form" id="applyFriendsForm">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <input class="form-control" name="nickname" id="nickname" type="text" placeholder="(必填)昵称">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <input class="form-control" name="email" id="email" type="email" placeholder="Email(仅用作添加成功后发送提示)">
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group">
+                            <input class="form-control" name="website" id="website" type="text" placeholder="(必填)网页链接">
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group">
+                            <input class="form-control" name="icon" id="icon" type="text" placeholder="(必填)图标链接">
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group">
+                            <input class="form-control" name="name" id="name" type="text" placeholder="(必填)网站名称">
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group">
+                            <textarea class="form-control w-100" name="introduction" id="comment" cols="30" rows="3" placeholder="网站介绍"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group">
+                            <button type="button" class="button button-contactForm text-right" id="submit" data-toggle="modal" data-target="#submit-modal">发送申请</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </article>
+    </div>
+    <div class="modal fade" id="submit-modal" tabindex="-1" role="dialog" aria-labelledby="confirmSubmit" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmSubmit">友链申请说明</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>哈喽，在申请友链之前请先了解以下内容：</p>
+                    <ol>
+                        <li>请确认你已经将我加入友链中；</li>
+                        <li>本站优先录入同类原创、技术生活类博客。</li>
+                        <li>任何包含违法国家法律或不健康内容站点均不录入。</li>
+                        <li>搜索引擎权重无要求，但是要求时常更新网站内容。</li>
+                        <li>本站会不定期走访友链，发现单方取消友链的话也会取消收录。</li>
+                    </ol>
+                    <p>
+                        在提交后，我会收到邮件通知，并在最快时间内确认并收录。我的社交账号可以在<a href="/blackboard">关于我</a>页面找到，如果等不及啦，你可以尽管联系我噢！
+                    </p>
+                    <p>
+                        审核结果会以邮件形式告诉你，所以请输入一个能联系到你的邮箱！
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">返回</button>
+                    <button type="button" class="btn btn-primary" id="confirm">确认提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--container-->
+</main>
+<!-- End Main content -->
+<!--site-bottom-->
+<div th:replace="components/categories :: categories"></div>
+<!--end site-bottom-->
+<!-- Footer Start-->
+<div th:replace="components/foot :: foot"></div>
+<!-- End Footer -->
+<div class="dark-mark"></div>
+<!-- Vendor JS-->
+<script src="/static/js/vendor/jquery-1.12.4.min.js"></script>
+<script src="/static/js/vendor/popper.min.js"></script>
+<script src="/static/js/vendor/bootstrap.min.js"></script>
+<script src="/static/js/vendor/jquery.slicknav.js"></script>
+<script src="/static/js/vendor/slick.min.js"></script>
+<script src="/static/js/vendor/wow.min.js"></script>
+<script src="/static/js/vendor/jquery.ticker.js"></script>
+<script src="/static/js/vendor/jquery.vticker-min.js"></script>
+<script src="/static/js/vendor/jquery.scrollUp.min.js"></script>
+<script src="/static/js/vendor/jquery.nice-select.min.js"></script>
+<script src="/static/js/vendor/jquery.magnific-popup.js"></script>
+<script src="/static/js/vendor/jquery.sticky.js"></script>
+<script src="/static/js/vendor/perfect-scrollbar.js"></script>
+<script src="/static/js/vendor/waypoints.min.js"></script>
+<script src="/static/js/vendor/jquery.theia.sticky.js"></script>
+<script src="/static/js/vendor/imagesloaded.pkgd.min.js"></script>
+<script src="/static/js/vendor/masonry.pkgd.min.js"></script>
+<!-- NewsBoard JS -->
+<script src="/static/js/main.js"></script>
+<script src="/static/js/vendor/timeago.js"></script>
+<script>
+  // 自动更新
+  var timeagoInstance = timeago();// 实例
+  timeagoInstance.render(document.querySelectorAll('.time'),'zh_CN');
+</script>
+<script src="/static/js/vendor/getAjax.js"></script>
+<script src="/static/js/vendor/toastr.min.js"></script>
+<script src="/static/js/applyFriendsLink.js"></script>
+<script type="text/javascript">
+  toastr.options.positionClass = 'toast-top-right';
+</script>
+</body>
+
+</html>
