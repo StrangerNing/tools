@@ -1,5 +1,6 @@
 package me.znzn.tools.module.blog.service;
 
+import me.znzn.tools.module.blog.entity.form.SubscribeManageForm;
 import me.znzn.tools.module.blog.entity.po.Subscribe;
 
 import java.util.List;
@@ -20,13 +21,27 @@ public interface SubscribeService {
     /**
      * 修改订阅状态
      * @param eid
+     * @return String 邮箱地址
      */
-    void enableSubscribe(String eid);
+    String enableSubscribe(String eid);
 
     /**
-     * 根据eid获取订阅类别
+     * 根据eid取消订阅
      * @param eid
+     * @return String 邮箱地址
+     */
+    String disableSubscribe(String eid);
+
+    /**
+     * 管理订阅
+     * @param subscribeManageForm
+     */
+    void manageSubscribe(SubscribeManageForm subscribeManageForm);
+
+    /**
+     * 获取订阅列表
+     * @param mailAddress
      * @return
      */
-    List<Subscribe> disableSubscribe(String eid);
+    List<Integer> getSubscribeList(String mailAddress);
 }

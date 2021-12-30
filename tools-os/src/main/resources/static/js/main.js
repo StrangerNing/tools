@@ -459,7 +459,7 @@
                     submitSubscribe(JSON.stringify(data), url, 'post').then(res => {
                         subscribeMsg.html('<p>确认订阅的邮件已经发送到您的邮箱，请稍后前往您的邮箱进行确认～</p>')
                     }).catch(e => {
-                        subscribeMsg.html('<p>发生了不可描述的错误，请重试X﹏X</p>')
+                        subscribeMsg.html('<p>' + e + '，请重试X﹏X</p>')
                     })
                 } else {
                     subscribeMsg.html('<p>请输入一个正确格式的邮箱地址</p>')

@@ -300,7 +300,8 @@ public class FeBlogController {
     @GetMapping("/unsubscribe")
     public String unsubscribe(Model model, @RequestParam String eid) {
         try {
-            model.addAttribute("subscribeList", subscribeService.disableSubscribe(eid));
+            String mail = subscribeService.disableSubscribe(eid);
+            model.addAttribute("subscribeList", subscribeService.getSubscribeList(mail));
         } catch (BusinessException be) {
             model.addAttribute("message", be.getTextMessage());
         } catch (Exception e) {

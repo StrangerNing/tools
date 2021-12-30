@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>确认订阅 - 凑凑 - EdChu的个人博客</title>
+    <title>取消订阅 - 凑凑 - EdChu的个人博客</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" type="image/x-icon" href="/static/imgs/theme/favicon.png">
@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="/static/css/style.css">
     <link rel="stylesheet" href="/static/css/widgets.css">
     <link rel="stylesheet" href="/static/css/responsive.css">
+    <link rel="stylesheet" href="/static/css/toastr.min.css">
 </head>
 
 <body>
@@ -57,7 +58,7 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="form-check pt-5">
-                            <input class="form-check-input" type="checkbox" value="1" id="friendNotify">
+                            <input class="form-check-input" name="subscribe-type" type="checkbox" value="1" id="friendNotify" th:checked="${#lists.contains(subscribeList, 1)}">
                             <label class="form-check-label" for="friendNotify">
                                 友链确认、取消通知
                             </label>
@@ -67,7 +68,7 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="form-check pt-5">
-                            <input class="form-check-input" type="checkbox" value="2" id="commentNotify" >
+                            <input class="form-check-input" name="subscribe-type" type="checkbox" value="2" id="commentNotify" th:checked="${#lists.contains(subscribeList, 2)}">
                             <label class="form-check-label" for="commentNotify">
                                 评论通知
                             </label>
@@ -77,7 +78,7 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="form-check pt-5">
-                            <input class="form-check-input" type="checkbox" value="3" id="subscribeNotify">
+                            <input class="form-check-input" name="subscribe-type" type="checkbox" value="3" id="subscribeNotify" th:checked="${#lists.contains(subscribeList, 3)}">
                             <label class="form-check-label" for="subscribeNotify">
                                 确认订阅通知
                             </label>
@@ -92,7 +93,7 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="form-check pt-5">
-                            <input class="form-check-input" type="checkbox" value="4" id="subscribeSend">
+                            <input class="form-check-input" name="subscribe-type" type="checkbox" value="4" id="subscribeSend" th:checked="${#lists.contains(subscribeList, 4)}">
                             <label class="form-check-label" for="subscribeSend">
                                 最新文章推送
                             </label>
@@ -101,7 +102,7 @@
                 </div>
                 <div class="row">
                     <div class="form-group col-12 pt-20">
-                        <button type="button" id="confirmManage" class="button button-contactForm">确认退订</button>
+                        <button type="button" id="confirmManage" class="button button-contactForm">提&nbsp交</button>
                     </div>
                 </div>
             </form>
@@ -139,10 +140,11 @@
   var timeagoInstance = timeago();// 实例
   timeagoInstance.render(document.querySelectorAll('.time'),'zh_CN');
 </script>
-<script>
-    $('#confirmManage').click(function () {
-      console.log($('#friendNotify').val())
-    })
+<script src="/static/js/vendor/getAjax.js"></script>
+<script src="/static/js/vendor/toastr.min.js"></script>
+<script src="/static/js/subscribe-manage.js"></script>
+<script type="text/javascript">
+toastr.options.positionClass = 'toast-top-right';
 </script>
 </body>
 

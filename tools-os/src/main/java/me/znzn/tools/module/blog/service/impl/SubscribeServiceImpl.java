@@ -4,21 +4,21 @@ import me.znzn.tools.common.component.MailSendParams;
 import me.znzn.tools.common.exception.BusinessException;
 import me.znzn.tools.module.blog.entity.enums.EidStatusEnum;
 import me.znzn.tools.module.blog.entity.enums.SubscribeEnableEnum;
+import me.znzn.tools.module.blog.entity.form.SubscribeManageForm;
 import me.znzn.tools.module.blog.entity.po.Eid;
 import me.znzn.tools.module.blog.entity.po.Subscribe;
 import me.znzn.tools.module.blog.mapper.EidMapper;
 import me.znzn.tools.module.blog.mapper.SubscribeMapper;
 import me.znzn.tools.module.blog.service.SubscribeService;
 import me.znzn.tools.utils.MailSenderUtil;
+import me.znzn.tools.utils.ValidatorUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.util.StringUtils;
 
 import javax.annotation.Resource;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -37,6 +37,7 @@ public class SubscribeServiceImpl implements SubscribeService {
     private MailSenderUtil mailSenderUtil;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void subscribe(Subscribe subscribe) {
         subscribe.setCreateTime(new Date());
 
@@ -62,7 +63,81 @@ public class SubscribeServiceImpl implements SubscribeService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void enableSubscribe(String eid) {
+    public String enableSubscribe(String eid) {
+        return modifySubscribeStatus(eid, SubscribeEnableEnum.ENABLE);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public String disableSubscribe(String eid) {
+        return modifySubscribeStatus(eid, SubscribeEnableEnum.DISABLE);
+    }
+
+    @Override
+    public void manageSubscribe(SubscribeManageForm subscribeManageForm) {
+        ValidatorUtil.validate(subscribeManageForm);
+        Eid eidQuery = new Eid();
+        eidQuery.setEid(subscribeManageForm.getEid());
+        eidQuery.setStatus(EidStatusEnum.ENABLE.getIndex());
+        List<Eid> eids = eidMapper.selectByProperty(eidQuery);
+        if (CollectionUtils.isEmpty(eids)) {
+            throw new BusinessException("很抱歉我忘记你是谁了，请返回重试");
+        }
+        Eid dbEid = eids.get(0);
+        String email = dbEid.getEmail();
+
+        Subscribe query = new Subscribe();
+        query.setMail(email);
+        subscribeMapper.deleteByProperty(query);
+
+        List<Integer> manageList = subscribeManageForm.getSubscribeTypes();
+        List<Subscribe> subscribes = new ArrayList<>();
+
+        for (MailSenderUtil.MailNeedSubscribeEnum type : MailSenderUtil.MailNeedSubscribeEnum.values()) {
+            if (manageList.contains(type.getType())) {
+                if (type.getNeedSubscribe()) {
+                    Subscribe subscribe = new Subscribe();
+                    subscribe.setMail(email);
+                    subscribe.setType(type.getType());
+                    subscribe.setEnable(SubscribeEnableEnum.ENABLE.getIndex());
+                    subscribe.setCreateTime(new Date());
+                    subscribes.add(subscribe);
+                }
+            } else {
+                if (!type.getNeedSubscribe()) {
+                    Subscribe subscribe = new Subscribe();
+                    subscribe.setMail(email);
+                    subscribe.setType(type.getType());
+                    subscribe.setEnable(SubscribeEnableEnum.DISABLE.getIndex());
+                    subscribe.setCreateTime(new Date());
+                    subscribes.add(subscribe);
+                }
+            }
+        }
+        subscribeMapper.insertBatchByProperty(subscribes);
+    }
+
+    @Override
+    public List<Integer> getSubscribeList(String mailAddress) {
+        Subscribe query = new Subscribe();
+        query.setMail(mailAddress);
+        List<Subscribe> subscribes = subscribeMapper.selectByProperty(query);
+        Map<Integer, Integer> subscribe = new HashSet<>(subscribes).stream().collect(Collectors.toMap(Subscribe::getType, Subscribe::getEnable));
+        List<Integer> subscribeList = new ArrayList<>();
+        for (MailSenderUtil.MailNeedSubscribeEnum type : MailSenderUtil.MailNeedSubscribeEnum.values()) {
+            Integer isSubscribe = subscribe.get(type.getType());
+            if (!type.getNeedSubscribe() && isSubscribe == null) {
+                subscribeList.add(type.getType());
+                continue;
+            }
+            if (SubscribeEnableEnum.ENABLE.getIndex().equals(isSubscribe)) {
+                subscribeList.add(type.getType());
+            }
+        }
+        return subscribeList;
+    }
+
+    private String modifySubscribeStatus(String eid, SubscribeEnableEnum subscribeEnableEnum) {
         Eid dbEid = getEidBeanByEid(eid);
         String email = dbEid.getEmail();
 
@@ -71,24 +146,19 @@ public class SubscribeServiceImpl implements SubscribeService {
         querySubscribe.setType(dbEid.getType());
         List<Subscribe> dbList = subscribeMapper.selectByProperty(querySubscribe);
         if (CollectionUtils.isEmpty(dbList)) {
-            throw new BusinessException("申请记录失踪了，请返回重试");
+            querySubscribe.setEnable(subscribeEnableEnum.getIndex());
+            querySubscribe.setCreateTime(new Date());
+            subscribeMapper.insertByProperty(querySubscribe);
+            return email;
         }
+
         Subscribe db = dbList.get(0);
-        if (SubscribeEnableEnum.ENABLE.getIndex().equals(db.getEnable())) {
-            return;
+        if (subscribeEnableEnum.getIndex().equals(db.getEnable())) {
+            return email;
         }
-        db.setEnable(SubscribeEnableEnum.ENABLE.getIndex());
+        db.setEnable(subscribeEnableEnum.getIndex());
         subscribeMapper.updateByPrimaryKey(db);
-    }
-
-    @Override
-    public List<Subscribe> disableSubscribe(String eid) {
-        Eid dbEid = getEidBeanByEid(eid);
-        String mail = dbEid.getEmail();
-
-        Subscribe query = new Subscribe();
-        query.setMail(mail);
-        return subscribeMapper.selectByProperty(query);
+        return email;
     }
 
     private Eid getEidBeanByEid(String eid) {
@@ -104,7 +174,7 @@ public class SubscribeServiceImpl implements SubscribeService {
         }
         Eid dbEid = eids.get(0);
         dbEid.setStatus(EidStatusEnum.DISABLE.getIndex());
-//        eidMapper.updateByPrimaryKey(dbEid);
+        eidMapper.updateByPrimaryKey(dbEid);
         return dbEid;
     }
 }

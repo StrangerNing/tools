@@ -1,4 +1,4 @@
-import "https://cdn.bootcss.com/timeago.js/3.0.2/timeago.js"
+import "/static/js/vendor/timeago.js"
 $('#featureMoreBtn').click(function () {
   let currentPage = $(this).data('id')
   let limit = $(this).data('limit')

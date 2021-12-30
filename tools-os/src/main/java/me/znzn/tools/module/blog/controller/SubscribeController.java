@@ -3,6 +3,7 @@ package me.znzn.tools.module.blog.controller;
 import lombok.extern.slf4j.Slf4j;
 import me.znzn.tools.common.component.ResultPageUtil;
 import me.znzn.tools.module.blog.entity.enums.SubscribeEnableEnum;
+import me.znzn.tools.module.blog.entity.form.SubscribeManageForm;
 import me.znzn.tools.module.blog.entity.po.Subscribe;
 import me.znzn.tools.module.blog.service.SubscribeService;
 import me.znzn.tools.utils.MailSenderUtil;
@@ -31,9 +32,16 @@ public class SubscribeController {
     @PostMapping("/newsletter/check")
     @ResponseBody
     public ResponseEntity subscribe(@RequestBody Subscribe subscribe) {
-        subscribe.setType(MailSenderUtil.MailTypeEnum.USER_NEWSLETTER.getCls());
+        subscribe.setType(MailSenderUtil.MailTypeEnum.USER_NEWSLETTER.getType());
         subscribe.setEnable(SubscribeEnableEnum.DISABLE.getIndex());
         subscribeService.subscribe(subscribe);
+        return ResultPageUtil.success();
+    }
+
+    @PostMapping("/manage")
+    @ResponseBody
+    public ResponseEntity manageSubscribe(@RequestBody SubscribeManageForm subscribeManageForm) {
+        subscribeService.manageSubscribe(subscribeManageForm);
         return ResultPageUtil.success();
     }
 }

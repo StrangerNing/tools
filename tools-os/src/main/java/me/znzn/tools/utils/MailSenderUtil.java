@@ -48,8 +48,6 @@ public class MailSenderUtil {
     @Resource
     private EidMapper eidMapper;
     @Resource
-    private UnsubscribeMapper unsubscribeMapper;
-    @Resource
     private SubscribeMapper subscribeMapper;
 
     public enum MailTypeEnum {
@@ -57,27 +55,27 @@ public class MailSenderUtil {
         /**
          * 友链确认
          */
-        FRIEND_CONFIRM("friend-confirm", "您的网站已被确认添加进友链", "notify", 1),
+        FRIEND_CONFIRM("friend-confirm", "您的网站已被确认添加进友链", "notify", 1, false),
 
         /**
          * 友链取消
          */
-        FRIEND_CANCEL("friend-cancel", "友链即将被取消", "notify", 1),
+        FRIEND_CANCEL("friend-cancel", "友链即将被取消", "notify", 1, false),
 
         /**
          * 消息提醒
          */
-        USER_MESSAGE("user-message", "您有一条新的消息提醒", "notify", 2),
+        USER_MESSAGE("user-message", "您有一条新的消息提醒", "notify", 2, false),
 
         /**
          * 订阅提醒
          */
-        USER_SUBSCRIBE("user-subscribe", "确认订阅提醒", "notify", 3),
+        USER_SUBSCRIBE("user-subscribe", "确认订阅提醒", "notify", 3, false),
 
         /**
          * 订阅消息
          */
-        USER_NEWSLETTER("user-newsletter", "有新的文章发布", "subscribe", 4);
+        USER_NEWSLETTER("user-newsletter", "有新的文章发布", "subscribe", 4, true);
 
         private String template;
 
@@ -85,13 +83,16 @@ public class MailSenderUtil {
 
         private String sender;
 
-        private Integer cls;
+        private Integer type;
 
-        MailTypeEnum(String template, String subject, String sender, Integer cls) {
+        private Boolean needSubscribe;
+
+        MailTypeEnum(String template, String subject, String sender, Integer type, Boolean needSubscribe) {
             this.template = template;
             this.subject = subject;
             this.sender = sender;
-            this.cls = cls;
+            this.type = type;
+            this.needSubscribe = needSubscribe;
         }
 
         public String getTemplate() {
@@ -106,23 +107,105 @@ public class MailSenderUtil {
             return subject;
         }
 
-        public Integer getCls() {
-            return cls;
+        public Integer getType() {
+            return type;
+        }
+
+        public Boolean getNeedSubscribe() {
+            return needSubscribe;
+        }
+
+        /**
+         * 是否是无需订阅即可发送的类型
+         * @param type
+         * @return
+         */
+        public static Boolean needSubscribe(Integer type) {
+            if (type == null) {
+                return true;
+            }
+            MailTypeEnum[] values = MailTypeEnum.values();
+            for (MailTypeEnum value : values) {
+                if (value.getType().equals(type)) {
+                    return value.getNeedSubscribe();
+                }
+            }
+            return true;
+        }
+    }
+
+    public enum MailNeedSubscribeEnum {
+
+        /**
+         * 友链相关
+         */
+        FRIEND("友链确认、取消通知", 1, false),
+
+        /**
+         * 评论相关
+         */
+        COMMENT("评论通知", 2, false),
+
+        /**
+         * 确认订阅
+         */
+        CONFIRM_SUBSCRIBE("确认订阅通知", 3, false),
+
+        /**
+         * 最新文章
+         */
+        NEWSLETTER("最新文章推送", 4, true);
+
+        private String title;
+
+        private Integer type;
+
+        private Boolean needSubscribe;
+
+        public String getTitle() {
+            return title;
+        }
+
+        public Integer getType() {
+            return type;
+        }
+
+        public Boolean getNeedSubscribe() {
+            return needSubscribe;
+        }
+
+        public static Boolean getNeedSubscribe(Integer type) {
+            if (type == null) {
+                return false;
+            }
+            for (MailNeedSubscribeEnum value : MailNeedSubscribeEnum.values()) {
+                if (value.type.equals(type)) {
+                    return value.needSubscribe;
+                }
+            }
+            return false;
+        }
+
+        MailNeedSubscribeEnum(String title, Integer type, Boolean needSubscribe) {
+            this.title = title;
+            this.type = type;
+            this.needSubscribe = needSubscribe;
         }
     }
 
     @Async
+    @Transactional(rollbackFor = Exception.class)
     public void send(MailSendParams params, MailTypeEnum type) {
         if (StringUtils.isEmpty(params.getTo())) {
             return;
         }
         Subscribe subscribe = new Subscribe();
         subscribe.setMail(params.getTo());
-        subscribe.setType(type.getCls());
+        subscribe.setType(type.getType());
         subscribe.setEnable(SubscribeEnableEnum.DISABLE.getIndex());
         List<Subscribe> unsubscribeList = subscribeMapper.selectByProperty(subscribe);
         if (CollectionUtil.isNotEmpty(unsubscribeList)) {
-            log.error("邮箱{}，邮件类型{}，已退订此消息", params.getTo(), type.getCls());
+            log.error("邮箱{}，邮件类型{}，已退订此消息", params.getTo(), type.getType());
             return;
         }
 
@@ -148,7 +231,7 @@ public class MailSenderUtil {
         eid.setEmail(params.getTo());
         eid.setNickname(params.getNickname());
         eid.setTemplate(type.getTemplate());
-        eid.setType(type.getCls());
+        eid.setType(type.getType());
         eid.setCreateTime(new Date());
         eid.setStatus(EidStatusEnum.ENABLE.getIndex());
         eidMapper.insertByProperty(eid);
