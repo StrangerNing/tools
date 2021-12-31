@@ -68,6 +68,11 @@ public class MailSenderUtil {
         FRIEND_UNSUCCESSFUL("friend-unsuccessful", "友链申请未通过", "notify", 1, false),
 
         /**
+         * 友链申请通知
+         */
+        FRIEND_APPLY("friend-apply", "有新的友链申请", "notify", 1, false),
+
+        /**
          * 消息提醒
          */
         USER_MESSAGE("user-message", "您有一条新的消息提醒", "notify", 2, false),
@@ -247,6 +252,7 @@ public class MailSenderUtil {
     public void sendSubscribe(ArticleVo articleVo) {
         Subscribe subscribe = new Subscribe();
         subscribe.setEnable(SubscribeEnableEnum.ENABLE.getIndex());
+        subscribe.setType(MailTypeEnum.USER_NEWSLETTER.getType());
         List<Subscribe> subscribeList = subscribeMapper.selectByProperty(subscribe);
         List<String> content = articleVo.getPartContent();
         subscribeList.forEach(item -> {

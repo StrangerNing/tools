@@ -83,6 +83,9 @@
             <if test="avatar != null and '' != avatar">
                 AND avatar = #{avatar}
             </if>
+            <if test="roles != null and '' != roles">
+                AND JSON_CONTAINS(roles, #{roles})
+            </if>
         </trim>
     </sql>
 

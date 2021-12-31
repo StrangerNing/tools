@@ -10,22 +10,50 @@ import java.util.List;
 public class MailSendParams {
     private String to;
 
+
+    /**
+     * 昵称
+     */
     private String nickname;
 
+    /**
+     * 友链取消原因
+     */
     private String cancelReason;
 
+    /**
+     * 评论人
+     */
     private String from;
 
+    /**
+     * 评论人头像
+     */
     private String fromAvatar;
 
+    /**
+     * 文章题目
+     */
     private String title;
 
+    /**
+     * 文章阅读时间
+     */
     private Integer minutes;
 
+    /**
+     * 消息
+     */
     private String message;
 
+    /**
+     * 文章内容
+     */
     private List<String> contentList;
 
+    /**
+     * 退订eid
+     */
     private String eid;
 
     private String href;

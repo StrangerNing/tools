@@ -26,6 +26,9 @@ public class Friends extends BaseModel implements Serializable {
 
     private String website;
 
+    /**
+     * 网站名称
+     */
     private String name;
 
     private String icon;

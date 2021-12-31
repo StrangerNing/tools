@@ -3,6 +3,7 @@ package me.znzn.tools.module.blog.service.impl;
 import cn.hutool.core.collection.CollectionUtil;
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
+import me.znzn.tools.common.component.MailSendParams;
 import me.znzn.tools.common.component.Page;
 import me.znzn.tools.common.component.ResultListData;
 import me.znzn.tools.common.constant.CommonConstant;
@@ -27,8 +28,10 @@ import me.znzn.tools.module.blog.service.FeBlogService;
 import me.znzn.tools.module.oss.entity.po.File;
 import me.znzn.tools.module.oss.entity.vo.FileReturnVo;
 import me.znzn.tools.module.oss.mapper.FileMapper;
+import me.znzn.tools.module.user.entity.po.User;
 import me.znzn.tools.module.user.entity.vo.UserInfoVO;
 import me.znzn.tools.module.user.mapper.UserMapper;
+import me.znzn.tools.utils.MailSenderUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
@@ -62,6 +65,8 @@ public class FeBlogServiceImpl implements FeBlogService {
     private FriendsMapper friendsMapper;
     @Resource
     private RedisTemplate redisTemplate;
+    @Resource
+    private MailSenderUtil mailSenderUtil;
 
 
     @Override
@@ -237,7 +242,7 @@ public class FeBlogServiceImpl implements FeBlogService {
         }
         redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<Object>(Object.class));
 
-        if (!redisTemplate.opsForValue().setIfAbsent(BlogRedisConstant.APPLY_FRIENDS_LINK + requestId, 1, Long.valueOf(CommonConstant.VALID_APPLY_FRIENDS_INTERVAL), TimeUnit.MILLISECONDS)) {
+        if (!redisTemplate.opsForValue().setIfAbsent(BlogRedisConstant.APPLY_FRIENDS_LINK + friends.getWebsite(), 1, Long.valueOf(CommonConstant.VALID_APPLY_FRIENDS_INTERVAL), TimeUnit.MILLISECONDS)) {
             log.info("{}已申请过友链，友链信息{}", requestId, JSON.toJSONString(friends));
             throw new BusinessException("您已申请过友链，请勿重复或申请多个友链");
         }
@@ -257,6 +262,20 @@ public class FeBlogServiceImpl implements FeBlogService {
         friends.setStatus(FriendsLinkStatusEnum.WAIT.getIndex());
         friends.setVersion(0);
         friendsMapper.insertByProperty(friends);
+
+        User queryAdmin = User.builder().roles("\"admin\"").build();
+        List<User> admins = userMapper.selectByProperty(queryAdmin);
+
+        admins.forEach(admin -> {
+            MailSendParams mailSendParams = new MailSendParams();
+            mailSendParams.setTo(admin.getEmail());
+            mailSendParams.setFrom(friends.getNickname());
+            mailSendParams.setHref(friends.getWebsite());
+            mailSendParams.setMessage(friends.getIntroduction());
+            mailSendParams.setFromAvatar(friends.getIcon());
+            mailSendParams.setNickname(friends.getName());
+            mailSenderUtil.send(mailSendParams, MailSenderUtil.MailTypeEnum.FRIEND_APPLY);
+        });
     }
 
     @Override
