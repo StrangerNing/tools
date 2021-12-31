@@ -63,6 +63,11 @@ public class MailSenderUtil {
         FRIEND_CANCEL("friend-cancel", "友链即将被取消", "notify", 1, false),
 
         /**
+         * 友链审核不通过
+         */
+        FRIEND_UNSUCCESSFUL("friend-unsuccessful", "友链申请未通过", "notify", 1, false),
+
+        /**
          * 消息提醒
          */
         USER_MESSAGE("user-message", "您有一条新的消息提醒", "notify", 2, false),

@@ -76,7 +76,7 @@ public class FriendsServiceImpl implements FriendsService {
                 mailSenderUtil.send(params, MailSenderUtil.MailTypeEnum.FRIEND_CANCEL);
             } else if (FriendsLinkStatusEnum.DENY.getIndex().equals(friends.getStatus())) {
                 params.setCancelReason(friends.getMessage());
-                mailSenderUtil.send(params, MailSenderUtil.MailTypeEnum.FRIEND_CANCEL);
+                mailSenderUtil.send(params, MailSenderUtil.MailTypeEnum.FRIEND_UNSUCCESSFUL);
             }
         }
         friendsMapper.updateByPrimaryKey(friends);

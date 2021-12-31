@@ -18,6 +18,7 @@ import me.znzn.tools.module.user.service.UserService;
 import me.znzn.tools.utils.LoginUserUtil;
 import me.znzn.tools.utils.MD5Util;
 import me.znzn.tools.utils.ValidatorUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -69,9 +70,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public Boolean register(RegisterForm registerForm) {
         String username = registerForm.getUsername();
+        String email = registerForm.getEmail();
         List<User> query = userMapper.selectByProperty(User.builder().username(username).build());
         if (!ListUtils.isEmpty(query)) {
             throw new BusinessException("用户名已被占用");
+        }
+        if (StringUtils.isNotEmpty(email)) {
+            List<User> queryEmail = userMapper.selectByProperty(User.builder().email(registerForm.getEmail()).build());
+            if (!ListUtils.isEmpty(queryEmail)) {
+                throw new BusinessException("该邮箱已被绑定");
+            }
         }
         User newUser = new User();
         newUser.setRoles("[\"user\"]");
@@ -79,6 +87,7 @@ public class UserServiceImpl implements UserService {
         newUser.setNickname(username);
         newUser.setPassword(MD5Util.generate(registerForm.getPassword()));
         newUser.setSex(SexEnum.UNKNOWN.getIndex());
+        newUser.setEmail(registerForm.getEmail());
         newUser.setStatus(StatusEnum.ENABLE.getIndex());
         newUser.setCreateTime(new Date());
         return userMapper.insertByProperty(newUser).equals(1L);
