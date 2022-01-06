@@ -65,3 +65,5 @@ const getFileAjax = (data, url, method) => {
     })
   })
 }
+
+export default getAjax;

@@ -1,6 +1,5 @@
 package me.znzn.tools.module.url.entity.vo;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.util.Date;
@@ -19,7 +18,6 @@ public class ShortUrlVO {
 
     private String originUrl;
 
-    @JsonFormat(pattern ="yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createTime;
 
     private Long createAccount;

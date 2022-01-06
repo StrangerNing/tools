@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zh-CN" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>博客大事记 - 凑凑 - EdChu的个人博客</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/x-icon" href="/static/imgs/theme/favicon.png">
+    <!-- NewsBoard CSS  -->
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/widgets.css">
+    <link rel="stylesheet" href="/static/css/responsive.css">
+    <link rel="stylesheet" href="/static/css/toastr.min.css">
+    <link rel="stylesheet" href="/static/css/timeline.css">
+</head>
+
+<body>
+<div class="scroll-progress primary-bg"></div>
+<!-- Start Preloader -->
+<!--     <div class="preloader text-center">
+    <div class="circle"></div>
+</div> -->
+<!--Offcanvas sidebar-->
+<div th:replace="components/aside :: aside"></div>
+<!-- Start Header -->
+<div th:replace="components/header :: header"></div>
+<!--Start search form-->
+<div th:replace="components/search :: search"></div>
+<!-- Start Main content -->
+<main class="bg-grey pb-50">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="comments-area" th:insert="components/timeline :: timeline"></div>
+            </div>
+            <div class="col-lg-4 primary-sidebar sticky-sidebar">
+                <div class="widget-area mt-50">
+                    <div class="sidebar-widget widget-about mb-50 pt-30 pr-30 pb-30 pl-30 bg-white border-radius-5 has-border  wow fadeInUp animated">
+                        <img class="about-author-img mb-25" src="https://oss.edchu.cn/others/1/2021/03/11/915f7afa-cabe-4cf4-97b2-e0c3bf66ec81.png" alt="">
+                        <h5 class="mb-20">Hello, 我是Ed Chu</h5>
+                        <p class="font-medium text-muted">一个毕业于某不知名大学的Java后端程序猿，平时也没啥特别的爱好，喜欢东逛逛西逛逛。</p>
+                        <p class="font-medium text-muted"> 有一天我在逛一个外网论坛的时候发现了一段2003年的对话，对话中的交流礼貌和谐，我觉得这才是互联网本来的样貌吧～所以欢迎大家给我留言！</p>
+                        <p class="font-medium text-muted">本博客启用于2021年3月23日。</p>
+                    </div>
+                    <div class="sidebar-widget widget_instagram wow fadeInUp animated">
+                        <div class="widget-header-1 position-relative mb-30">
+                            <h5 class="mt-5 mb-30">Instagram</h5>
+                        </div>
+                        <div class="instagram-gellay" th:insert="category-list :: instagram">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<!-- End Main content -->
+<!--site-bottom-->
+<div th:replace="components/categories :: categories"></div>
+<!--end site-bottom-->
+<!-- Footer Start-->
+<div th:replace="components/foot :: foot"></div>
+<!-- End Footer -->
+<div class="dark-mark"></div>
+<!-- Vendor JS-->
+<script src="/static/js/vendor/timeago.js"></script>
+<script>
+  // 自动更新
+  var timeagoInstance = timeago();// 实例
+  timeagoInstance.render(document.querySelectorAll('.time'),'zh_CN');
+</script>
+<script src="/static/js/vendor/modernizr-3.5.0.min.js"></script>
+<script src="/static/js/vendor/jquery-1.12.4.min.js"></script>
+<script src="/static/js/vendor/popper.min.js"></script>
+<script src="/static/js/vendor/bootstrap.min.js"></script>
+<script src="/static/js/vendor/jquery.slicknav.js"></script>
+<script src="/static/js/vendor/slick.min.js"></script>
+<script src="/static/js/vendor/wow.min.js"></script>
+<script src="/static/js/vendor/jquery.ticker.js"></script>
+<script src="/static/js/vendor/jquery.vticker-min.js"></script>
+<script src="/static/js/vendor/jquery.scrollUp.min.js"></script>
+<script src="/static/js/vendor/jquery.nice-select.min.js"></script>
+<script src="/static/js/vendor/jquery.magnific-popup.js"></script>
+<script src="/static/js/vendor/jquery.sticky.js"></script>
+<script src="/static/js/vendor/perfect-scrollbar.js"></script>
+<script src="/static/js/vendor/waypoints.min.js"></script>
+<script src="/static/js/vendor/jquery.theia.sticky.js"></script>
+<!-- NewsBoard JS -->
+<script type="module" src="/static/js/main.js"></script>
+</body>
+
+</html>

@@ -78,7 +78,6 @@ public class SubscribeServiceImpl implements SubscribeService {
         ValidatorUtil.validate(subscribeManageForm);
         Eid eidQuery = new Eid();
         eidQuery.setEid(subscribeManageForm.getEid());
-        eidQuery.setStatus(EidStatusEnum.ENABLE.getIndex());
         List<Eid> eids = eidMapper.selectByProperty(eidQuery);
         if (CollectionUtils.isEmpty(eids)) {
             throw new BusinessException("很抱歉我忘记你是谁了，请返回重试");
@@ -114,7 +113,9 @@ public class SubscribeServiceImpl implements SubscribeService {
                 }
             }
         }
-        subscribeMapper.insertBatchByProperty(subscribes);
+        if (CollectionUtils.isNotEmpty(subscribes)) {
+            subscribeMapper.insertBatchByProperty(subscribes);
+        }
     }
 
     @Override

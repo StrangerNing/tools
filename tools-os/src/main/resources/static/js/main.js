@@ -1,3 +1,5 @@
+import getAjax from "./vendor/getAjax.js";
+
 (function($) {
     'use strict';
 

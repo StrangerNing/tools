@@ -1,0 +1,35 @@
+﻿<!DOCTYPE html>
+<html dir="ltr" lang="en" class="no-outlines" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- ==== Document Title ==== -->
+    <title>响应式TimeLine时间轴Bootstrap样式</title>
+
+    <!-- Page Level Stylesheets -->
+
+</head>
+<body>
+    <div class="panel" th:fragment="timeline">
+
+        <div class="panel-content">
+            <!-- Vertical Timeline Start -->
+            <div class="vertical-timeline">
+                <ul class="list-unstyled" id="timeline">
+                    <li class="action" id="more">
+                        <a id="moreBtn" class="btn bg-primary text-white">查看更多</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- Vertical Timeline End -->
+        </div>
+        <script type="module" src="/static/js/getTimeline.js"></script>
+    </div>
+
+
+</body>
+</html>
+

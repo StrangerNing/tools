@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.znzn.tools.module.blog.mapper.TimelineMapper">
+
+    <!-- Timeline结果集 -->
+    <resultMap id="TimelineMap" type="me.znzn.tools.module.blog.entity.po.Timeline" >
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="publish_time" property="publishTime" jdbcType="TIMESTAMP"/>
+        <result column="title" property="title" jdbcType="VARCHAR"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="INTEGER"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP"/>
+        <result column="create_account" property="createAccount" jdbcType="BIGINT"/>
+        <result column="modify_account" property="modifyAccount" jdbcType="BIGINT"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="TimelineVoMap" type="me.znzn.tools.module.blog.entity.vo.TimelineVo" extends="TimelineMap">
+
+    </resultMap>
+
+    <!-- 表名 -->
+    <sql id="table_name">t_blog_timeline</sql>
+
+    <!-- 所有字段 -->
+    <sql id="all_columns">
+        id, publish_time, title, description, type, status, create_time, modify_time, create_account, modify_account, remark
+    </sql>
+
+    <!-- 不带主键的所有字段 -->
+    <sql id="all_columns_not_with_id">
+        publish_time, title, description, type, status, create_time, modify_time, create_account, modify_account, remark
+    </sql>
+
+    <!-- 查询条件带where -->
+    <sql id="all_query_condition_with_where">
+        <trim prefix="WHERE" prefixOverrides="AND|OR">
+            <if test="id != null">
+                AND id = #{id}
+            </if>
+            <if test="publishTime != null">
+                AND publish_time = #{publishTime}
+            </if>
+            <if test="title != null and '' != title">
+                AND title = #{title}
+            </if>
+            <if test="description != null and '' != description">
+                AND description = #{description}
+            </if>
+            <if test="type != null">
+                AND type = #{type}
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+            <if test="createTime != null">
+                AND create_time = #{createTime}
+            </if>
+            <if test="modifyTime != null">
+                AND modify_time = #{modifyTime}
+            </if>
+            <if test="createAccount != null">
+                AND create_account = #{createAccount}
+            </if>
+            <if test="modifyAccount != null">
+                AND modify_account = #{modifyAccount}
+            </if>
+            <if test="remark != null and '' != remark">
+                AND remark = #{remark}
+            </if>
+            <if test="year != null">
+                AND YEAR(publish_time) = #{year}
+            </if>
+            <if test="minYear != null">
+                AND YEAR(publish_time) &gt;= #{minYear}
+            </if>
+            <if test="maxYear != null">
+                AND YEAR(publish_time) &lt;= #{maxYear}
+            </if>
+        </trim>
+    </sql>
+
+    <!-- 删除条件带where -->
+    <sql id="all_delete_condition_with_where">
+        <trim prefix="WHERE" prefixOverrides="AND|OR">
+            <if test="publishTime != null">
+                AND publish_time = #{publishTime}
+            </if>
+            <if test="title != null and '' != title">
+                AND title = #{title}
+            </if>
+            <if test="description != null and '' != description">
+                AND description = #{description}
+            </if>
+            <if test="type != null">
+                AND type = #{type}
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+            <if test="createTime != null">
+                AND create_time = #{createTime}
+            </if>
+            <if test="modifyTime != null">
+                AND modify_time = #{modifyTime}
+            </if>
+            <if test="createAccount != null">
+                AND create_account = #{createAccount}
+            </if>
+            <if test="modifyAccount != null">
+                AND modify_account = #{modifyAccount}
+            </if>
+            <if test="remark != null and '' != remark">
+                AND remark = #{remark}
+            </if>
+        </trim>
+    </sql>
+
+    <!-- 更新条件带set -->
+    <sql id="all_set_condition_with_set">
+        <set>
+            <if test="publishTime != null">
+                publish_time = #{publishTime},
+            </if>
+            <if test="title != null and '' != title">
+                title = #{title},
+            </if>
+            <if test="description != null and '' != description">
+                description = #{description},
+            </if>
+            <if test="type != null">
+                type = #{type},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="modifyTime != null">
+                modify_time = #{modifyTime},
+            </if>
+            <if test="createAccount != null">
+                create_account = #{createAccount},
+            </if>
+            <if test="modifyAccount != null">
+                modify_account = #{modifyAccount},
+            </if>
+            <if test="remark != null and '' != remark">
+                remark = #{remark}
+            </if>
+        </set>
+    </sql>
+
+    <!-- 批量更新条件带set -->
+    <sql id="all_batch_set_condition_with_set">
+        <set>
+            <if test="item.publishTime != null">
+                publish_time = #{item.publishTime},
+            </if>
+            <if test="item.title != null and '' != item.title">
+                title = #{item.title},
+            </if>
+            <if test="item.description != null and '' != item.description">
+                description = #{item.description},
+            </if>
+            <if test="item.type != null">
+                type = #{item.type},
+            </if>
+            <if test="status != null">
+                status = #{item.status},
+            </if>
+            <if test="item.createTime != null">
+                create_time = #{item.createTime},
+            </if>
+            <if test="item.modifyTime != null">
+                modify_time = #{item.modifyTime},
+            </if>
+            <if test="item.createAccount != null">
+                create_account = #{item.createAccount},
+            </if>
+            <if test="item.modifyAccount != null">
+                modify_account = #{item.modifyAccount},
+            </if>
+            <if test="item.remark != null and '' != item.remark">
+                remark = #{item.remark}
+            </if>
+        </set>
+    </sql>
+
+    <!--根据对象属性插入-->
+    <insert id="insertByProperty" useGeneratedKeys="true" keyProperty="id" keyColumn="id" parameterType="me.znzn.tools.module.blog.entity.po.Timeline">
+        INSERT INTO <include refid="table_name"/>
+        (
+            <include refid="all_columns_not_with_id"/>
+        )
+        VALUES (
+            #{publishTime}, #{title}, #{description}, #{type}, #{status}, #{createTime}, #{modifyTime}, #{createAccount}, #{modifyAccount}, #{remark}
+        )
+    </insert>
+
+    <!--根据对象属性插入-->
+    <insert id="insertBatchByProperty" useGeneratedKeys="true" keyProperty="id" keyColumn="id" parameterType="java.util.List">
+        INSERT INTO <include refid="table_name"/>
+        (
+            <include refid="all_columns_not_with_id"/>
+        )
+        VALUES
+        <foreach collection="list" item="item" separator="," index = "index">
+        (
+            #{item.publishTime}, #{item.title}, #{item.description}, #{item.type}, #{item.status}, #{item.createTime}, #{item.modifyTime}, #{item.createAccount}, #{item.modifyAccount}, #{item.remark}
+        )
+        </foreach>
+    </insert>
+
+    <!--根据主键更新-->
+    <update id="updateByPrimaryKey" parameterType="me.znzn.tools.module.blog.entity.po.Timeline">
+        UPDATE <include refid="table_name"/>
+            <include refid="all_set_condition_with_set"/>
+        WHERE
+            id = #{id}
+    </update>
+
+    <!--根据主键批量更新-->
+    <update id="updateBatchByPrimaryKey" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" separator=";">
+            UPDATE <include refid="table_name"/>
+                <include refid="all_batch_set_condition_with_set"/>
+            WHERE
+                id = #{item.id}
+        </foreach>
+    </update>
+
+    <!--根据主键删除-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        DELETE FROM
+            <include refid="table_name"/>
+        WHERE
+            id = #{id}
+    </delete>
+
+    <!--根据主键列表批量删除-->
+    <delete id="deleteBatchByPrimaryKey" parameterType="java.util.List">
+        DELETE FROM
+            <include refid="table_name"/>
+        WHERE
+            id
+        IN
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!--根据属性删除-->
+    <delete id="deleteByProperty" parameterType="me.znzn.tools.module.blog.entity.po.Timeline">
+        DELETE FROM <include refid="table_name"/>
+        <include refid="all_delete_condition_with_where"/>
+    </delete>
+
+    <!-- 根据主键查询 -->
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="TimelineMap">
+        SELECT
+            <include refid="all_columns"/>
+        FROM
+            <include refid="table_name"/>
+        WHERE
+            id = #{id}
+    </select>
+
+    <!-- 根据对象属性查询 -->
+    <select id="selectByProperty" parameterType="me.znzn.tools.module.blog.entity.po.Timeline" resultMap="TimelineMap">
+        SELECT
+            <include refid="all_columns"/>
+        FROM
+            <include refid="table_name"/>
+        <include refid="all_query_condition_with_where"/>
+        ORDER BY publish_time DESC
+        <if test="startIndex != null">
+            <if test="limit != null">
+                LIMIT #{startIndex} , #{limit}
+            </if>
+        </if>
+    </select>
+
+    <select id="getTimelineVoByProperty" parameterType="me.znzn.tools.module.blog.entity.po.Timeline" resultMap="TimelineVoMap">
+        SELECT
+        <include refid="all_columns"/>
+        FROM
+        <include refid="table_name"/>
+        <include refid="all_query_condition_with_where"/>
+        ORDER BY publish_time DESC
+        <if test="startIndex != null">
+            <if test="limit != null">
+                LIMIT #{startIndex} , #{limit}
+            </if>
+        </if>
+    </select>
+
+    <!-- 根据对象属性查询统计 -->
+    <select id="countByProperty" parameterType="me.znzn.tools.module.blog.entity.po.Timeline" resultType="java.lang.Integer">
+        SELECT
+            COUNT(*)
+        FROM
+            <include refid="table_name"/>
+        <include refid="all_query_condition_with_where"/>
+    </select>
+
+</mapper>

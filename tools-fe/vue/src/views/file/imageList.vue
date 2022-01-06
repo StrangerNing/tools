@@ -55,7 +55,7 @@
                     @load="$refs.waterfall.refresh"
                   />
                   <div class="name">
-                    <p>上传时间：{{props.data.createTime}}</p>
+                    <p>上传时间：{{formatDate(props.data.createTime,'yyyy-MM-dd HH:mm:ss')}}</p>
                   </div>
                   <span class="el-upload-list__item-actions">
                     <el-tooltip effect="dark" content="复制链接" placement="top-end">
@@ -106,6 +106,7 @@
   import {baseURL} from "../../utils/request";
   import Waterfall from "vue-waterfall-plugin";
   import ElImageViewer from 'element-ui/packages/image/src/image-viewer';
+  import {formatDate} from "element-ui/lib/utils/date-util";
 
   export default {
     name: "imageList",
@@ -152,7 +153,8 @@
         isOpen: false,
         slideWidth: 200,
         boxWidth: 'auto',
-        noMore: false
+        noMore: false,
+        formatDate: formatDate
       }
     },
     computed: {

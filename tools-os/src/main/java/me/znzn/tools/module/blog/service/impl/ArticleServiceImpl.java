@@ -15,10 +15,7 @@ import me.znzn.tools.module.blog.service.ArticleService;
 import me.znzn.tools.module.blog.service.LuceneService;
 import me.znzn.tools.module.blog.service.TagService;
 import me.znzn.tools.module.user.entity.vo.UserInfoVO;
-import me.znzn.tools.utils.JsonUtils;
-import me.znzn.tools.utils.SpringUtil;
-import me.znzn.tools.utils.StringUtil;
-import me.znzn.tools.utils.UploadFileUtil;
+import me.znzn.tools.utils.*;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.checkerframework.checker.units.qual.A;
@@ -59,6 +56,9 @@ public class ArticleServiceImpl implements ArticleService {
     @Resource
     private LuceneService luceneService;
 
+    @Resource
+    private MailSenderUtil mailSenderUtil;
+
     @Override
     public Long addArticle(ArticleVo articleVo, UserInfoVO loginUser) {
         Article article = new Article();
@@ -85,6 +85,7 @@ public class ArticleServiceImpl implements ArticleService {
         articleVo.setCreateTime(article.getCreateTime());
         luceneService.addDocument(articleVo);
         tagService.clearTagCache();
+        mailSenderUtil.sendSubscribe(articleVo);
         return id;
     }
 

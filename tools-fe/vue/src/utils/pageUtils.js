@@ -1,3 +1,4 @@
+import {formatDate} from "element-ui/lib/utils/date-util";
 export function callNewPage (url, options = {}) {
   if (!options.autoClose) options.autoClose = true
   let path = /\/$/.test(url) ? url : `${url}/`
@@ -8,4 +9,12 @@ export function callNewPage (url, options = {}) {
     queryStr += `&${key}=${options[key]}`
   }
   window.open(`${target}${queryStr}`, options.pageName)
+}
+
+export function format2Date() {
+  formatDate(row[column.property])
+}
+
+export function format2Time(row, column) {
+  formatDate(row[column.property], "YYYY-MM-dd HH:mm:ss")
 }

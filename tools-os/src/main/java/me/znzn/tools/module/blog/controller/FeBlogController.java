@@ -54,6 +54,8 @@ public class FeBlogController {
     private LuceneService luceneService;
     @Resource
     private SubscribeService subscribeService;
+    @Resource
+    private TimelineService timelineService;
 
     @GetMapping("/")
     public String index(Model model) {
@@ -281,6 +283,18 @@ public class FeBlogController {
             getPagePlugins(model);
         }
         return "page-contact";
+    }
+
+    @GetMapping("/events")
+    public String events(Model model) {
+        try {
+            model.addAttribute("categories", categoryService.searchCategory(new CategoryForm()));
+        } catch (Exception e) {
+            log.error("系统异常,", e);
+        } finally {
+            getPagePlugins(model);
+        }
+        return "page-events";
     }
 
     @GetMapping("/subscribe")

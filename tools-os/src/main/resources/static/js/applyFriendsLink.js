@@ -1,3 +1,5 @@
+import getAjax from "./vendor/getAjax.js";
+
 $('#confirm').click(function () {
   let url = '/wapi/blog/friends/apply'
   let form = $('#applyFriendsForm').serializeArray()

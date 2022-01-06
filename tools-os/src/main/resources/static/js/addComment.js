@@ -1,3 +1,5 @@
+import getAjax from "./vendor/getAjax.js";
+
 $('#submit').click(function () {
   let url = '/wapi/blog/article/comment/add'
   let form = $('#commentForm').serializeArray()

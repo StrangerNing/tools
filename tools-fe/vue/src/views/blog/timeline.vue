@@ -1,41 +1,14 @@
 <template>
   <div class="page-container">
     <div class="page-text">
-      <span>友链管理</span>
+      <span>博客大事件</span>
     </div>
     <div class="page-content">
       <el-form label-width="90px">
         <el-row>
           <el-col :span="6">
-            <el-form-item label="名称：">
-              <el-input size="small" v-model="params.name" clearable></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="网址：">
-              <el-input size="small" v-model="params.website" clearable></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="邮箱：">
-              <el-input size="small" v-model="params.email" clearable></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="昵称：">
-              <el-input size="small" v-model="params.nickname" clearable></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="状态：">
-              <el-select v-model="params.status" placeholder="请选择" size="small" clearable>
-                <el-option
-                  v-for="item in blogEnums.friendsLinkEnum"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-              </el-select>
+            <el-form-item label="标题：">
+              <el-input size="small" v-model="params.title" clearable></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -49,8 +22,9 @@
     <div class="page-content">
       <el-row>
         <el-button size="small" type="primary" @click="create" icon="el-icon-plus">新建</el-button>
-        <el-button size="small" type="success" @click="approve" icon="el-icon-check" :disabled="!currentRowId || currentRow.status === 2">通过</el-button>
-        <el-button size="small" type="danger" @click="deny" icon="el-icon-close" :disabled="!currentRowId">拒绝</el-button>
+        <el-button size="small" type="warning" @click="modify" icon="el-icon-edit" :disabled="!currentRowId">修改</el-button>
+        <el-button size="small" type="danger" @click="deleteItem" icon="el-icon-close" :disabled="!currentRowId">删除</el-button>
+        <el-button size="small" type="success" @click="recoverItem" icon="el-icon-check" :disabled="!currentRowId">恢复</el-button>
       </el-row>
     </div>
     <div class="page-content">
@@ -60,26 +34,23 @@
             <el-radio v-model="currentRowId" :label="scope.row.id"><i></i></el-radio>
           </template>
         </el-table-column>
-        <el-table-column label="网站名称" prop="name" width="150px" show-overflow-tooltip></el-table-column>
-        <el-table-column label="网站地址" width="200px" show-overflow-tooltip>
+        <el-table-column label="标题" prop="title" width="150px" show-overflow-tooltip></el-table-column>
+        <el-table-column label="描述" prop="description" width="250px" show-overflow-tooltip></el-table-column>
+        <el-table-column label="类型"width="150px" show-overflow-tooltip>
           <template slot-scope="scope">
-            <a :href="scope.row.website" style="color: #3a8ee6">{{scope.row.website}}</a>
+            {{blogEnums.timelineTypeEnum.getLabelByValue(scope.row.type)}}
           </template>
         </el-table-column>
-        <el-table-column label="网站图标" prop="icon" width="80px">
+        <el-table-column label="状态" width="150px" show-overflow-tooltip>
           <template slot-scope="scope">
-            <img :src="scope.row.icon" alt="" style="width: 20px;height: 20px">
+            {{blogEnums.timelineStatusEnum.getLabelByValue(scope.row.status)}}
           </template>
         </el-table-column>
-        <el-table-column label="网站介绍" prop="introduction" width="200px" show-overflow-tooltip></el-table-column>
-        <el-table-column label="友链状态" width="100px">
+        <el-table-column label="发布时间" width="150px" show-overflow-tooltip>
           <template slot-scope="scope">
-            {{blogEnums.friendsLinkEnum.getLabelByValue(scope.row.status)}}
+            {{formatDate(scope.row.publishTime)}}
           </template>
         </el-table-column>
-        <el-table-column label="申请邮箱" prop="email" width="150px" show-overflow-tooltip></el-table-column>
-        <el-table-column label="申请人昵称" prop="nickname" width="100px" show-overflow-tooltip></el-table-column>
-        <el-table-column label="不通过原因" prop="message" width="150px" show-overflow-tooltip></el-table-column>
         <el-table-column label="新建时间" prop="createTime" width="200px">
           <template slot-scope="scope">
             {{formatDate(scope.row.createTime, 'yyyy-MM-dd HH:mm:ss')}}
@@ -118,40 +89,20 @@
       <el-form label-width="15%">
         <el-row>
           <el-col :span="24">
-            <el-form-item label="名称：">
-              <el-input size="small" v-model="createForm.name" clearable></el-input>
+            <el-form-item label="标题：">
+              <el-input size="small" v-model="createForm.title" clearable></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="24">
-            <el-form-item label="网址：">
-              <el-input size="small" v-model="createForm.website" clearable></el-input>
+            <el-form-item label="描述：">
+              <el-input size="small" v-model="createForm.description" clearable></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="24">
-            <el-form-item label="网站图标：">
-              <el-input size="small" v-model="createForm.icon" clearable></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="24">
-            <el-form-item label="网站介绍：">
-              <el-input size="small" type="textarea" :autosize="{ minRows: 2, maxRows: 4}" v-model="createForm.introduction" clearable></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="24">
-            <el-form-item label="邮箱：">
-              <el-input size="small" v-model="createForm.email" clearable></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="24">
-            <el-form-item label="昵称：">
-              <el-input size="small" v-model="createForm.nickname" clearable></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="24">
-            <el-form-item label="状态：">
-              <el-select v-model="createForm.status" placeholder="请选择" size="small" clearable>
+            <el-form-item label="类型：">
+              <el-select v-model="createForm.type" placeholder="请选择" size="small" clearable>
                 <el-option
-                  v-for="item in blogEnums.friendsLinkEnum"
+                  v-for="item in blogEnums.timelineTypeEnum"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
@@ -159,9 +110,26 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="24" v-if="createForm.status === blogEnums.friendsLinkEnum.getValueByFiledName('deny')">
-            <el-form-item label="原因：">
-              <el-input size="small" v-model="createForm.message" clearable></el-input>
+          <el-col :span="24">
+            <el-form-item label="状态：">
+              <el-select v-model="createForm.status" placeholder="请选择" size="small" clearable>
+                <el-option
+                  v-for="item in blogEnums.timelineStatusEnum"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="发布时间：">
+              <el-date-picker
+                v-model="createForm.publishTime"
+                size="small"
+                type="date"
+                placeholder="选择日期">
+              </el-date-picker>
             </el-form-item>
           </el-col>
         </el-row>
@@ -175,20 +143,16 @@
 </template>
 
 <script>
-  import {addFriendsLink, getFriendsLink, updateFriendsLink} from "../../api/blog";
+  import {addTimelineEvent, getTimelineList, updateTimelineEvent} from "../../api/blog";
   import blogEnums from "./blogEnums";
   import {formatDate} from "element-ui/lib/utils/date-util";
 
   export default {
-    name: "friends",
+    name: "timeline",
     data() {
       return {
         params: {
-          name: null,
-          website: null,
-          email: null,
-          nickname: null,
-          status: null,
+          title: null,
           limit: 10,
           currentPage: 1
         },
@@ -197,31 +161,13 @@
         currentRowId: null,
         total: null,
         createVisible: false,
-        createForm: {message: null},
-        dialogTitle: '',
+        dialogTitle: null,
+        createForm: {},
         blogEnums: blogEnums,
         formatDate: formatDate
       }
     },
-    watch: {
-      'createVisible': function (value) {
-        if (!value) {
-          this.createForm = {}
-        }
-      }
-    },
     methods: {
-      search() {
-        getFriendsLink(this.params).then(res => {
-          this.data = res.data.list
-          this.total = res.data.totalCount
-          this.params.currentPage = res.data.currentPage
-        })
-      },
-      research() {
-        this.params.currentPage = 1
-        this.search()
-      },
       choose(item) {
         if (item === null) {
           this.currentRow = null
@@ -231,35 +177,52 @@
         this.currentRow = item
         this.currentRowId = item.id
       },
+      search() {
+        getTimelineList(this.params).then(res => {
+          this.data = res.data.list
+          this.total = res.data.totalCount
+          this.params.currentPage = res.data.currentPage
+        })
+      },
+      research() {
+        this.params.currentPage = 1
+        this.search()
+      },
       create() {
         this.createVisible = true
         this.createForm = {}
-        this.dialogTitle = '新建友链'
+        this.dialogTitle = '新建事件'
       },
-      approve() {
+      modify() {
         this.createVisible = true
         this.createForm = JSON.parse(JSON.stringify(this.currentRow))
-        this.createForm.status = blogEnums.friendsLinkEnum.getValueByFiledName('approve')
-        this.dialogTitle = '审核友链'
+        this.dialogTitle = '修改事件'
       },
-      deny() {
-        this.createVisible = true
+      deleteItem() {
         this.createForm = JSON.parse(JSON.stringify(this.currentRow))
-        this.createForm.status = blogEnums.friendsLinkEnum.getValueByFiledName('deny')
-        this.dialogTitle = '拒绝友链'
+        this.createForm.status = 0
+        updateTimelineEvent(this.createForm).then(res => {
+          this.$message.success('新建成功')
+          this.research()
+        })
+      },
+      recoverItem() {
+        this.createForm = JSON.parse(JSON.stringify(this.currentRow))
+        this.createForm.status = 1
+        updateTimelineEvent(this.createForm).then(res => {
+          this.$message.success('新建成功')
+          this.research()
+        })
       },
       commitCreate() {
-        if (this.createForm.status !== blogEnums.friendsLinkEnum.getValueByFiledName('deny')) {
-          this.createForm.message = null
-        }
         if (this.createForm.id) {
-          updateFriendsLink(this.createForm).then(res => {
+          updateTimelineEvent(this.createForm).then(res => {
             this.closeCreateDialog()
             this.$message.success('操作成功')
             this.research()
           })
         } else {
-          addFriendsLink(this.createForm).then(res => {
+          addTimelineEvent(this.createForm).then(res => {
             this.closeCreateDialog()
             this.$message.success('新建成功')
             this.research()

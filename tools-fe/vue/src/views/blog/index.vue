@@ -173,8 +173,16 @@
             {{blogEnums.editTypeEnum.getLabelByValue(scope.row.editType)}}
           </template>
         </el-table-column>
-        <el-table-column prop="createTime" label="新建时间" min-width="160px"/>
-        <el-table-column prop="modifyTime" label="修改时间" min-width="160px"/>
+        <el-table-column label="新建时间" min-width="160px">
+          <template slot-scope="scope">
+            {{formatDate(scope.row.createTime, 'yyyy-MM-dd HH:mm:ss')}}
+          </template>
+        </el-table-column>
+        <el-table-column label="修改时间" min-width="160px">
+          <template slot-scope="scope">
+            {{formatDate(scope.row.modifyTime, 'yyyy-MM-dd HH:mm:ss')}}
+          </template>
+        </el-table-column>
       </el-table>
       <el-row class="hidden-xs-only">
         <el-pagination
@@ -208,7 +216,8 @@
 <script>
   import {deleteArticle, list, refreshIndex, searchCategory, searchTag} from "../../api/blog";
   import blogEnums from "../blog/blogEnums";
-  import "mavon-editor/dist/css/index.css"
+  import "mavon-editor/dist/css/index.css";
+  import {formatDate} from "element-ui/lib/utils/date-util";
 
   export default {
     name: "index",
@@ -226,7 +235,8 @@
         categoryOptions:[],
         total: 0,
         blogEnums: blogEnums,
-        previewVisible: false
+        previewVisible: false,
+        formatDate: formatDate
       }
     },
     methods: {

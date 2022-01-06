@@ -92,3 +92,27 @@ export function updateFriendsLink(data) {
     data: data
   })
 }
+
+export function getTimelineList(params) {
+  return request({
+    url: '/wapi/blog/timeline/list',
+    method: 'get',
+    params: params
+  })
+}
+
+export function addTimelineEvent(data) {
+  return request({
+    url: '/wapi/blog/timeline/add',
+    method: 'post',
+    data: data
+  })
+}
+
+export function updateTimelineEvent(data) {
+  return request({
+    url: '/wapi/blog/timeline/update',
+    method: 'post',
+    data: data
+  })
+}

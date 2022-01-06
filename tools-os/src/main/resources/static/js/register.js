@@ -1,3 +1,5 @@
+import getAjax from "./vendor/getAjax.js";
+
 var register = document.getElementById('register')
 register.onclick = function () {
   // let captcha = document.getElementById('captcha')

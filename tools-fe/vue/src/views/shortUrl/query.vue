@@ -30,6 +30,9 @@
           prop="createTime"
           label="创建时间"
           width="160">
+          <template slot-scope="scope">
+            {{formatDate(scope.row.createTime, 'yyyy-MM-dd HH:mm:ss')}}
+          </template>
         </el-table-column>
         <el-table-column
           prop="createName"
@@ -74,6 +77,7 @@
 
 <script>
   import {queryUrl, updateUrl} from "../../api/shortUrl";
+  import {formatDate} from "element-ui/lib/utils/date-util";
 
   export default {
     name: "query",
@@ -84,7 +88,8 @@
           limit: 10
         },
         total: 0,
-        urlList: []
+        urlList: [],
+        formatDate: formatDate
       }
     },
     methods: {

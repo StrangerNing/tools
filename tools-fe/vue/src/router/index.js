@@ -177,7 +177,18 @@ export const asyncRoutes = [
           icon: 'friend-link',
           roles: ['user', 'admin']
         }
-      }]
+      },
+      {
+        path: 'timeline',
+        name: 'timeline',
+        component: () => import('@/views/blog/timeline'),
+        meta: {
+          title: '博客大事件',
+          icon: 'timeline',
+          roles: ['admin']
+        }
+      },
+    ]
   },
   {
     path: '/constant',

@@ -1,4 +1,6 @@
 import "/static/js/vendor/timeago.js"
+import getAjax from "./vendor/getAjax.js";
+
 $('#featureMoreBtn').click(function () {
   let currentPage = $(this).data('id')
   let limit = $(this).data('limit')

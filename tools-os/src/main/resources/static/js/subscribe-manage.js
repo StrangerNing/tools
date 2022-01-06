@@ -1,3 +1,5 @@
+import getAjax from "./vendor/getAjax.js";
+
 $('#confirmManage').click(function () {
   let subscribeTypes = []
   $("input[name='subscribe-type']").each(function (i, value) {
@@ -13,6 +15,8 @@ $('#confirmManage').click(function () {
   }
   subscribeManage(JSON.stringify(params), url, 'post').then(res => {
     toastr.success(res.msg)
+  }).catch(res => {
+    toastr.error(res.msg)
   })
   console.log(subscribeTypes)
 })

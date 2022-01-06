@@ -1,7 +1,7 @@
 import "https://cdn.bootcss.com/timeago.js/3.0.2/timeago.js"
+import getAjax from "./vendor/getAjax.js";
 
 $('.page-item').click(function () {
-  console.log($(this).data('current'))
   let current = $(this).data('current')
   let to = $(this).data('to')
   let limit = $(this).data('limit')

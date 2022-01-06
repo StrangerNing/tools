@@ -1,6 +1,5 @@
 package me.znzn.tools.common.component;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,17 +25,21 @@ public class BaseModel {
 
     private Long createAccount;
 
-    @JsonFormat(pattern ="yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createTime;
 
     private Long modifyAccount;
 
-    @JsonFormat(pattern ="yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date modifyTime;
 
     private String remark;
 
     private String orderBy = "create_time DESC";
+
+    private Integer year;
+
+    private Integer minYear;
+
+    private Integer maxYear;
 
     public Integer getStartIndex() {
         if (getLimit() != null || getCurrentPage() != null) {

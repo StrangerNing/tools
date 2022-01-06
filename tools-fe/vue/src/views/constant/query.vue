@@ -41,9 +41,11 @@
           label="备注">
         </el-table-column>
         <el-table-column
-          prop="modifyTime"
           label="最后修改时间"
           width="160">
+          <template slot-scope="scope">
+            {{formatDate(scope.row.modifyTime, 'yyyy-MM-dd HH:mm:ss')}}
+          </template>
         </el-table-column>
         <el-table-column
           prop="modifyName"
@@ -106,6 +108,7 @@
 <script>
   import {getConstantList, updateConstants, updateAllConstants, addConstant} from "../../api/constant";
   import fullScreen from "../../utils/fullscreen";
+  import {formatDate} from "element-ui/lib/utils/date-util";
 
   export default {
     name: "query",
@@ -121,7 +124,8 @@
         title: '新建变量',
         updateDialogVisible: false,
         temp: {},
-        isFullScreen: true
+        isFullScreen: true,
+        formatDate: formatDate
       }
     },
     methods: {
