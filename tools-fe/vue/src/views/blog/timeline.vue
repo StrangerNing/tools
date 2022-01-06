@@ -95,7 +95,7 @@
           </el-col>
           <el-col :span="24">
             <el-form-item label="描述：">
-              <el-input size="small" v-model="createForm.description" clearable></el-input>
+              <el-input size="small" type="textarea" :autosize="{ minRows: 2, maxRows: 6}" v-model="createForm.description" clearable></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="24">
