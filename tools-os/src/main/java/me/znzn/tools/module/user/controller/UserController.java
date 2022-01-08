@@ -58,7 +58,10 @@ public class UserController {
         if (userInfoVO.getId() == null) {
             throw new BusinessException("用户id为空，请刷新重试");
         }
-        Boolean result = userService.update(userInfoVO, user);
+        if (!userInfoVO.getId().equals(user.getId())) {
+            throw new BusinessException("用户信息出错，请刷新重试");
+        }
+        Boolean result = userService.update(userInfoVO);
         if (result) {
             LoginUserUtil.setSessionUser(userInfoVO);
         }

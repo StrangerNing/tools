@@ -1,11 +1,12 @@
 package me.znzn.tools.module.user.service.impl;
 
-import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollectionUtil;
 import lombok.extern.slf4j.Slf4j;
+import me.znzn.tools.common.component.MailSendParams;
 import me.znzn.tools.common.constant.CommonConstant;
 import me.znzn.tools.common.exception.BusinessException;
 import me.znzn.tools.module.user.entity.enums.SexEnum;
-import me.znzn.tools.module.user.entity.enums.StatusEnum;
+import me.znzn.tools.module.user.entity.enums.UserStatusEnum;
 import me.znzn.tools.module.user.entity.form.ApiKeyForm;
 import me.znzn.tools.module.user.entity.form.LoginForm;
 import me.znzn.tools.module.user.entity.form.RegisterForm;
@@ -15,13 +16,12 @@ import me.znzn.tools.module.user.entity.vo.UserInfoVO;
 import me.znzn.tools.module.user.mapper.ApiKeyMapper;
 import me.znzn.tools.module.user.mapper.UserMapper;
 import me.znzn.tools.module.user.service.UserService;
-import me.znzn.tools.utils.LoginUserUtil;
-import me.znzn.tools.utils.MD5Util;
-import me.znzn.tools.utils.ValidatorUtil;
+import me.znzn.tools.utils.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Base64Utils;
 import org.thymeleaf.util.ListUtils;
 
@@ -48,6 +48,9 @@ public class UserServiceImpl implements UserService {
     @Resource
     private RedisTemplate redisTemplate;
 
+    @Resource
+    private MailSenderUtil mailSenderUtil;
+
     @Override
     public UserInfoVO login(LoginForm loginForm) {
         String username = loginForm.getUsername();
@@ -56,15 +59,41 @@ public class UserServiceImpl implements UserService {
             throw new BusinessException("没有这个用户");
         }
         User user = userList.get(0);
-        if (MD5Util.verify(loginForm.getPassword(), user.getPassword())) {
-            UserInfoVO userInfo = new UserInfoVO();
-            BeanUtils.copyProperties(user, userInfo, "password");
-            String token = UUID.randomUUID().toString();
-            userInfo.setToken(token);
-            LoginUserUtil.login(userInfo);
-            return userInfo;
+        if (!MD5Util.verify(loginForm.getPassword(), user.getPassword())) {
+            throw new BusinessException("用户名或密码错误");
         }
-        throw new BusinessException("用户名或密码错误");
+        if (UserStatusEnum.WAIT_AUTH.getIndex().equals(user.getStatus())) {
+            throw new BusinessException("请前往邮箱确认激活账号");
+        }
+        if (UserStatusEnum.DISABLE.getIndex().equals(user.getStatus())) {
+            throw new BusinessException("账号已冻结");
+        }
+        UserInfoVO userInfo = new UserInfoVO();
+        BeanUtils.copyProperties(user, userInfo, "password");
+        String token = UUID.randomUUID().toString();
+        userInfo.setToken(token);
+        LoginUserUtil.login(userInfo);
+        return userInfo;
+    }
+
+    @Override
+    public UserInfoVO googleLogin(String googleId) {
+        List<User> userList = userMapper.selectByProperty(User.builder().googleId(googleId).build());
+        if (ListUtils.isEmpty(userList)) {
+            return null;
+        }
+        User user = userList.get(0);
+        UserInfoVO userInfo = new UserInfoVO();
+        BeanUtils.copyProperties(user, userInfo, "password");
+
+        if (UserStatusEnum.DISABLE.getIndex().equals(user.getStatus())) {
+            userInfo.setStatus(UserStatusEnum.ENABLE.getIndex());
+            update(userInfo);
+        }
+        String token = UUID.randomUUID().toString();
+        userInfo.setToken(token);
+        LoginUserUtil.login(userInfo);
+        return userInfo;
     }
 
     @Override
@@ -88,19 +117,67 @@ public class UserServiceImpl implements UserService {
         newUser.setPassword(MD5Util.generate(registerForm.getPassword()));
         newUser.setSex(SexEnum.UNKNOWN.getIndex());
         newUser.setEmail(registerForm.getEmail());
-        newUser.setStatus(StatusEnum.ENABLE.getIndex());
+        newUser.setStatus(UserStatusEnum.WAIT_AUTH.getIndex());
         newUser.setCreateTime(new Date());
-        return userMapper.insertByProperty(newUser).equals(1L);
+        userMapper.insertByProperty(newUser);
+
+        MailSendParams mailSendParams = new MailSendParams();
+        mailSendParams.setTo(email);
+        mailSendParams.setHref(CommonConstant.SSO_URL + "confirm?eid=");
+        mailSenderUtil.send(mailSendParams, MailSenderUtil.MailTypeEnum.USER_EMAIL_CONFIRM);
+        return Boolean.TRUE;
     }
 
     @Override
-    public Boolean update(UserInfoVO userInfoVO, UserInfoVO loginUser) {
+    public UserInfoVO googleRegister(GoogleIdTokenVerifyUtil.GoogleUser googleUser) {
+        List<User> userList = userMapper.selectByProperty(User.builder().email(googleUser.getEmail()).build());
+        User user;
+        if (CollectionUtil.isNotEmpty(userList)) {
+            user = userList.get(0);
+            user.setGoogleId(googleUser.getSub());
+            user.setModifyTime(new Date());
+            user.setModifyEmp(user.getId());
+            updateByEmail(user);
+        } else {
+            user = new User();
+            user.setEmail(googleUser.getEmail());
+            user.setNickname(googleUser.getName());
+            user.setGoogleId(googleUser.getSub());
+            user.setSex(SexEnum.UNKNOWN.getIndex());
+            user.setCreateTime(new Date());
+            user.setRoles("[\"user\"]");
+            user.setStatus(UserStatusEnum.ENABLE.getIndex());
+            userMapper.insertByProperty(user);
+        }
+        UserInfoVO userInfo = new UserInfoVO();
+        BeanUtils.copyProperties(user, userInfo, "password");
+        String token = UUID.randomUUID().toString();
+        userInfo.setToken(token);
+        LoginUserUtil.login(userInfo);
+        return userInfo;
+    }
+
+    @Override
+    public Boolean update(UserInfoVO userInfoVO) {
         User user = new User();
         BeanUtils.copyProperties(userInfoVO, user);
         user.setModifyTime(new Date());
-        user.setModifyEmp(loginUser.getId());
+        user.setModifyEmp(userInfoVO.getId());
         Integer count = userMapper.updateByPrimaryKey(user);
         return count == 1;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void updateByEmail(User user) {
+        if (user.getEmail() == null) {
+            throw new BusinessException("用户邮箱为空");
+        }
+        user.setModifyTime(new Date());
+        Integer count = userMapper.updateByEmail(user);
+        if (count != 1) {
+            throw new BusinessException("更新失败");
+        }
     }
 
     @Override

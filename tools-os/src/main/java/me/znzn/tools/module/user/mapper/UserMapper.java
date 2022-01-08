@@ -21,4 +21,11 @@ public interface UserMapper extends BaseDao<User> {
      */
     UserInfoVO selectByUserId(Long id);
 
+    /**
+     * 根据邮箱更新用户信息
+     * @param user
+     * @return
+     */
+    Integer updateByEmail(User user);
+
 }

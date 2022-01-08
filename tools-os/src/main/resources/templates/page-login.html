@@ -7,6 +7,7 @@
     <title>统一登录平台</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="google-signin-client_id" content="117692462533-bdg0naaj6gqlb4d910pr9cc2hjbvnoc0.apps.googleusercontent.com">
     <link rel="shortcut icon" type="image/x-icon" href="/static/imgs/theme/favicon.png">
     <!-- NewsBoard CSS  -->
     <link rel="stylesheet" href="/static/css/style.css">
@@ -42,17 +43,42 @@
                                     <a class="text-muted" href="#">忘记密码？</a>
                                 </div>
                                 <div class="form-group">
-                                    <button type="submit" class="button button-contactForm btn-block">登录</button>
+                                    <button type="submit" id="loginBtn" class="button button-contactForm btn-block" th:data-params="'&' + (${redirect} ? ('redirect=' + ${redirect} + '&') : '') + (${login} ? ('login=' + ${login}) : '')">登录</button>
                                 </div>
                             </form>
                             <div class="divider-text-center mt-15 mb-15">
                                 <span> OR</span>
                             </div>
-                            <ul class="btn-login list_none text-center mb-15">
-                                <li class="col-sm-5 mb-10"><a href="#" class="btn btn-facebook"><i class="elegant-icon social_facebook  mr-5"></i>Facebook</a></li>
-                                <li class="col-sm-5"><a href="#" class="btn btn-google"><i class="elegant-icon social_googleplus mr-5"></i>Google</a></li>
-                            </ul>
+                            <div class="btn-login list_none text-center mb-15">
+                                <div id="my-signin2" class="d-flex justify-content-center"></div>
+                            </div>
                             <div class="text-muted text-center">还没有账号？ <a href="/register">点击注册</a></div>
+                            <div th:if="${error}" class="modal fade" id="error-Modal" tabindex="-1" role="dialog" aria-labelledby="confirm" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="confirmSubmit">提示</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div id="subscribe-msg" class="modal-body">
+                                            <p>[[${error}]]</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn bg-primary text-white" data-dismiss="modal">确定</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <script src="/static/js/vendor/jquery-1.12.4.min.js"></script>
+                                <script src="/static/js/vendor/bootstrap.min.js"></script>
+                                <script>
+                                  var myModal = new bootstrap.Modal(document.getElementById('error-Modal'), {
+                                    keyboard: false
+                                  })
+                                  myModal.toggle()
+                                </script>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -81,8 +107,32 @@
 <!--    <script src="/static/js/vendor/perfect-scrollbar.js"></script>-->
 <!--    <script src="/static/js/vendor/waypoints.min.js"></script>-->
 <!--    <script src="/static/js/vendor/jquery.theia.sticky.js"></script>-->
-<!--     NewsBoard JS -->
-<!--    <script src="/static/js/main.js"></script>-->
+<!--     NewsBoard JS-->
+<!--    <script type="module" src="/static/js/main.js"></script>-->
+    <script>
+      function onSuccess(googleUser) {
+        let id_token = googleUser.getAuthResponse().id_token;
+        console.log(id_token)
+        let params = document.getElementById('loginBtn').dataset.params
+        window.location.href='/login/google?idToken='+id_token+params
+      }
+      function onFailure(error) {
+        console.log(error);
+      }
+      function renderButton() {
+        gapi.signin2.render('my-signin2', {
+          'scope': 'profile email',
+          'width': 240,
+          'height': 50,
+          'longtitle': true,
+          'theme': 'dark',
+          'onsuccess': onSuccess,
+          'onfailure': onFailure
+        });
+      }
+    </script>
+
+    <script src="/static/js/vendor/google-platform.js" async defer></script>
 </body>
 
 </html>

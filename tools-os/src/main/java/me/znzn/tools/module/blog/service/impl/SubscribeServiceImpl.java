@@ -162,7 +162,8 @@ public class SubscribeServiceImpl implements SubscribeService {
         return email;
     }
 
-    private Eid getEidBeanByEid(String eid) {
+    @Override
+    public Eid getEidBeanByEid(String eid) {
         if (StringUtils.isEmpty(eid)) {
             throw new BusinessException("链接出错啦，请返回重试");
         }

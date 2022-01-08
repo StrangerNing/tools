@@ -85,7 +85,12 @@ public class MailSenderUtil {
         /**
          * 订阅消息
          */
-        USER_NEWSLETTER("user-newsletter", "有新的文章发布", "subscribe", 4, true);
+        USER_NEWSLETTER("user-newsletter", "有新的文章发布", "subscribe", 4, true),
+
+        /**
+         * 账号注册邮箱确认
+         */
+        USER_EMAIL_CONFIRM("user-email-confirm", "账号注册邮箱确认", "notify", 5, false);
 
         private String template;
 

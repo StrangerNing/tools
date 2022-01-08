@@ -94,6 +94,8 @@ public class UserInfoVO implements Serializable {
 
     private String nickname;
 
+    private String googleId;
+
     public String getAvatarUrl() {
         if (this.avatar == null) {
             return null;

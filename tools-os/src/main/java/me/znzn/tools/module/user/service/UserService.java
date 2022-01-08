@@ -4,7 +4,9 @@ import me.znzn.tools.module.user.entity.form.ApiKeyForm;
 import me.znzn.tools.module.user.entity.form.LoginForm;
 import me.znzn.tools.module.user.entity.form.RegisterForm;
 import me.znzn.tools.module.user.entity.po.ApiKey;
+import me.znzn.tools.module.user.entity.po.User;
 import me.znzn.tools.module.user.entity.vo.UserInfoVO;
+import me.znzn.tools.utils.GoogleIdTokenVerifyUtil;
 
 import java.util.List;
 
@@ -24,6 +26,13 @@ public interface UserService {
     UserInfoVO login(LoginForm loginForm);
 
     /**
+     * 谷歌登录
+     * @param googleId
+     * @return
+     */
+    UserInfoVO googleLogin(String googleId);
+
+    /**
      * 用户注册
      * @param registerForm 注册项
      * @return 注册结果
@@ -31,11 +40,25 @@ public interface UserService {
     Boolean register(RegisterForm registerForm);
 
     /**
+     * 通过谷歌登录注册
+     * @param user
+     * @return
+     */
+    UserInfoVO googleRegister(GoogleIdTokenVerifyUtil.GoogleUser user);
+
+    /**
      * 更新用户信息
      * @param userInfoVO
      * @return
      */
-    Boolean update(UserInfoVO userInfoVO, UserInfoVO loginUser);
+    Boolean update(UserInfoVO userInfoVO);
+
+    /**
+     * 根据邮箱更新用户信息
+     * @param user
+     * @return
+     */
+    void updateByEmail(User user);
 
     /**
      * 获取用户AK列表

@@ -1,6 +1,7 @@
 package me.znzn.tools.module.blog.service;
 
 import me.znzn.tools.module.blog.entity.form.SubscribeManageForm;
+import me.znzn.tools.module.blog.entity.po.Eid;
 import me.znzn.tools.module.blog.entity.po.Subscribe;
 
 import java.util.List;
@@ -44,4 +45,11 @@ public interface SubscribeService {
      * @return
      */
     List<Integer> getSubscribeList(String mailAddress);
+
+    /**
+     * 获取eid记录
+     * @param eid
+     * @return
+     */
+    Eid getEidBeanByEid(String eid);
 }

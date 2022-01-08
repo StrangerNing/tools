@@ -8,6 +8,10 @@ import java.util.List;
  * @since 2021/8/2
  */
 public class MailSendParams {
+
+    /**
+     * 收件人
+     */
     private String to;
 
 
