@@ -95,7 +95,7 @@ public class SsoController {
     }
 
     @GetMapping("/login/google")
-    public RedirectView google(RedirectAttributes redirectAttributes, String idToken,
+    public Object google(RedirectAttributes redirectAttributes, String idToken,
                               HttpServletResponse response,
                               @RequestParam(name = "redirect", required = false) String redirect,
                               @RequestParam(name = "login", required = false) String login,
@@ -119,18 +119,23 @@ public class SsoController {
             redirect(redirectAttributes, redirectView, redirect, login, loginUser.getToken());
             return redirectView;
         } catch (BusinessException e) {
-            redirectView.setUrl(CommonConstant.SSO_URL);
             model.addAttribute("error", e.getTextMessage());
-            return redirectView;
+            return "page-login";
         }
     }
 
     @GetMapping("/logout")
-    public Object logout(String redirect, HttpServletResponse response) {
+    public Object logout(String redirect, HttpServletResponse response, Model model) {
+        UserInfoVO loginUser = LoginUserUtil.getSessionUserWithoutThrow();
         LoginUserUtil.logout();
         Cookie cookie = new Cookie("user", "");
         cookie.setMaxAge(0);
         response.addCookie(cookie);
+        if (loginUser.getViaGoogle() != null && loginUser.getViaGoogle() == 1) {
+            model.addAttribute("logout", true);
+            model.addAttribute("redirect", redirect);
+            return "page-login";
+        }
         return new ModelAndView("redirect:" + redirect);
     }
 

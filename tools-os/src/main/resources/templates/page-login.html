@@ -32,7 +32,8 @@
                             <div class="heading_s1 text-center">
                                 <h3 class="mb-30 font-weight-900">统一登录平台</h3>
                             </div>
-                            <form method="post" th:action="'/login/submit?' + (${redirect} ? ('redirect=' + ${redirect} + '&') : '') + (${login} ? ('login=' + ${login}) : '')" enctype="application/json">
+                            <div id="logout-redirect" th:if="logout" th:data-target="${redirect}"></div>
+                            <form method="post" id="loginForm" th:action="'/login/submit?' + (${redirect} ? ('redirect=' + ${redirect} + '&') : '') + (${login} ? ('login=' + ${login}) : '')" enctype="application/json">
                                 <div class="form-group">
                                     <input type="text" required="" class="form-control" name="username" placeholder="用户名">
                                 </div>
@@ -109,13 +110,31 @@
 <!--    <script src="/static/js/vendor/jquery.theia.sticky.js"></script>-->
 <!--     NewsBoard JS-->
 <!--    <script type="module" src="/static/js/main.js"></script>-->
-    <script>
+    <script th:if="${logout}">
+        function onSuccess() {
+          var auth2 = gapi.auth2.getAuthInstance();
+          let redirect = document.getElementById('logout-redirect').dataset.target
+          console.log(redirect)
+          auth2.signOut().then(function () {
+            window.location.href = redirect
+          });
+        }
+    </script>
+    <script th:unless="${logout}">
       function onSuccess(googleUser) {
-        let id_token = googleUser.getAuthResponse().id_token;
-        console.log(id_token)
-        let params = document.getElementById('loginBtn').dataset.params
-        window.location.href='/login/google?idToken='+id_token+params
+        let error = document.getElementById('error-Modal')
+        console.log(error)
+        if (error) {
+          console.log('error login')
+        } else {
+          let id_token = googleUser.getAuthResponse().id_token;
+          console.log(id_token)
+          let params = document.getElementById('loginBtn').dataset.params
+          window.location.href='/login/google?idToken='+id_token+params
+        }
       }
+    </script>
+    <script>
       function onFailure(error) {
         console.log(error);
       }

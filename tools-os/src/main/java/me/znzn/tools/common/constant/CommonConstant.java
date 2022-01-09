@@ -87,4 +87,6 @@ public class CommonConstant {
      * 阿里云邮件回信地址，用","或者";"分隔
      */
     public static String MAIL_REPLY_TO = "";
+
+    public static String GOOGLE_VERIFY = "https://oauth2.googleapis.com/tokeninfo";
 }

@@ -19,6 +19,8 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static me.znzn.tools.common.constant.CommonConstant.GOOGLE_VERIFY;
+
 /**
  * @author zhuzening
  * @version 1.0
@@ -72,7 +74,6 @@ public class GoogleIdTokenVerifyUtil {
     public static GoogleUser verify(String idToken) {
         JSONObject jsonObject = null;
         try {
-            String GOOGLE_VERIFY = "https://oauth2.googleapis.com/tokeninfo?id_token=";
             URIBuilder uriBuilder = new URIBuilder(GOOGLE_VERIFY);
             List<NameValuePair> list = new ArrayList<>();
             list.add(new BasicNameValuePair("id_token", idToken));

@@ -72,6 +72,7 @@ public class UserServiceImpl implements UserService {
         BeanUtils.copyProperties(user, userInfo, "password");
         String token = UUID.randomUUID().toString();
         userInfo.setToken(token);
+        userInfo.setViaGoogle(0);
         LoginUserUtil.login(userInfo);
         return userInfo;
     }
@@ -92,6 +93,7 @@ public class UserServiceImpl implements UserService {
         }
         String token = UUID.randomUUID().toString();
         userInfo.setToken(token);
+        userInfo.setViaGoogle(1);
         LoginUserUtil.login(userInfo);
         return userInfo;
     }
