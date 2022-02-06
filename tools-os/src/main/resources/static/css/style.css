@@ -412,6 +412,7 @@ h1.page-404-text{font-size: 1.5rem}
 .entry-main-content h2{line-height:1.25;margin-top:30px;margin-bottom:28px;font-size:1.5rem;}
 .entry-main-content p{font-size:1.1em;}
 .entry-main-content figure{margin-bottom:30px;margin-top:30px;}
+.entry-main-content img{margin-bottom: 20px}
 .entry-bottom .tags a{display:inline-block;font-weight:normal;text-decoration:none;margin-top:2px;margin-bottom:2px;margin-right:5px;border-radius:2px;font-size:14px;text-transform:capitalize;font-style:italic;border-bottom:1px solid rgb(225,225,225);}
 .related-posts .img-hover-slide{min-height:200px;}
 blockquote{position:relative;border-left:0;padding:0px 30px;font-weight:400;margin-bottom:1.5rem;font-style:italic;}
