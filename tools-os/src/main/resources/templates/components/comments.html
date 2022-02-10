@@ -14,7 +14,7 @@
                 <p>暂无评论</p>
             </div>
             <div class="comment-list wow fadeIn animated" th:each="comment : ${comments.list}">
-                <div class="single-comment justify-content-between d-flex">
+                <div class="single-comment justify-content-between d-flex" th:name="${comment.id}">
                     <div class="user justify-content-between d-flex w-100">
                         <div class="thumb">
                             <img th:if="${comment.avatar}" th:src="${comment.avatar}" th:data-name="${comment.createName}" alt="">
@@ -39,7 +39,7 @@
                     </div>
                 </div>
                 <div class="single-comment depth-2 justify-content-between d-flex mt-50" th:each="child : ${comment.childrenComments}">
-                    <div class="user justify-content-between d-flex w-100">
+                    <div class="user justify-content-between d-flex w-100" th:name="${child.id}">
                         <div class="thumb">
                             <img th:if="${child.avatar}" th:src="${comment.avatar}" th:data-name="${child.createName}" alt="">
                             <img th:unless="${child.avatar}" class="avatar" src="" th:data-name="${child.createName}" alt="">

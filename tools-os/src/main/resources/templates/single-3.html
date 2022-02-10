@@ -7,7 +7,7 @@
     <title>[[${article.title}]] - 凑凑 - EdChu的个人博客</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!--twtter分享-->
+    <!--twitter分享-->
     <meta name="twitter:card" content="summary_large_image"/>
     <meta name="twitter:title" th:content="${article.title}"/>
     <meta name="twitter:description" th:content="'点击查看关于' + ${article.title} + '的内容'"/>
@@ -63,9 +63,9 @@
                             <div class="entry-meta align-items-center meta-2 font-small color-muted">
                                 <p class="mb-5">
                                     <a class="author-avatar" href="#"><img class="img-circle" th:src="${article.authorInfo.avatarUrl}" alt=""></a>
-                                    By <a href="author.html"><span class="author-name font-weight-bold" th:text="${article.author}">Edchu</span></a>
+                                    By <a href="author.html"><span class="author-name font-weight-bold" th:text="${article.author}">EdChu</span></a>
                                 </p>
-                                <span id="createTime" class="mr-10 time" th:datetime="${#dates.format(article.createTime,'yyyy-MM-dd HH:mm:ss')}"> 30 May 1997</span>
+                                <span id="createTime" class="mr-10 time" th:datetime="${#dates.format(article.createTime,'yyyy-MM-dd HH:mm:ss')}"></span>
                                 <span id="minutes" class="time-reading has-dot">[[${article.minutes}]] 字</span>
                             </div>
                         </div>

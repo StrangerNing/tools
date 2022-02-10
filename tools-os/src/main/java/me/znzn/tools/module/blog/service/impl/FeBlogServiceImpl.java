@@ -149,18 +149,52 @@ public class FeBlogServiceImpl implements FeBlogService {
         if (articleComment.getArticleId() == null) {
             throw new BusinessException("文章id丢失，请重试");
         }
-        if (articleComment.getParentId() == null) {
-            articleComment.setParentId(0L);
-        }
 
+        MailSendParams params = new MailSendParams();
+
+        String href;
         if (articleComment.getArticleId() != 0) {
             ArticleVo article = articleMapper.selectArticleById(articleComment.getArticleId());
             if (CommentLimitEnum.DISABLE.getIndex().equals(article.getComment())) {
                 throw new BusinessException("当前文章不允许评论");
             }
+            href = article.getAliasHref();
+            if (articleComment.getParentId() == null) {
+                params.setTo(article.getAuthorInfo().getEmail());
+            }
+        } else {
+            href = CommonConstant.BACKGROUND_DOMAIN + "/blackboard";
         }
 
+        boolean needSend = false;
+        if (articleComment.getParentId() == null) {
+            articleComment.setParentId(0L);
+            needSend = true;
+            if (StringUtils.isEmpty(params.getTo())) {
+                params.setTo(CommonConstant.MAIL_REPLY_TO);
+            }
+        } else {
+            ArticleComment parent = articleCommentMapper.selectByPrimaryKey(articleComment.getParentId());
+            String parentCreateEmail = parent.getCreateEmail();
+            if (StringUtils.isNotEmpty(parentCreateEmail)) {
+                needSend = true;
+                params.setTo(parentCreateEmail);
+            }
+        }
+
+        params.setFrom(articleComment.getCreateName());
+        if (null != loginUser) {
+            params.setFromAvatar(loginUser.getAvatarUrl());
+        }
+        params.setMessage(articleComment.getContent());
+        params.setNickname(articleComment.getCreateName());
+
         articleCommentMapper.insertByProperty(articleComment);
+
+        if (needSend) {
+            params.setHref(href + "#" + articleComment.getId());
+            mailSenderUtil.send(params, MailSenderUtil.MailTypeEnum.USER_MESSAGE);
+        }
     }
 
     @Async
@@ -263,19 +297,13 @@ public class FeBlogServiceImpl implements FeBlogService {
         friends.setVersion(0);
         friendsMapper.insertByProperty(friends);
 
-        User queryAdmin = User.builder().roles("\"admin\"").build();
-        List<User> admins = userMapper.selectByProperty(queryAdmin);
-
-        admins.forEach(admin -> {
-            MailSendParams mailSendParams = new MailSendParams();
-            mailSendParams.setTo(admin.getEmail());
-            mailSendParams.setFrom(friends.getNickname());
-            mailSendParams.setHref(friends.getWebsite());
-            mailSendParams.setMessage(friends.getIntroduction());
-            mailSendParams.setFromAvatar(friends.getIcon());
-            mailSendParams.setNickname(friends.getName());
-            mailSenderUtil.send(mailSendParams, MailSenderUtil.MailTypeEnum.FRIEND_APPLY);
-        });
+        MailSendParams mailSendParams = new MailSendParams();
+        mailSendParams.setFrom(friends.getNickname());
+        mailSendParams.setHref(friends.getWebsite());
+        mailSendParams.setMessage(friends.getIntroduction());
+        mailSendParams.setFromAvatar(friends.getIcon());
+        mailSendParams.setNickname(friends.getName());
+        mailSenderUtil.sendToAdmins(mailSendParams, MailSenderUtil.MailTypeEnum.FRIEND_APPLY);
     }
 
     @Override

@@ -18,6 +18,8 @@ import me.znzn.tools.module.blog.entity.vo.ArticleVo;
 import me.znzn.tools.module.blog.mapper.EidMapper;
 import me.znzn.tools.module.blog.mapper.SubscribeMapper;
 import me.znzn.tools.module.blog.mapper.UnsubscribeMapper;
+import me.znzn.tools.module.user.entity.po.User;
+import me.znzn.tools.module.user.mapper.UserMapper;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.env.Environment;
@@ -49,6 +51,8 @@ public class MailSenderUtil {
     private EidMapper eidMapper;
     @Resource
     private SubscribeMapper subscribeMapper;
+    @Resource
+    private UserMapper userMapper;
 
     public enum MailTypeEnum {
 
@@ -230,26 +234,29 @@ public class MailSenderUtil {
         context.setVariables(BeanUtil.beanToMap(params));
         String content = templateEngine.process("emails/" + type.getTemplate(), context);
         MailAccount mailAccount = new MailAccount(environment.getRequiredProperty("mail.setting-path." + type.getSender()));
-        Mail mail = Mail.create(mailAccount)
-                .setUseGlobalSession(false)
-                .setTos(params.getTo())
-                .setTitle(type.getSubject())
-                .setContent(content, true);
-        List<String> replyTo = splitAddress(CommonConstant.MAIL_REPLY_TO);
-        if (CollectionUtils.isNotEmpty(replyTo)) {
-            mail.setReply(replyTo.toArray(new String[0]));
-        }
-        mail.send();
+        List<String> tos = splitAddress(params.getTo());
+        if (CollectionUtils.isNotEmpty(tos)) {
+            Mail mail = Mail.create(mailAccount)
+                    .setUseGlobalSession(false)
+                    .setTos(tos.toArray(new String[0]))
+                    .setTitle(type.getSubject())
+                    .setContent(content, true);
+            List<String> replyTo = splitAddress(CommonConstant.MAIL_REPLY_TO);
+            if (CollectionUtils.isNotEmpty(replyTo)) {
+                mail.setReply(replyTo.toArray(new String[0]));
+            }
+            mail.send();
 
-        Eid eid = new Eid();
-        eid.setEid(uuid.toString());
-        eid.setEmail(params.getTo());
-        eid.setNickname(params.getNickname());
-        eid.setTemplate(type.getTemplate());
-        eid.setType(type.getType());
-        eid.setCreateTime(new Date());
-        eid.setStatus(EidStatusEnum.ENABLE.getIndex());
-        eidMapper.insertByProperty(eid);
+            Eid eid = new Eid();
+            eid.setEid(uuid.toString());
+            eid.setEmail(params.getTo());
+            eid.setNickname(params.getNickname());
+            eid.setTemplate(type.getTemplate());
+            eid.setType(type.getType());
+            eid.setCreateTime(new Date());
+            eid.setStatus(EidStatusEnum.ENABLE.getIndex());
+            eidMapper.insertByProperty(eid);
+        }
     }
 
     @Async
@@ -270,6 +277,16 @@ public class MailSenderUtil {
             params.setHref(CommonConstant.BACKGROUND_DOMAIN + articleVo.getAliasHref());
             SpringUtil.getBean(this.getClass()).send(params, MailTypeEnum.USER_NEWSLETTER);
         });
+    }
+
+    @Async
+    @Transactional(rollbackFor = Exception.class)
+    public void sendToAdmins(MailSendParams mailSendParams, MailTypeEnum mailTypeEnum) {
+        User queryAdmin = User.builder().roles("\"admin\"").build();
+        List<User> admins = userMapper.selectByProperty(queryAdmin);
+        String tos = StringUtils.join(admins, ";");
+        mailSendParams.setTo(tos);
+        send(mailSendParams, mailTypeEnum);
     }
 
     private static List<String> splitAddress(String addresses) {
